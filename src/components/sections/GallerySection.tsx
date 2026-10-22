@@ -9,9 +9,25 @@ interface Props {
 
 export const GallerySection: React.FC<Props> = ({ content, theme }) => {
   const primaryColor = theme.primaryColor || '#2563eb';
+  const columns = (content as any).columns || '4';
+  const padding = (content as any).padding || 'normal';
+
+  const paddingClass =
+    padding === 'compact'
+      ? 'py-10 sm:py-14'
+      : padding === 'spacious'
+      ? 'py-24 sm:py-32'
+      : 'py-16 sm:py-24';
+
+  const gridClass =
+    columns === '2'
+      ? 'grid-cols-1 sm:grid-cols-2'
+      : columns === '3'
+      ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
+      : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4';
 
   return (
-    <section id="gallery" className="py-16 sm:py-24 bg-slate-50/50">
+    <section id="gallery" className={`${paddingClass} bg-slate-50/50`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto space-y-4 mb-12 sm:mb-16">
           {content.badge && (
@@ -32,7 +48,7 @@ export const GallerySection: React.FC<Props> = ({ content, theme }) => {
           )}
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className={`grid ${gridClass} gap-6`}>
           {content.images?.map((img, idx) => (
             <div key={idx} className="group relative rounded-2xl overflow-hidden shadow-xs hover:shadow-lg transition duration-300">
               <img

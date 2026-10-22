@@ -26,11 +26,36 @@ function MainApp() {
     setCurrentPath(path);
   };
 
-  // Check if public site URL: /sites/:slug
+  // 1. PRIORITY 1: Direct Path URL (Local Fallback: /sites/:slug)
+  // Bekerja 100% di http://localhost:5173/sites/:slug dan http://127.0.0.1:5173/sites/:slug
   const siteMatch = currentPath.match(/^\/sites\/([a-zA-Z0-9_-]+)/);
   if (siteMatch) {
     const slug = siteMatch[1];
     return <PublicSitePage slug={slug} />;
+  }
+
+  // 2. Query Parameter Fallback (misal: http://localhost:5173/?site=kopi-senja)
+  const queryParams = new URLSearchParams(window.location.search);
+  const querySlug = queryParams.get('site') || queryParams.get('slug');
+  if (querySlug) {
+    return <PublicSitePage slug={querySlug} />;
+  }
+
+  // 3. PRIORITY 2: Wildcard Subdomain Detection (misal: kopi-senja.lokalsite.id atau kopi-senja.localhost)
+  const host = window.location.hostname.toLowerCase();
+  const isIpAddress = /^(\d{1,3}\.){3}\d{1,3}$/.test(host);
+
+  if (!isIpAddress) {
+    const hostParts = host.split('.');
+    const isLocalhostSubdomain = hostParts.length === 2 && hostParts[1] === 'localhost';
+    const isDomainSubdomain = hostParts.length >= 3;
+    const subdomainCandidate = (isLocalhostSubdomain || isDomainSubdomain) ? hostParts[0] : null;
+    const isSystemSubdomain =
+      subdomainCandidate && ['www', 'app', 'admin', 'api', 'localhost'].includes(subdomainCandidate);
+
+    if (subdomainCandidate && !isSystemSubdomain) {
+      return <PublicSitePage slug={subdomainCandidate} />;
+    }
   }
 
   // Auth Loading Spinner

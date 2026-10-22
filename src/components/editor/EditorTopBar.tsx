@@ -12,6 +12,7 @@ import {
   ExternalLink,
   CheckCircle,
   Copy,
+  LayoutGrid,
 } from 'lucide-react';
 
 interface Props {
@@ -25,6 +26,8 @@ interface Props {
   onPublishToggle: () => void;
   onBack: () => void;
   onUpdateTitle: (newTitle: string) => void;
+  showGrid?: boolean;
+  setShowGrid?: (show: boolean) => void;
 }
 
 export const EditorTopBar: React.FC<Props> = ({
@@ -38,6 +41,8 @@ export const EditorTopBar: React.FC<Props> = ({
   onPublishToggle,
   onBack,
   onUpdateTitle,
+  showGrid = false,
+  setShowGrid,
 }) => {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [titleInput, setTitleInput] = useState(website.name);
@@ -149,6 +154,24 @@ export const EditorTopBar: React.FC<Props> = ({
             <span className="hidden lg:inline">Mobile</span>
           </button>
         </div>
+
+        {/* Toggle 12-Column Grid Blueprint */}
+        {!previewMode && setShowGrid && (
+          <button
+            type="button"
+            onClick={() => setShowGrid(!showGrid)}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold border transition cursor-pointer ${
+              showGrid
+                ? 'bg-blue-50 border-blue-300 text-blue-700 shadow-xs'
+                : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
+            }`}
+            title="Tampilkan Panduan Garis Grid 12-Kolom"
+          >
+            <LayoutGrid className="w-3.5 h-3.5 text-blue-600" />
+            <span className="hidden lg:inline">Grid 12-Kolom</span>
+            {showGrid && <span className="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse" />}
+          </button>
+        )}
 
         {/* Edit / Preview Mode */}
         <button

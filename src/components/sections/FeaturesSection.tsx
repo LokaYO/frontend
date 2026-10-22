@@ -20,9 +20,25 @@ const ICON_MAP: Record<string, React.ReactNode> = {
 
 export const FeaturesSection: React.FC<Props> = ({ content, theme }) => {
   const primaryColor = theme.primaryColor || '#2563eb';
+  const columns = (content as any).columns || '3';
+  const padding = (content as any).padding || 'normal';
+
+  const paddingClass =
+    padding === 'compact'
+      ? 'py-10 sm:py-14'
+      : padding === 'spacious'
+      ? 'py-24 sm:py-32'
+      : 'py-16 sm:py-24';
+
+  const gridClass =
+    columns === '2'
+      ? 'grid-cols-1 md:grid-cols-2'
+      : columns === '4'
+      ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'
+      : 'grid-cols-1 md:grid-cols-3';
 
   return (
-    <section id="features" className="py-16 sm:py-24 bg-white">
+    <section id="features" className={`${paddingClass} bg-white`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto space-y-4 mb-14">
           {content.badge && (
@@ -43,7 +59,7 @@ export const FeaturesSection: React.FC<Props> = ({ content, theme }) => {
           )}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className={`grid ${gridClass} gap-8`}>
           {content.items?.map((item, idx) => (
             <div
               key={idx}

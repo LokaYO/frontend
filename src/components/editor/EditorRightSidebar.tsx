@@ -1,6 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Section } from '../../types/schema';
-import { Plus, Trash2, X, Sliders, Image, Link, Type } from 'lucide-react';
+import {
+  Plus,
+  Trash2,
+  X,
+  Sliders,
+  Image,
+  Link,
+  Type,
+  LayoutGrid,
+  GripVertical,
+  ChevronUp,
+  ChevronDown,
+} from 'lucide-react';
 
 interface Props {
   section: Section | null;
@@ -76,6 +88,69 @@ export const EditorRightSidebar: React.FC<Props> = ({
 
       {/* Form Fields Body */}
       <div className="flex-1 overflow-y-auto p-4 space-y-5 text-xs">
+        {/* TATA LETAK & GRID (LAYOUT GRID SYSTEM) */}
+        <div className="p-3.5 bg-slate-50 border border-slate-200/90 rounded-2xl space-y-3 shadow-2xs">
+          <div className="flex items-center gap-1.5 font-bold text-slate-800 text-[11px] uppercase tracking-wider">
+            <LayoutGrid className="w-3.5 h-3.5 text-blue-600" />
+            <span>Tata Letak Grid & Spasi</span>
+          </div>
+
+          {/* Grid Columns Setting (for multi-item sections like services, features, gallery, testimonials) */}
+          {['services', 'features', 'gallery', 'testimonials'].includes(section.type) && (
+            <div>
+              <label className="block text-[11px] font-semibold text-slate-600 mb-1.5">
+                Jumlah Kolom Grid:
+              </label>
+              <div className="grid grid-cols-3 gap-1.5">
+                {[
+                  { val: '2', label: '2 Kolom' },
+                  { val: '3', label: '3 Kolom' },
+                  { val: '4', label: '4 Kolom' },
+                ].map((colOpt) => (
+                  <button
+                    key={colOpt.val}
+                    type="button"
+                    onClick={() => handleChange('columns', colOpt.val)}
+                    className={`py-1.5 rounded-lg text-[11px] font-bold border transition cursor-pointer ${
+                      (content.columns || (section.type === 'testimonials' ? '2' : section.type === 'features' ? '3' : '4')) === colOpt.val
+                        ? 'bg-blue-600 border-blue-600 text-white shadow-xs'
+                        : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
+                    }`}
+                  >
+                    {colOpt.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Spacing / Vertical Padding */}
+          <div>
+            <label className="block text-[11px] font-semibold text-slate-600 mb-1.5">
+              Spasi Vertikal (Padding):
+            </label>
+            <div className="grid grid-cols-3 gap-1.5">
+              {[
+                { val: 'compact', label: 'Rapat' },
+                { val: 'normal', label: 'Normal' },
+                { val: 'spacious', label: 'Lapang' },
+              ].map((padOpt) => (
+                <button
+                  key={padOpt.val}
+                  type="button"
+                  onClick={() => handleChange('padding', padOpt.val)}
+                  className={`py-1.5 rounded-lg text-[11px] font-bold border transition cursor-pointer ${
+                    (content.padding || 'normal') === padOpt.val
+                      ? 'bg-blue-600 border-blue-600 text-white shadow-xs'
+                      : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
+                  }`}
+                >
+                  {padOpt.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
         {/* COMMON: Badge */}
         {'badge' in content && (
           <div>
@@ -351,7 +426,41 @@ export const EditorRightSidebar: React.FC<Props> = ({
               {(content.items || []).map((item: any, idx: number) => (
                 <div key={idx} className="p-3 rounded-xl border border-slate-200 bg-slate-50 space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-slate-700 text-[11px]">Item #{idx + 1}</span>
+                    <div className="flex items-center gap-1.5">
+                      <span className="font-bold text-slate-700 text-[11px]">Item #{idx + 1}</span>
+                      {idx > 0 && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const items = [...content.items];
+                            const temp = items[idx];
+                            items[idx] = items[idx - 1];
+                            items[idx - 1] = temp;
+                            handleChange('items', items);
+                          }}
+                          className="p-0.5 rounded hover:bg-slate-200 text-slate-500"
+                          title="Geser ke atas"
+                        >
+                          <ChevronUp className="w-3 h-3" />
+                        </button>
+                      )}
+                      {idx < content.items.length - 1 && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const items = [...content.items];
+                            const temp = items[idx];
+                            items[idx] = items[idx + 1];
+                            items[idx + 1] = temp;
+                            handleChange('items', items);
+                          }}
+                          className="p-0.5 rounded hover:bg-slate-200 text-slate-500"
+                          title="Geser ke bawah"
+                        >
+                          <ChevronDown className="w-3 h-3" />
+                        </button>
+                      )}
+                    </div>
                     <button
                       type="button"
                       onClick={() => {
@@ -359,7 +468,7 @@ export const EditorRightSidebar: React.FC<Props> = ({
                         items.splice(idx, 1);
                         handleChange('items', items);
                       }}
-                      className="text-red-500 hover:text-red-700"
+                      className="text-red-500 hover:text-red-700 p-0.5"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
@@ -427,7 +536,41 @@ export const EditorRightSidebar: React.FC<Props> = ({
               {(content.items || []).map((item: any, idx: number) => (
                 <div key={idx} className="p-3 rounded-xl border border-slate-200 bg-slate-50 space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-slate-700 text-[11px]">Poin #{idx + 1}</span>
+                    <div className="flex items-center gap-1.5">
+                      <span className="font-bold text-slate-700 text-[11px]">Poin #{idx + 1}</span>
+                      {idx > 0 && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const items = [...content.items];
+                            const temp = items[idx];
+                            items[idx] = items[idx - 1];
+                            items[idx - 1] = temp;
+                            handleChange('items', items);
+                          }}
+                          className="p-0.5 rounded hover:bg-slate-200 text-slate-500"
+                          title="Geser ke atas"
+                        >
+                          <ChevronUp className="w-3 h-3" />
+                        </button>
+                      )}
+                      {idx < content.items.length - 1 && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const items = [...content.items];
+                            const temp = items[idx];
+                            items[idx] = items[idx + 1];
+                            items[idx + 1] = temp;
+                            handleChange('items', items);
+                          }}
+                          className="p-0.5 rounded hover:bg-slate-200 text-slate-500"
+                          title="Geser ke bawah"
+                        >
+                          <ChevronDown className="w-3 h-3" />
+                        </button>
+                      )}
+                    </div>
                     <button
                       type="button"
                       onClick={() => {
@@ -435,7 +578,7 @@ export const EditorRightSidebar: React.FC<Props> = ({
                         items.splice(idx, 1);
                         handleChange('items', items);
                       }}
-                      className="text-red-500 hover:text-red-700"
+                      className="text-red-500 hover:text-red-700 p-0.5"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
@@ -497,7 +640,41 @@ export const EditorRightSidebar: React.FC<Props> = ({
               {(content.items || []).map((item: any, idx: number) => (
                 <div key={idx} className="p-3 rounded-xl border border-slate-200 bg-slate-50 space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-slate-700 text-[11px]">Ulasan #{idx + 1}</span>
+                    <div className="flex items-center gap-1.5">
+                      <span className="font-bold text-slate-700 text-[11px]">Ulasan #{idx + 1}</span>
+                      {idx > 0 && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const items = [...content.items];
+                            const temp = items[idx];
+                            items[idx] = items[idx - 1];
+                            items[idx - 1] = temp;
+                            handleChange('items', items);
+                          }}
+                          className="p-0.5 rounded hover:bg-slate-200 text-slate-500"
+                          title="Geser ke atas"
+                        >
+                          <ChevronUp className="w-3 h-3" />
+                        </button>
+                      )}
+                      {idx < content.items.length - 1 && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const items = [...content.items];
+                            const temp = items[idx];
+                            items[idx] = items[idx + 1];
+                            items[idx + 1] = temp;
+                            handleChange('items', items);
+                          }}
+                          className="p-0.5 rounded hover:bg-slate-200 text-slate-500"
+                          title="Geser ke bawah"
+                        >
+                          <ChevronDown className="w-3 h-3" />
+                        </button>
+                      )}
+                    </div>
                     <button
                       type="button"
                       onClick={() => {
@@ -505,7 +682,7 @@ export const EditorRightSidebar: React.FC<Props> = ({
                         items.splice(idx, 1);
                         handleChange('items', items);
                       }}
-                      className="text-red-500 hover:text-red-700"
+                      className="text-red-500 hover:text-red-700 p-0.5"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
@@ -577,7 +754,41 @@ export const EditorRightSidebar: React.FC<Props> = ({
               {(content.images || []).map((img: any, idx: number) => (
                 <div key={idx} className="p-3 rounded-xl border border-slate-200 bg-slate-50 space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-slate-700 text-[11px]">Foto #{idx + 1}</span>
+                    <div className="flex items-center gap-1.5">
+                      <span className="font-bold text-slate-700 text-[11px]">Foto #{idx + 1}</span>
+                      {idx > 0 && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const images = [...content.images];
+                            const temp = images[idx];
+                            images[idx] = images[idx - 1];
+                            images[idx - 1] = temp;
+                            handleChange('images', images);
+                          }}
+                          className="p-0.5 rounded hover:bg-slate-200 text-slate-500"
+                          title="Geser ke atas"
+                        >
+                          <ChevronUp className="w-3 h-3" />
+                        </button>
+                      )}
+                      {idx < content.images.length - 1 && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const images = [...content.images];
+                            const temp = images[idx];
+                            images[idx] = images[idx + 1];
+                            images[idx + 1] = temp;
+                            handleChange('images', images);
+                          }}
+                          className="p-0.5 rounded hover:bg-slate-200 text-slate-500"
+                          title="Geser ke bawah"
+                        >
+                          <ChevronDown className="w-3 h-3" />
+                        </button>
+                      )}
+                    </div>
                     <button
                       type="button"
                       onClick={() => {
@@ -585,7 +796,7 @@ export const EditorRightSidebar: React.FC<Props> = ({
                         images.splice(idx, 1);
                         handleChange('images', images);
                       }}
-                      className="text-red-500 hover:text-red-700"
+                      className="text-red-500 hover:text-red-700 p-0.5"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>

@@ -10,9 +10,23 @@ interface Props {
 
 export const TestimonialsSection: React.FC<Props> = ({ content, theme }) => {
   const primaryColor = theme.primaryColor || '#2563eb';
+  const columns = (content as any).columns || '2';
+  const padding = (content as any).padding || 'normal';
+
+  const paddingClass =
+    padding === 'compact'
+      ? 'py-10 sm:py-14'
+      : padding === 'spacious'
+      ? 'py-24 sm:py-32'
+      : 'py-16 sm:py-24';
+
+  const gridClass =
+    columns === '3'
+      ? 'grid-cols-1 md:grid-cols-3 max-w-7xl'
+      : 'grid-cols-1 md:grid-cols-2 max-w-4xl';
 
   return (
-    <section id="testimonials" className="py-16 sm:py-24 bg-white">
+    <section id="testimonials" className={`${paddingClass} bg-white`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto space-y-4 mb-14">
           {content.badge && (
@@ -33,7 +47,7 @@ export const TestimonialsSection: React.FC<Props> = ({ content, theme }) => {
           )}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <div className={`grid ${gridClass} gap-8 mx-auto`}>
           {content.items?.map((item, idx) => (
             <div
               key={idx}

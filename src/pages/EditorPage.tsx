@@ -24,6 +24,7 @@ export const EditorPage: React.FC<Props> = ({ websiteId, onBackToDashboard }) =>
 
   const [viewport, setViewport] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
   const [previewMode, setPreviewMode] = useState(false);
+  const [showGrid, setShowGrid] = useState(false);
   const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
   const [isAddSectionOpen, setIsAddSectionOpen] = useState(false);
   const [publishModalOpen, setPublishModalOpen] = useState(false);
@@ -239,6 +240,8 @@ export const EditorPage: React.FC<Props> = ({ websiteId, onBackToDashboard }) =>
         setViewport={setViewport}
         previewMode={previewMode}
         setPreviewMode={setPreviewMode}
+        showGrid={showGrid}
+        setShowGrid={setShowGrid}
         saving={saving}
         onSave={handleSave}
         onPublishToggle={handlePublishToggle}
@@ -282,6 +285,10 @@ export const EditorPage: React.FC<Props> = ({ websiteId, onBackToDashboard }) =>
               isEditor={!previewMode}
               activeSectionId={activeSectionId}
               onSelectSection={(id) => setActiveSectionId(id)}
+              onMoveSection={handleMoveSection}
+              onDeleteSection={handleDeleteSection}
+              onReorderSections={(reordered) => setWebsite({ ...website, sections: reordered })}
+              showGridLines={showGrid}
             />
           </div>
         </main>
