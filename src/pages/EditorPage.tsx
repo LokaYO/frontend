@@ -115,6 +115,17 @@ export const EditorPage: React.FC<Props> = ({ websiteId, onBackToDashboard }) =>
     }
   };
 
+  // Select and scroll to section
+  const handleSelectSection = (id: string) => {
+    setActiveSectionId(id);
+    setTimeout(() => {
+      const el = document.getElementById(`editor-section-${id}`);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 40);
+  };
+
   // Section reordering
   const handleMoveSection = (index: number, direction: 'up' | 'down') => {
     if (!website?.sections) return;
@@ -232,7 +243,7 @@ export const EditorPage: React.FC<Props> = ({ websiteId, onBackToDashboard }) =>
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-100 overflow-hidden select-none">
+    <div className="fixed inset-0 h-screen max-h-screen w-screen flex flex-col bg-slate-100 overflow-hidden select-none z-10">
       {/* Top Bar */}
       <EditorTopBar
         website={website}
@@ -250,13 +261,13 @@ export const EditorPage: React.FC<Props> = ({ websiteId, onBackToDashboard }) =>
       />
 
       {/* Main Workspace */}
-      <div className="flex-1 flex overflow-hidden relative">
-        {/* Left Sidebar (Hidden in Preview Mode) */}
+      <div className="flex-1 min-h-0 w-full flex overflow-hidden relative">
+        {/* Left Sidebar (Pinned / Fixed on the Left) */}
         {!previewMode && (
           <EditorLeftSidebar
             sections={website.sections || []}
             activeSectionId={activeSectionId}
-            onSelectSection={(id) => setActiveSectionId(id)}
+            onSelectSection={handleSelectSection}
             onMoveSection={handleMoveSection}
             onDeleteSection={handleDeleteSection}
             onOpenAddSection={() => setIsAddSectionOpen(true)}
@@ -269,8 +280,8 @@ export const EditorPage: React.FC<Props> = ({ websiteId, onBackToDashboard }) =>
           />
         )}
 
-        {/* Center Canvas / Live Preview */}
-        <main className="flex-1 overflow-y-auto bg-slate-200/70 flex justify-center p-0 relative">
+        {/* Center Canvas / Live Preview (Only this scrolls smoothly) */}
+        <main className="flex-1 min-h-0 h-full overflow-y-auto bg-slate-200/70 flex justify-center p-0 relative scroll-smooth">
           {saveStatusText && (
             <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 bg-slate-900 text-white text-xs font-semibold px-4 py-2 rounded-full shadow-lg flex items-center gap-2 animate-in fade-in slide-in-from-bottom-2">
               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
@@ -284,7 +295,7 @@ export const EditorPage: React.FC<Props> = ({ websiteId, onBackToDashboard }) =>
               theme={website.theme}
               isEditor={!previewMode}
               activeSectionId={activeSectionId}
-              onSelectSection={(id) => setActiveSectionId(id)}
+              onSelectSection={handleSelectSection}
               onMoveSection={handleMoveSection}
               onDeleteSection={handleDeleteSection}
               onReorderSections={(reordered) => setWebsite({ ...website, sections: reordered })}
@@ -293,7 +304,7 @@ export const EditorPage: React.FC<Props> = ({ websiteId, onBackToDashboard }) =>
           </div>
         </main>
 
-        {/* Right Sidebar Inspector (Hidden in Preview Mode) */}
+        {/* Right Sidebar Inspector (Pinned / Fixed on the Right) */}
         {!previewMode && (
           <EditorRightSidebar
             section={activeSection}

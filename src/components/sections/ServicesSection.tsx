@@ -20,7 +20,7 @@ const ICON_MAP: Record<string, React.ReactNode> = {
   clock: <Clock className="w-6 h-6" />,
 };
 
-export const ServicesSection: React.FC<Props> = ({ content, theme }) => {
+export const ServicesSection: React.FC<Props> = ({ content, theme, isEditor }) => {
   const primaryColor = theme.primaryColor || '#2563eb';
   const columns = (content as any).columns || '4';
   const padding = (content as any).padding || 'normal';
@@ -67,12 +67,19 @@ export const ServicesSection: React.FC<Props> = ({ content, theme }) => {
           {content.items?.map((item, idx) => (
             <div
               key={idx}
-              className="bg-white rounded-2xl p-6 sm:p-7 shadow-xs hover:shadow-md border border-slate-200/80 transition-all flex flex-col justify-between group"
+              className="bg-white rounded-2xl p-6 sm:p-7 shadow-xs hover:shadow-md border border-slate-200/80 transition-all flex flex-col justify-between group relative"
             >
+              {/* Visual Index Badge in Editor */}
+              {isEditor && (
+                <div className="absolute top-3 right-3 z-20 bg-slate-100 text-slate-600 text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border border-slate-200 shadow-2xs">
+                  #{idx + 1}
+                </div>
+              )}
+
               <div className="space-y-4">
                 {/* Image or Icon */}
                 {item.imageUrl ? (
-                  <div className="overflow-hidden rounded-xl h-44 w-full mb-2">
+                  <div className="overflow-hidden rounded-xl h-44 w-full mb-2 bg-slate-100">
                     <img
                       src={item.imageUrl}
                       alt={item.title}

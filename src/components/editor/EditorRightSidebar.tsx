@@ -27,7 +27,7 @@ export const EditorRightSidebar: React.FC<Props> = ({
 }) => {
   if (!section) {
     return (
-      <aside className="w-88 bg-white border-l border-slate-200 flex flex-col shrink-0 h-[calc(100vh-4rem)] p-6 items-center justify-center text-center">
+      <aside className="w-88 bg-white border-l border-slate-200 flex flex-col shrink-0 h-full z-20 p-6 items-center justify-center text-center">
         <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400 mb-3">
           <Sliders className="w-6 h-6" />
         </div>
@@ -48,6 +48,14 @@ export const EditorRightSidebar: React.FC<Props> = ({
     });
   };
 
+  const moveItemToIndex = (field: string, fromIndex: number, toIndex: number) => {
+    const list = [...(content[field] || [])];
+    if (toIndex < 0 || toIndex >= list.length || fromIndex === toIndex) return;
+    const [item] = list.splice(fromIndex, 1);
+    list.splice(toIndex, 0, item);
+    handleChange(field, list);
+  };
+
   const getSectionTitle = (type: string) => {
     switch (type) {
       case 'navbar': return 'Pengaturan Navbar';
@@ -65,7 +73,7 @@ export const EditorRightSidebar: React.FC<Props> = ({
   };
 
   return (
-    <aside className="w-88 bg-white border-l border-slate-200 flex flex-col shrink-0 h-[calc(100vh-4rem)]">
+    <aside className="w-88 bg-white border-l border-slate-200 flex flex-col shrink-0 h-full z-20 overflow-hidden">
       {/* Header */}
       <div className="p-3.5 border-b border-slate-200 flex items-center justify-between shrink-0 bg-slate-50/50">
         <div>
@@ -284,32 +292,36 @@ export const EditorRightSidebar: React.FC<Props> = ({
             </div>
 
             <div>
-              <label className="block font-semibold text-slate-700 mb-1">
-                Alignment Teks
+              <label className="block font-semibold text-slate-700 mb-1.5">
+                Tata Letak & Posisi Gambar Hero
               </label>
-              <div className="grid grid-cols-2 gap-2">
-                <button
-                  type="button"
-                  onClick={() => handleChange('alignment', 'left')}
-                  className={`py-1.5 px-3 rounded-lg border font-semibold ${
-                    content.alignment !== 'center'
-                      ? 'border-blue-600 bg-blue-50 text-blue-700'
-                      : 'border-slate-200 text-slate-600'
-                  }`}
-                >
-                  Rata Kiri
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleChange('alignment', 'center')}
-                  className={`py-1.5 px-3 rounded-lg border font-semibold ${
-                    content.alignment === 'center'
-                      ? 'border-blue-600 bg-blue-50 text-blue-700'
-                      : 'border-slate-200 text-slate-600'
-                  }`}
-                >
-                  Rata Tengah
-                </button>
+              <div className="grid grid-cols-2 gap-1.5">
+                {[
+                  { val: 'image-right', label: 'Gambar Kanan' },
+                  { val: 'image-left', label: 'Gambar Kiri' },
+                  { val: 'center', label: 'Tengah / Center' },
+                  { val: 'background', label: 'Background Cover' },
+                ].map((opt) => (
+                  <button
+                    key={opt.val}
+                    type="button"
+                    onClick={() => {
+                      handleChange('layoutVariant', opt.val);
+                      if (opt.val === 'center') {
+                        handleChange('alignment', 'center');
+                      } else {
+                        handleChange('alignment', 'left');
+                      }
+                    }}
+                    className={`py-1.5 px-2 rounded-lg text-[10px] font-bold border transition text-center ${
+                      ((content.layoutVariant || (content.alignment === 'center' ? 'center' : 'image-right')) === opt.val)
+                        ? 'bg-blue-600 border-blue-600 text-white shadow-xs'
+                        : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
               </div>
             </div>
           </div>
@@ -372,6 +384,32 @@ export const EditorRightSidebar: React.FC<Props> = ({
         {section.type === 'about' && (
           <div className="space-y-4 pt-2 border-t border-slate-100">
             <div>
+              <label className="block font-semibold text-slate-700 mb-1.5">
+                Posisi Tata Letak Gambar
+              </label>
+              <div className="grid grid-cols-3 gap-1.5">
+                {[
+                  { val: 'left', label: 'Gambar Kiri' },
+                  { val: 'right', label: 'Gambar Kanan' },
+                  { val: 'bottom', label: 'Gambar Bawah' },
+                ].map((opt) => (
+                  <button
+                    key={opt.val}
+                    type="button"
+                    onClick={() => handleChange('imagePosition', opt.val)}
+                    className={`py-1.5 px-2 rounded-lg text-[10px] font-bold border transition text-center ${
+                      ((content.imagePosition || 'left') === opt.val)
+                        ? 'bg-blue-600 border-blue-600 text-white shadow-xs'
+                        : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
               <label className="block font-semibold text-slate-700 mb-1">
                 Cerita / Narasi Bisnis
               </label>
@@ -385,14 +423,38 @@ export const EditorRightSidebar: React.FC<Props> = ({
 
             <div>
               <label className="block font-semibold text-slate-700 mb-1">
-                URL Gambar Tentang Kami
+                URL Gambar Utama
               </label>
               <input
                 type="text"
                 value={content.imageUrl || ''}
                 onChange={(e) => handleChange('imageUrl', e.target.value)}
+                placeholder="https://images.unsplash.com/..."
                 className="w-full px-3 py-2 border border-slate-200 rounded-lg outline-none font-mono text-[11px]"
               />
+              {content.imageUrl && (
+                <div className="mt-2 rounded-lg overflow-hidden border border-slate-200 h-24">
+                  <img src={content.imageUrl} alt="About preview" className="w-full h-full object-cover" />
+                </div>
+              )}
+            </div>
+
+            <div>
+              <label className="block font-semibold text-slate-700 mb-1">
+                URL Gambar Sekunder (Kolase Foto #2)
+              </label>
+              <input
+                type="text"
+                value={content.secondaryImageUrl || ''}
+                onChange={(e) => handleChange('secondaryImageUrl', e.target.value)}
+                placeholder="https://images.unsplash.com/... (opsional)"
+                className="w-full px-3 py-2 border border-slate-200 rounded-lg outline-none font-mono text-[11px]"
+              />
+              {content.secondaryImageUrl && (
+                <div className="mt-2 rounded-lg overflow-hidden border border-slate-200 h-20 w-32">
+                  <img src={content.secondaryImageUrl} alt="Secondary preview" className="w-full h-full object-cover" />
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -401,7 +463,7 @@ export const EditorRightSidebar: React.FC<Props> = ({
         {section.type === 'services' && (
           <div className="space-y-4 pt-2 border-t border-slate-100">
             <div className="flex items-center justify-between">
-              <label className="font-semibold text-slate-700">Daftar Layanan</label>
+              <label className="font-semibold text-slate-700">Daftar Layanan & Foto</label>
               <button
                 type="button"
                 onClick={() => {
@@ -412,6 +474,7 @@ export const EditorRightSidebar: React.FC<Props> = ({
                       title: 'Layanan Baru',
                       description: 'Deskripsi lengkap layanan...',
                       price: 'Rp 50.000',
+                      imageUrl: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=600&q=80',
                       icon: 'check',
                     },
                   ]);
@@ -424,43 +487,50 @@ export const EditorRightSidebar: React.FC<Props> = ({
 
             <div className="space-y-3">
               {(content.items || []).map((item: any, idx: number) => (
-                <div key={idx} className="p-3 rounded-xl border border-slate-200 bg-slate-50 space-y-2">
+                <div key={idx} className="p-3 rounded-xl border border-slate-200 bg-slate-50 space-y-2.5">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex items-center gap-2">
                       <span className="font-bold text-slate-700 text-[11px]">Item #{idx + 1}</span>
-                      {idx > 0 && (
+
+                      {/* Urutan / Index Selector */}
+                      <div className="flex items-center gap-1 bg-white border border-slate-200 rounded-md px-1 py-0.5 shadow-2xs">
+                        <span className="text-[10px] text-slate-400 font-medium">Index:</span>
+                        <select
+                          value={idx + 1}
+                          onChange={(e) => moveItemToIndex('items', idx, parseInt(e.target.value) - 1)}
+                          className="text-[10px] font-bold text-blue-600 bg-transparent outline-none cursor-pointer"
+                        >
+                          {(content.items || []).map((_: any, optIdx: number) => (
+                            <option key={optIdx} value={optIdx + 1}>
+                              Ke-{optIdx + 1}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      {/* Up and Down Buttons */}
+                      <div className="flex items-center">
                         <button
                           type="button"
-                          onClick={() => {
-                            const items = [...content.items];
-                            const temp = items[idx];
-                            items[idx] = items[idx - 1];
-                            items[idx - 1] = temp;
-                            handleChange('items', items);
-                          }}
-                          className="p-0.5 rounded hover:bg-slate-200 text-slate-500"
+                          disabled={idx === 0}
+                          onClick={() => moveItemToIndex('items', idx, idx - 1)}
+                          className="p-0.5 rounded hover:bg-slate-200 text-slate-500 disabled:opacity-20"
                           title="Geser ke atas"
                         >
-                          <ChevronUp className="w-3 h-3" />
+                          <ChevronUp className="w-3.5 h-3.5" />
                         </button>
-                      )}
-                      {idx < content.items.length - 1 && (
                         <button
                           type="button"
-                          onClick={() => {
-                            const items = [...content.items];
-                            const temp = items[idx];
-                            items[idx] = items[idx + 1];
-                            items[idx + 1] = temp;
-                            handleChange('items', items);
-                          }}
-                          className="p-0.5 rounded hover:bg-slate-200 text-slate-500"
+                          disabled={idx === content.items.length - 1}
+                          onClick={() => moveItemToIndex('items', idx, idx + 1)}
+                          className="p-0.5 rounded hover:bg-slate-200 text-slate-500 disabled:opacity-20"
                           title="Geser ke bawah"
                         >
-                          <ChevronDown className="w-3 h-3" />
+                          <ChevronDown className="w-3.5 h-3.5" />
                         </button>
-                      )}
+                      </div>
                     </div>
+
                     <button
                       type="button"
                       onClick={() => {
@@ -469,10 +539,34 @@ export const EditorRightSidebar: React.FC<Props> = ({
                         handleChange('items', items);
                       }}
                       className="text-red-500 hover:text-red-700 p-0.5"
+                      title="Hapus Item"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
                   </div>
+
+                  {/* Thumbnail & Image URL */}
+                  <div className="flex items-center gap-2">
+                    {item.imageUrl ? (
+                      <img src={item.imageUrl} alt="Thumb" className="w-9 h-9 rounded-lg object-cover shrink-0 border border-slate-200" />
+                    ) : (
+                      <div className="w-9 h-9 rounded-lg bg-slate-200 flex items-center justify-center shrink-0 text-slate-400">
+                        <Image className="w-4 h-4" />
+                      </div>
+                    )}
+                    <input
+                      type="text"
+                      value={item.imageUrl || ''}
+                      onChange={(e) => {
+                        const items = [...content.items];
+                        items[idx] = { ...items[idx], imageUrl: e.target.value };
+                        handleChange('items', items);
+                      }}
+                      placeholder="URL Foto Menu (opsional)"
+                      className="flex-1 px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg outline-none font-mono text-[10px]"
+                    />
+                  </div>
+
                   <input
                     type="text"
                     value={item.title || ''}
@@ -481,7 +575,7 @@ export const EditorRightSidebar: React.FC<Props> = ({
                       items[idx] = { ...items[idx], title: e.target.value };
                       handleChange('items', items);
                     }}
-                    placeholder="Nama Layanan"
+                    placeholder="Nama Layanan / Menu"
                     className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg outline-none"
                   />
                   <input
@@ -504,7 +598,7 @@ export const EditorRightSidebar: React.FC<Props> = ({
                       handleChange('items', items);
                     }}
                     placeholder="Deskripsi singkat..."
-                    className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg outline-none"
+                    className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg outline-none text-[11px]"
                   />
                 </div>
               ))}
@@ -536,41 +630,47 @@ export const EditorRightSidebar: React.FC<Props> = ({
               {(content.items || []).map((item: any, idx: number) => (
                 <div key={idx} className="p-3 rounded-xl border border-slate-200 bg-slate-50 space-y-2">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex items-center gap-2">
                       <span className="font-bold text-slate-700 text-[11px]">Poin #{idx + 1}</span>
-                      {idx > 0 && (
+
+                      {/* Urutan / Index Selector */}
+                      <div className="flex items-center gap-1 bg-white border border-slate-200 rounded-md px-1 py-0.5 shadow-2xs">
+                        <span className="text-[10px] text-slate-400 font-medium">Index:</span>
+                        <select
+                          value={idx + 1}
+                          onChange={(e) => moveItemToIndex('items', idx, parseInt(e.target.value) - 1)}
+                          className="text-[10px] font-bold text-blue-600 bg-transparent outline-none cursor-pointer"
+                        >
+                          {(content.items || []).map((_: any, optIdx: number) => (
+                            <option key={optIdx} value={optIdx + 1}>
+                              Ke-{optIdx + 1}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div className="flex items-center">
                         <button
                           type="button"
-                          onClick={() => {
-                            const items = [...content.items];
-                            const temp = items[idx];
-                            items[idx] = items[idx - 1];
-                            items[idx - 1] = temp;
-                            handleChange('items', items);
-                          }}
-                          className="p-0.5 rounded hover:bg-slate-200 text-slate-500"
+                          disabled={idx === 0}
+                          onClick={() => moveItemToIndex('items', idx, idx - 1)}
+                          className="p-0.5 rounded hover:bg-slate-200 text-slate-500 disabled:opacity-20"
                           title="Geser ke atas"
                         >
-                          <ChevronUp className="w-3 h-3" />
+                          <ChevronUp className="w-3.5 h-3.5" />
                         </button>
-                      )}
-                      {idx < content.items.length - 1 && (
                         <button
                           type="button"
-                          onClick={() => {
-                            const items = [...content.items];
-                            const temp = items[idx];
-                            items[idx] = items[idx + 1];
-                            items[idx + 1] = temp;
-                            handleChange('items', items);
-                          }}
-                          className="p-0.5 rounded hover:bg-slate-200 text-slate-500"
+                          disabled={idx === content.items.length - 1}
+                          onClick={() => moveItemToIndex('items', idx, idx + 1)}
+                          className="p-0.5 rounded hover:bg-slate-200 text-slate-500 disabled:opacity-20"
                           title="Geser ke bawah"
                         >
-                          <ChevronDown className="w-3 h-3" />
+                          <ChevronDown className="w-3.5 h-3.5" />
                         </button>
-                      )}
+                      </div>
                     </div>
+
                     <button
                       type="button"
                       onClick={() => {
@@ -640,41 +740,47 @@ export const EditorRightSidebar: React.FC<Props> = ({
               {(content.items || []).map((item: any, idx: number) => (
                 <div key={idx} className="p-3 rounded-xl border border-slate-200 bg-slate-50 space-y-2">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex items-center gap-2">
                       <span className="font-bold text-slate-700 text-[11px]">Ulasan #{idx + 1}</span>
-                      {idx > 0 && (
+
+                      {/* Urutan / Index Selector */}
+                      <div className="flex items-center gap-1 bg-white border border-slate-200 rounded-md px-1 py-0.5 shadow-2xs">
+                        <span className="text-[10px] text-slate-400 font-medium">Index:</span>
+                        <select
+                          value={idx + 1}
+                          onChange={(e) => moveItemToIndex('items', idx, parseInt(e.target.value) - 1)}
+                          className="text-[10px] font-bold text-blue-600 bg-transparent outline-none cursor-pointer"
+                        >
+                          {(content.items || []).map((_: any, optIdx: number) => (
+                            <option key={optIdx} value={optIdx + 1}>
+                              Ke-{optIdx + 1}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div className="flex items-center">
                         <button
                           type="button"
-                          onClick={() => {
-                            const items = [...content.items];
-                            const temp = items[idx];
-                            items[idx] = items[idx - 1];
-                            items[idx - 1] = temp;
-                            handleChange('items', items);
-                          }}
-                          className="p-0.5 rounded hover:bg-slate-200 text-slate-500"
+                          disabled={idx === 0}
+                          onClick={() => moveItemToIndex('items', idx, idx - 1)}
+                          className="p-0.5 rounded hover:bg-slate-200 text-slate-500 disabled:opacity-20"
                           title="Geser ke atas"
                         >
-                          <ChevronUp className="w-3 h-3" />
+                          <ChevronUp className="w-3.5 h-3.5" />
                         </button>
-                      )}
-                      {idx < content.items.length - 1 && (
                         <button
                           type="button"
-                          onClick={() => {
-                            const items = [...content.items];
-                            const temp = items[idx];
-                            items[idx] = items[idx + 1];
-                            items[idx + 1] = temp;
-                            handleChange('items', items);
-                          }}
-                          className="p-0.5 rounded hover:bg-slate-200 text-slate-500"
+                          disabled={idx === content.items.length - 1}
+                          onClick={() => moveItemToIndex('items', idx, idx + 1)}
+                          className="p-0.5 rounded hover:bg-slate-200 text-slate-500 disabled:opacity-20"
                           title="Geser ke bawah"
                         >
-                          <ChevronDown className="w-3 h-3" />
+                          <ChevronDown className="w-3.5 h-3.5" />
                         </button>
-                      )}
+                      </div>
                     </div>
+
                     <button
                       type="button"
                       onClick={() => {
@@ -729,8 +835,34 @@ export const EditorRightSidebar: React.FC<Props> = ({
         {/* GALLERY SPECIFIC */}
         {section.type === 'gallery' && (
           <div className="space-y-4 pt-2 border-t border-slate-100">
+            <div>
+              <label className="block font-semibold text-slate-700 mb-1.5">
+                Bentuk / Rasio Foto Galeri
+              </label>
+              <div className="grid grid-cols-3 gap-1.5">
+                {[
+                  { val: 'square', label: 'Kotak (1:1)' },
+                  { val: 'landscape', label: 'Wide (16:9)' },
+                  { val: 'portrait', label: 'Tinggi (3:4)' },
+                ].map((opt) => (
+                  <button
+                    key={opt.val}
+                    type="button"
+                    onClick={() => handleChange('aspectRatio', opt.val)}
+                    className={`py-1.5 px-2 rounded-lg text-[10px] font-bold border transition text-center ${
+                      ((content.aspectRatio || 'square') === opt.val)
+                        ? 'bg-blue-600 border-blue-600 text-white shadow-xs'
+                        : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <div className="flex items-center justify-between">
-              <label className="font-semibold text-slate-700">Foto Galeri</label>
+              <label className="font-semibold text-slate-700">Foto Galeri & Urutan Index</label>
               <button
                 type="button"
                 onClick={() => {
@@ -754,41 +886,47 @@ export const EditorRightSidebar: React.FC<Props> = ({
               {(content.images || []).map((img: any, idx: number) => (
                 <div key={idx} className="p-3 rounded-xl border border-slate-200 bg-slate-50 space-y-2">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex items-center gap-2">
                       <span className="font-bold text-slate-700 text-[11px]">Foto #{idx + 1}</span>
-                      {idx > 0 && (
+
+                      {/* Urutan / Index Selector */}
+                      <div className="flex items-center gap-1 bg-white border border-slate-200 rounded-md px-1 py-0.5 shadow-2xs">
+                        <span className="text-[10px] text-slate-400 font-medium">Index:</span>
+                        <select
+                          value={idx + 1}
+                          onChange={(e) => moveItemToIndex('images', idx, parseInt(e.target.value) - 1)}
+                          className="text-[10px] font-bold text-blue-600 bg-transparent outline-none cursor-pointer"
+                        >
+                          {(content.images || []).map((_: any, optIdx: number) => (
+                            <option key={optIdx} value={optIdx + 1}>
+                              Ke-{optIdx + 1}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div className="flex items-center">
                         <button
                           type="button"
-                          onClick={() => {
-                            const images = [...content.images];
-                            const temp = images[idx];
-                            images[idx] = images[idx - 1];
-                            images[idx - 1] = temp;
-                            handleChange('images', images);
-                          }}
-                          className="p-0.5 rounded hover:bg-slate-200 text-slate-500"
+                          disabled={idx === 0}
+                          onClick={() => moveItemToIndex('images', idx, idx - 1)}
+                          className="p-0.5 rounded hover:bg-slate-200 text-slate-500 disabled:opacity-20"
                           title="Geser ke atas"
                         >
-                          <ChevronUp className="w-3 h-3" />
+                          <ChevronUp className="w-3.5 h-3.5" />
                         </button>
-                      )}
-                      {idx < content.images.length - 1 && (
                         <button
                           type="button"
-                          onClick={() => {
-                            const images = [...content.images];
-                            const temp = images[idx];
-                            images[idx] = images[idx + 1];
-                            images[idx + 1] = temp;
-                            handleChange('images', images);
-                          }}
-                          className="p-0.5 rounded hover:bg-slate-200 text-slate-500"
+                          disabled={idx === content.images.length - 1}
+                          onClick={() => moveItemToIndex('images', idx, idx + 1)}
+                          className="p-0.5 rounded hover:bg-slate-200 text-slate-500 disabled:opacity-20"
                           title="Geser ke bawah"
                         >
-                          <ChevronDown className="w-3 h-3" />
+                          <ChevronDown className="w-3.5 h-3.5" />
                         </button>
-                      )}
+                      </div>
                     </div>
+
                     <button
                       type="button"
                       onClick={() => {
@@ -801,17 +939,29 @@ export const EditorRightSidebar: React.FC<Props> = ({
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
                   </div>
-                  <input
-                    type="text"
-                    value={img.imageUrl || ''}
-                    onChange={(e) => {
-                      const images = [...content.images];
-                      images[idx] = { ...images[idx], imageUrl: e.target.value };
-                      handleChange('images', images);
-                    }}
-                    placeholder="URL Gambar"
-                    className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg outline-none font-mono text-[11px]"
-                  />
+
+                  {/* Thumbnail & URL */}
+                  <div className="flex items-center gap-2">
+                    {img.imageUrl ? (
+                      <img src={img.imageUrl} alt="Thumb" className="w-10 h-10 rounded-lg object-cover shrink-0 border border-slate-200" />
+                    ) : (
+                      <div className="w-10 h-10 rounded-lg bg-slate-200 flex items-center justify-center shrink-0 text-slate-400">
+                        <Image className="w-4 h-4" />
+                      </div>
+                    )}
+                    <input
+                      type="text"
+                      value={img.imageUrl || ''}
+                      onChange={(e) => {
+                        const images = [...content.images];
+                        images[idx] = { ...images[idx], imageUrl: e.target.value };
+                        handleChange('images', images);
+                      }}
+                      placeholder="URL Gambar"
+                      className="flex-1 px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg outline-none font-mono text-[10px]"
+                    />
+                  </div>
+
                   <input
                     type="text"
                     value={img.caption || ''}

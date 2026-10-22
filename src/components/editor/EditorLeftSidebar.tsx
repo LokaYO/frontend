@@ -100,7 +100,7 @@ export const EditorLeftSidebar: React.FC<Props> = ({
   };
 
   return (
-    <aside className="w-80 bg-white border-r border-slate-200 flex flex-col shrink-0 h-[calc(100vh-4rem)]">
+    <aside className="w-80 bg-white border-r border-slate-200 flex flex-col shrink-0 h-full z-20 overflow-hidden select-none">
       {/* Sidebar Tabs */}
       <div className="flex border-b border-slate-200 bg-slate-50/70 p-1.5 gap-1 shrink-0">
         <button

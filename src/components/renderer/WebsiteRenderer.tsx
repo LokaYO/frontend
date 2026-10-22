@@ -173,6 +173,7 @@ export const WebsiteRenderer: React.FC<Props> = ({
         return (
           <div
             key={section.id}
+            id={`editor-section-${section.id}`}
             onDragOver={(e) => handleDragOver(e, index)}
             onDrop={(e) => handleDrop(e, index)}
             className="relative"

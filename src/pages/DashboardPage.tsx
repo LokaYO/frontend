@@ -108,11 +108,11 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
   );
 
   return (
-    <div className="min-h-screen bg-slate-50 flex">
-      {/* SaaS Sidebar */}
-      <aside className="w-64 bg-white border-r border-slate-200 hidden md:flex flex-col shrink-0">
+    <div className="fixed inset-0 h-screen max-h-screen w-screen overflow-hidden bg-slate-50 flex">
+      {/* SaaS Sidebar (Fixed & Pinned for Both Admin and Client) */}
+      <aside className="w-64 h-full bg-white border-r border-slate-200 hidden md:flex flex-col shrink-0 z-30 select-none">
         {/* Brand */}
-        <div className="h-16 px-6 border-b border-slate-100 flex items-center gap-3">
+        <div className="h-16 px-6 border-b border-slate-100 flex items-center gap-3 shrink-0">
           <div
             className={`w-8 h-8 rounded-xl ${
               isAdmin ? 'bg-purple-600' : 'bg-blue-600'
@@ -135,7 +135,7 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
         </div>
 
         {/* Navigation */}
-        <nav className="p-4 space-y-1.5 flex-1">
+        <nav className="p-4 space-y-1.5 flex-1 min-h-0 overflow-y-auto">
           {isAdmin ? (
             /* ADMIN ONLY NAVIGATION - PURELY MONITORING */
             <>
@@ -220,7 +220,7 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
         </nav>
 
         {/* User Footer */}
-        <div className="p-4 border-t border-slate-100 flex items-center justify-between">
+        <div className="p-4 border-t border-slate-100 flex items-center justify-between shrink-0 bg-slate-50/50">
           <div className="min-w-0 pr-2">
             <p className="text-xs font-bold text-slate-900 truncate">{user?.name || 'Blackiee'}</p>
             <p className="text-[11px] text-slate-400 truncate">{user?.email}</p>
@@ -236,10 +236,10 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
         </div>
       </aside>
 
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0">
-        {/* Top Header */}
-        <header className="h-16 bg-white border-b border-slate-200 px-6 sm:px-8 flex items-center justify-between">
+      {/* Main Content Area (Independent Scroll Container) */}
+      <div className="flex-1 h-full min-h-0 flex flex-col min-w-0 overflow-hidden">
+        {/* Top Header - Fixed at Top */}
+        <header className="h-16 bg-white border-b border-slate-200 px-6 sm:px-8 flex items-center justify-between shrink-0 z-20">
           <div className="flex items-center gap-3">
             <div className="md:hidden flex items-center gap-2">
               <div
@@ -283,8 +283,8 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
           </div>
         </header>
 
-        {/* Body Content */}
-        <main className="flex-1 overflow-y-auto p-6 sm:p-8 space-y-8 max-w-7xl w-full mx-auto">
+        {/* Body Content (Only this scrolls smoothly) */}
+        <main className="flex-1 min-h-0 overflow-y-auto p-6 sm:p-8 space-y-8 max-w-7xl w-full mx-auto pb-24 md:pb-8 scroll-smooth">
           {/* TAB 1: WEBSITES (CLIENT ONLY) */}
           {!isAdmin && activeNav === 'websites' && (
             <div className="space-y-6">
@@ -573,6 +573,83 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
           )}
         </main>
       </div>
+
+      {/* Mobile Fixed Bottom Navigation Bar (Always Pinned) */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 px-3 py-2 flex items-center justify-around z-40 shadow-lg">
+        {isAdmin ? (
+          <>
+            <button
+              type="button"
+              onClick={() => setActiveNav('admin')}
+              className={`flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-[10px] font-bold transition cursor-pointer ${
+                activeNav === 'admin' ? 'text-purple-600' : 'text-slate-400 hover:text-slate-700'
+              }`}
+            >
+              <ShieldCheck className="w-5 h-5" />
+              <span>Monitoring</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveNav('settings')}
+              className={`flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-[10px] font-bold transition cursor-pointer ${
+                activeNav === 'settings' ? 'text-purple-600' : 'text-slate-400 hover:text-slate-700'
+              }`}
+            >
+              <Settings className="w-5 h-5" />
+              <span>Pengaturan</span>
+            </button>
+            <button
+              type="button"
+              onClick={logout}
+              className="flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-[10px] font-bold text-slate-400 hover:text-red-600 transition cursor-pointer"
+            >
+              <LogOut className="w-5 h-5" />
+              <span>Keluar</span>
+            </button>
+          </>
+        ) : (
+          <>
+            <button
+              type="button"
+              onClick={() => setActiveNav('websites')}
+              className={`flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-[10px] font-bold transition cursor-pointer ${
+                activeNav === 'websites' ? 'text-blue-600' : 'text-slate-400 hover:text-slate-700'
+              }`}
+            >
+              <Layers className="w-5 h-5" />
+              <span>Website</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveNav('templates')}
+              className={`flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-[10px] font-bold transition cursor-pointer ${
+                activeNav === 'templates' ? 'text-blue-600' : 'text-slate-400 hover:text-slate-700'
+              }`}
+            >
+              <LayoutTemplate className="w-5 h-5" />
+              <span>Template</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveNav('settings')}
+              className={`flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-[10px] font-bold transition cursor-pointer ${
+                activeNav === 'settings' ? 'text-blue-600' : 'text-slate-400 hover:text-slate-700'
+              }`}
+            >
+              <Settings className="w-5 h-5" />
+              <span>Pengaturan</span>
+            </button>
+            <button
+              type="button"
+              onClick={logout}
+              className="flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-[10px] font-bold text-slate-400 hover:text-red-600 transition cursor-pointer"
+            >
+              <LogOut className="w-5 h-5" />
+              <span>Keluar</span>
+            </button>
+          </>
+        )}
+      </nav>
 
       {/* Create Website Modal (Khusus Client Pengguna Saja) */}
       {!isAdmin && (
