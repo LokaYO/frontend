@@ -34,6 +34,7 @@ interface Props {
   onReorderSections?: (newSections: Section[]) => void;
   onUpdateSectionContent?: (sectionId: string, content: any) => void;
   showGridLines?: boolean;
+  ownerPlan?: 'free' | 'pro';
 }
 
 export const getFontFamilyClass = (font?: string) => {
@@ -73,6 +74,7 @@ export const WebsiteRenderer: React.FC<Props> = ({
   onReorderSections,
   onUpdateSectionContent,
   showGridLines = false,
+  ownerPlan = 'free',
 }) => {
   const sortedSections = [...sections].sort((a, b) => a.position - b.position);
 
@@ -368,6 +370,33 @@ export const WebsiteRenderer: React.FC<Props> = ({
           closeTime={businessInfo?.closeTime}
           isEditor={isEditor}
         />
+      )}
+
+      {/* Free Plan Watermark Footer (100% Removed / White-label for PRO Plan) */}
+      {ownerPlan !== 'pro' && (
+        <aside
+          aria-label="Branding Platform"
+          className="py-5 px-4 bg-slate-900 text-center flex flex-col sm:flex-row items-center justify-center gap-2 border-t border-slate-800 text-slate-400 select-none"
+        >
+          <div className="flex items-center gap-1.5 text-xs">
+            <span>Dibuat dengan</span>
+            <a
+              href="/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white font-bold hover:text-blue-400 transition underline underline-offset-2 flex items-center gap-1"
+            >
+              <span>⚡ LOKA Site</span>
+            </a>
+          </div>
+          <span className="hidden sm:inline text-slate-600">•</span>
+          <a
+            href="/"
+            className="text-[11px] font-semibold text-blue-400 hover:text-blue-300 transition"
+          >
+            Buat landing page bisnis Anda gratis →
+          </a>
+        </aside>
       )}
     </div>
   );

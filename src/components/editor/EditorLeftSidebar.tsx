@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Section, ThemeConfig, BusinessInfo } from '../../types/schema';
+import { useAuth } from '../../context/AuthContext';
 import { ImageUploadInput } from '../common/ImageUploadInput';
 import {
   Layers,
@@ -15,6 +16,8 @@ import {
   Globe,
   Search,
   MessageCircle,
+  Crown,
+  Sparkles,
 } from 'lucide-react';
 import {
   DndContext,
@@ -245,6 +248,7 @@ export const EditorLeftSidebar: React.FC<Props> = ({
   slug,
   onUpdateSlug,
 }) => {
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<'sections' | 'theme' | 'business' | 'seo'>('sections');
   const [seoPreviewType, setSeoPreviewType] = useState<'whatsapp' | 'google' | 'social'>('whatsapp');
 
@@ -555,6 +559,37 @@ export const EditorLeftSidebar: React.FC<Props> = ({
               />
             </div>
             <p className="text-[10px] text-slate-400 mt-1">Hanya huruf kecil, angka, dan tanda hubung (-)</p>
+            {user?.plan === 'pro' ? (
+              <div className="mt-2 p-2.5 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl space-y-2">
+                <div className="flex items-center gap-1.5 text-[11px] font-bold text-amber-900">
+                  <Crown className="w-3.5 h-3.5 text-amber-600 fill-amber-500 shrink-0" />
+                  <span>Fitur PRO Aktif: Custom URL Bersih</span>
+                </div>
+                {/-\d{4}$/.test(slug) ? (
+                  <button
+                    type="button"
+                    onClick={() => onUpdateSlug(slug.replace(/-\d{4}$/, ''))}
+                    className="w-full py-1.5 px-2.5 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-[10px] font-bold transition flex items-center justify-center gap-1 cursor-pointer shadow-2xs active:scale-95"
+                  >
+                    <Sparkles className="w-3 h-3" />
+                    <span>Hapus Angka Acak (Jadikan: /{slug.replace(/-\d{4}$/, '')})</span>
+                  </button>
+                ) : (
+                  <p className="text-[10px] text-amber-800 leading-relaxed">
+                    URL Anda sudah rapi dan bersih tanpa akhiran angka acak sistem.
+                  </p>
+                )}
+              </div>
+            ) : (
+              <div className="mt-2 p-2 bg-slate-50 border border-slate-200 rounded-lg text-[10px] text-slate-500 space-y-0.5">
+                <p className="font-semibold text-slate-700 flex items-center gap-1">
+                  <span>ℹ️ Paket Gratis (Free)</span>
+                </p>
+                <p className="leading-relaxed">
+                  URL website gratis otomatis disematkan 4 digit angka acak saat disimpan (misal: <span className="font-mono text-slate-700 bg-slate-200/70 px-1 rounded">/{slug || 'toko'}-1234</span>). Upgrade ke PRO untuk custom URL bersih &amp; hapus watermark.
+                </p>
+              </div>
+            )}
           </div>
 
           <div>
@@ -661,6 +696,27 @@ export const EditorLeftSidebar: React.FC<Props> = ({
               placeholder="@namabisnis"
               className="w-full text-xs px-3 py-2 border border-slate-200 rounded-lg outline-none focus:ring-1 focus:ring-blue-500"
             />
+          </div>
+
+          {/* White-Label Watermark Status */}
+          <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
+            <div className="flex items-center justify-between text-xs">
+              <span className="font-semibold text-slate-700">Watermark LOKA:</span>
+              {user?.plan === 'pro' ? (
+                <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded-full text-[10px] font-bold">
+                  Dihapus (100% White-label)
+                </span>
+              ) : (
+                <span className="px-2 py-0.5 bg-slate-200 text-slate-600 rounded-full text-[10px] font-semibold">
+                  Tampil (Paket Free)
+                </span>
+              )}
+            </div>
+            <p className="text-[10px] text-slate-400 leading-relaxed">
+              {user?.plan === 'pro'
+                ? 'Website Anda 100% white-label tanpa footer branding platform LOKA.'
+                : 'Tingkatkan ke paket PRO untuk otomatis menghapus watermark di bagian bawah halaman.'}
+            </p>
           </div>
         </div>
       )}

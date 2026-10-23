@@ -75,6 +75,13 @@ export const apiClient = {
       ...options,
     }),
 
+  patch: <T = any>(endpoint: string, body?: any, options?: RequestOptions) =>
+    request<T>(endpoint, {
+      method: 'PATCH',
+      body: body ? JSON.stringify(body) : undefined,
+      ...options,
+    }),
+
   delete: <T = any>(endpoint: string, options?: RequestOptions) =>
     request<T>(endpoint, { method: 'DELETE', ...options }),
 };

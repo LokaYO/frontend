@@ -20,6 +20,7 @@ import {
   Layers,
   MapPin,
   MessageCircle,
+  Crown,
 } from 'lucide-react';
 
 interface Props {
@@ -33,7 +34,7 @@ export const CreateWebsiteModal: React.FC<Props> = ({
   onClose,
   onWebsiteCreated,
 }) => {
-  const { token } = useAuth();
+  const { token, user } = useAuth();
   const [step, setStep] = useState<'choose_method' | 'ai_form' | 'template_gallery'>('choose_method');
   const [selectedTemplate, setSelectedTemplate] = useState<PresetTemplate | null>(null);
   const [loading, setLoading] = useState(false);
@@ -154,6 +155,12 @@ export const CreateWebsiteModal: React.FC<Props> = ({
               {step === 'ai_form' && '✨ Buat dengan Gemini AI'}
               {step === 'template_gallery' && '🎨 Pilih dari Template Siap Pakai'}
             </h3>
+            {user?.plan === 'pro' && (
+              <span className="ml-2 inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-100 text-amber-800 text-[10px] font-bold">
+                <Crown className="w-3 h-3 text-amber-600 fill-amber-500" />
+                <span>PRO: Clean URL</span>
+              </span>
+            )}
           </div>
           <button
             type="button"

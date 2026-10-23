@@ -7,8 +7,10 @@ export interface User {
   name: string;
   email: string;
   role?: UserRole;
+  plan?: 'free' | 'pro';
+  subscriptionUntil?: string | null;
   lastLoginAt?: string;
-  createdAt: string;
+  createdAt?: string;
 }
 
 export type WebsiteStatus = 'draft' | 'published' | 'suspended';
@@ -31,6 +33,8 @@ export interface BusinessInfo {
   seoTitle?: string;
   seoDescription?: string;
   ogImageUrl?: string;
+  tagline?: string;
+  logo?: string;
 }
 
 export interface Lead {
@@ -226,6 +230,7 @@ export interface Website {
   status: WebsiteStatus;
   template?: string;
   suspendReason?: string;
+  ownerPlan?: 'free' | 'pro';
   businessInfo: BusinessInfo;
   theme: ThemeConfig;
   viewsCount?: number;

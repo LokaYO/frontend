@@ -57,9 +57,9 @@ export const PublicSitePage: React.FC<Props> = ({ slug }) => {
   useEffect(() => {
     if (!website) return;
 
-    const info = website.businessInfo || {};
-    const title = info.seoTitle || website.title || info.name || 'Website Resmi';
-    const description = info.seoDescription || info.tagline || 'Selamat datang di website resmi kami.';
+    const info = (website.businessInfo || {}) as any;
+    const title = info.seoTitle || info.name || website.name || 'Website Resmi';
+    const description = info.seoDescription || info.tagline || info.description || 'Selamat datang di website resmi kami.';
     const imageUrl = info.ogImageUrl || info.logo || '';
 
     document.title = title;
@@ -187,6 +187,7 @@ export const PublicSitePage: React.FC<Props> = ({ slug }) => {
         businessInfo={website.businessInfo}
         slug={slug}
         isEditor={false}
+        ownerPlan={website.ownerPlan}
       />
     </div>
   );

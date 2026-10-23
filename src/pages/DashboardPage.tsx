@@ -30,10 +30,12 @@ import {
   Megaphone,
   X,
   ShieldAlert,
+  Crown,
 } from 'lucide-react';
 import { AdminMonitoringPanel } from '../components/admin/AdminMonitoringPanel';
 import { QrCodeModal } from '../components/common/QrCodeModal';
 import { LeadsModal } from '../components/common/LeadsModal';
+import { PricingModal } from '../components/modals/PricingModal';
 import { adminService, AdminAnnouncement } from '../services/admin.service';
 import { useToast } from '../context/ToastContext';
 
@@ -54,6 +56,7 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
     isAdmin ? 'admin' : (initialNav || 'websites')
   );
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isPricingModalOpen, setIsPricingModalOpen] = useState(false);
   const [copiedSlug, setCopiedSlug] = useState<string | null>(null);
   const [selectedQrSite, setSelectedQrSite] = useState<Website | null>(null);
   const [selectedLeadsSite, setSelectedLeadsSite] = useState<Website | null>(null);
@@ -162,7 +165,7 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
       await fetchWebsites();
       toast.success(
         'Website Berhasil Diduplikasi!',
-        `Salinan baru "${res.website?.name || 'Website Copy'}" siap dikustomisasi.`
+        `Salinan baru "${res.name || 'Website Copy'}" siap dikustomisasi.`
       );
     } catch (err: any) {
       toast.error('Gagal Menduplikasi', err.message || 'Terjadi kendala saat kloning website.');
@@ -347,6 +350,30 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
           </div>
 
           <div className="flex items-center gap-3">
+            {/* PRO BADGE / UPGRADE BUTTON */}
+            {!isAdmin && (
+              user?.plan === 'pro' ? (
+                <button
+                  type="button"
+                  onClick={() => setIsPricingModalOpen(true)}
+                  className="flex items-center gap-1.5 px-3.5 py-1.5 bg-gradient-to-r from-amber-500/15 to-orange-500/15 hover:from-amber-500/25 hover:to-orange-500/25 border border-amber-300 rounded-xl text-amber-800 text-xs font-bold transition shadow-2xs hover:shadow-xs active:scale-95 cursor-pointer"
+                  title="Klik untuk melihat status langganan & seluruh benefit PRO Anda"
+                >
+                  <Crown className="w-3.5 h-3.5 text-amber-600 fill-amber-500" />
+                  <span>PRO PLAN</span>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setIsPricingModalOpen(true)}
+                  className="flex items-center gap-1.5 px-3.5 py-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-xl text-xs font-bold shadow-xs active:scale-95 transition cursor-pointer"
+                >
+                  <Crown className="w-3.5 h-3.5 fill-current" />
+                  <span>⭐ Upgrade ke Pro</span>
+                </button>
+              )
+            )}
+
             {/* ONLY REGULAR CLIENTS CAN CREATE WEBSITES */}
             {!isAdmin && (
               <button
@@ -898,6 +925,16 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
             isOpen={!!selectedLeadsSite}
             onClose={() => setSelectedLeadsSite(null)}
             website={selectedLeadsSite}
+          />
+
+          {/* Pricing & Midtrans Payment Modal */}
+          <PricingModal
+            isOpen={isPricingModalOpen}
+            onClose={() => setIsPricingModalOpen(false)}
+            onUpgraded={() => {
+              fetchWebsites();
+              window.location.reload();
+            }}
           />
         </>
       )}

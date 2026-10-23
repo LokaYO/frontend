@@ -16,7 +16,7 @@ interface Props {
 }
 
 export const EditorPage: React.FC<Props> = ({ websiteId, onBackToDashboard }) => {
-  const { token } = useAuth();
+  const { token, user } = useAuth();
   const [website, setWebsite] = useState<Website | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -309,6 +309,7 @@ export const EditorPage: React.FC<Props> = ({ websiteId, onBackToDashboard }) =>
               businessInfo={website.businessInfo}
               slug={website.slug}
               isEditor={!previewMode}
+              ownerPlan={user?.plan}
               activeSectionId={activeSectionId}
               onSelectSection={handleSelectSection}
               onMoveSection={handleMoveSection}
