@@ -23,12 +23,31 @@ export interface BusinessInfo {
   services?: string;
   targetCustomer?: string;
   preferredStyle?: 'modern' | 'minimalist' | 'warm' | 'bold' | 'elegant';
+  operatingHours?: string;
+  openTime?: string;
+  closeTime?: string;
+  whatsappMessageTemplate?: string;
+  enableFloatingWhatsapp?: boolean;
+  seoTitle?: string;
+  seoDescription?: string;
+  ogImageUrl?: string;
+}
+
+export interface Lead {
+  id: string;
+  websiteId: string;
+  name: string;
+  phone: string;
+  message: string;
+  serviceInterest?: string;
+  status: 'unread' | 'read';
+  createdAt: string;
 }
 
 export interface ThemeConfig {
   primaryColor: string;
   secondaryColor: string;
-  font: 'sans' | 'serif' | 'display';
+  font: 'sans' | 'serif' | 'display' | 'poppins' | 'oswald' | 'lora' | 'montserrat' | 'cinzel' | 'inter' | string;
   accentColor?: string;
   backgroundColor?: string;
 }
@@ -42,6 +61,7 @@ export type SectionType =
   | 'gallery'
   | 'testimonials'
   | 'cta'
+  | 'faq'
   | 'contact'
   | 'footer';
 
@@ -162,6 +182,19 @@ export interface FooterContent {
   quickLinks?: Array<{ label: string; href: string }>;
 }
 
+export interface FaqItem {
+  id?: string;
+  question: string;
+  answer: string;
+}
+
+export interface FaqContent {
+  badge?: string;
+  title: string;
+  subtitle?: string;
+  items: FaqItem[];
+}
+
 export type SectionContent =
   | NavbarContent
   | HeroContent
@@ -171,6 +204,7 @@ export type SectionContent =
   | GalleryContent
   | TestimonialsContent
   | CtaContent
+  | FaqContent
   | ContactContent
   | FooterContent;
 
@@ -193,6 +227,8 @@ export interface Website {
   template?: string;
   businessInfo: BusinessInfo;
   theme: ThemeConfig;
+  viewsCount?: number;
+  whatsappClicksCount?: number;
   createdAt: string;
   updatedAt: string;
   sections?: Section[];

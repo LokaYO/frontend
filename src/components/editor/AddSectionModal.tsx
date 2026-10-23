@@ -12,6 +12,7 @@ import {
   Flame,
   MapPin,
   FileText,
+  HelpCircle,
 } from 'lucide-react';
 
 interface Props {
@@ -204,6 +205,31 @@ export const AddSectionModal: React.FC<Props> = ({
         buttonText: 'Chat WhatsApp Sekarang',
         buttonUrl: '#contact',
         note: 'Respon cepat setiap hari!',
+      }),
+    },
+    {
+      type: 'faq',
+      title: 'Tanya Jawab (FAQ)',
+      description: 'Pertanyaan yang sering diajukan pelanggan dengan format accordion buka-tutup.',
+      icon: <HelpCircle className="w-5 h-5 text-emerald-500" />,
+      defaultContent: () => ({
+        badge: 'FAQ',
+        title: 'Pertanyaan yang Sering Diajukan',
+        subtitle: 'Temukan jawaban cepat untuk pertanyaan umum seputar layanan kami.',
+        items: [
+          {
+            question: 'Bagaimana cara melakukan pemesanan atau reservasi?',
+            answer: 'Anda dapat langsung menekan tombol WhatsApp di website ini untuk terhubung langsung dengan admin kami.',
+          },
+          {
+            question: 'Apakah melayani pembayaran non-tunai (QRIS / Transfer)?',
+            answer: 'Ya, kami menerima semua jenis pembayaran tunai, QRIS, dan transfer bank lokal.',
+          },
+          {
+            question: 'Apakah ada garansi atau jaminan kepuasan?',
+            answer: 'Tentu saja, kami memberikan garansi perbaikan atau konsultasi ulang jika ada layanan yang belum sesuai.',
+          },
+        ],
       }),
     },
     {

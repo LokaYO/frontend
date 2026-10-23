@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { NavbarContent, ThemeConfig } from '../../types/schema';
 import { Menu, X, Phone, ArrowRight } from 'lucide-react';
+import { OperatingStatusBadge } from '../common/OperatingStatusBadge';
 
 interface Props {
   content: NavbarContent;
@@ -28,9 +29,18 @@ export const NavbarSection: React.FC<Props> = ({ content, theme, isEditor }) => 
                 {content.brandName?.charAt(0) || 'L'}
               </div>
             )}
-            <span className="font-bold text-lg sm:text-xl tracking-tight text-slate-900">
-              {content.brandName || 'Nama Bisnis'}
-            </span>
+            <div className="flex items-center gap-2.5">
+              <span className="font-bold text-lg sm:text-xl tracking-tight text-slate-900">
+                {content.brandName || 'Nama Bisnis'}
+              </span>
+              <OperatingStatusBadge
+                operatingHours={(content as any).operatingHours}
+                openTime={(content as any).openTime}
+                closeTime={(content as any).closeTime}
+                showDetail={false}
+                className="hidden lg:inline-flex"
+              />
+            </div>
           </div>
 
           {/* Desktop Nav Links */}

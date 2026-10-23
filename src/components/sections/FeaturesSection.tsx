@@ -1,11 +1,30 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { FeaturesContent, ThemeConfig } from '../../types/schema';
-import { Shield, Clock, Smile, Award, Wifi, Truck, Wrench, CheckCircle } from 'lucide-react';
+import { Shield, Clock, Smile, Award, Wifi, Truck, Wrench, CheckCircle, GripVertical } from 'lucide-react';
+import {
+  DndContext,
+  closestCorners,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  rectSortingStrategy,
+  useSortable,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { ensureItemIds } from '../../utils/dndUtils';
 
 interface Props {
   content: FeaturesContent;
   theme: ThemeConfig;
   isEditor?: boolean;
+  onUpdateContent?: (newContent: FeaturesContent) => void;
 }
 
 const ICON_MAP: Record<string, React.ReactNode> = {
@@ -18,7 +37,70 @@ const ICON_MAP: Record<string, React.ReactNode> = {
   wrench: <Wrench className="w-6 h-6" />,
 };
 
-export const FeaturesSection: React.FC<Props> = ({ content, theme }) => {
+interface FeatureCardProps {
+  id: string;
+  item: any;
+  idx: number;
+  isEditor?: boolean;
+  primaryColor: string;
+}
+
+const SortableFeatureCard: React.FC<FeatureCardProps> = ({ id, item, idx, isEditor, primaryColor }) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id });
+
+  const style: React.CSSProperties = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    zIndex: isDragging ? 50 : undefined,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={`p-8 rounded-2xl border transition-all space-y-4 text-center sm:text-left relative select-none ${
+        isDragging
+          ? 'shadow-2xl ring-2 ring-blue-500 scale-[1.03] opacity-90 z-50 bg-blue-50/40 border-blue-400'
+          : 'border-slate-100 bg-slate-50/50 hover:bg-white hover:border-slate-200 hover:shadow-md'
+      }`}
+    >
+      {/* Visual Index Badge + Drag Handle in Editor */}
+      {isEditor && (
+        <div
+          {...attributes}
+          {...listeners}
+          className="absolute top-3 right-3 z-30 flex items-center gap-1.5 bg-white hover:bg-blue-600 hover:text-white text-slate-700 text-[11px] font-mono font-bold px-2.5 py-1 rounded-full border border-slate-200 shadow-xs cursor-grab active:cursor-grabbing transition"
+          title="Tahan dan geser (drag) untuk memindahkan keunggulan ini"
+        >
+          <GripVertical className="w-3.5 h-3.5 opacity-70" />
+          <span>#{idx + 1}</span>
+        </div>
+      )}
+
+      <div
+        className="w-12 h-12 rounded-xl flex items-center justify-center text-white mx-auto sm:mx-0 shadow-xs"
+        style={{ backgroundColor: primaryColor }}
+      >
+        {ICON_MAP[item.icon || 'shield'] || <CheckCircle className="w-6 h-6" />}
+      </div>
+      <h3 className="text-lg font-bold text-slate-900">
+        {item.title}
+      </h3>
+      <p className="text-sm text-slate-600 leading-relaxed">
+        {item.description}
+      </p>
+    </div>
+  );
+};
+
+export const FeaturesSection: React.FC<Props> = ({ content, theme, isEditor, onUpdateContent }) => {
   const primaryColor = theme.primaryColor || '#2563eb';
   const columns = (content as any).columns || '3';
   const padding = (content as any).padding || 'normal';
@@ -36,6 +118,32 @@ export const FeaturesSection: React.FC<Props> = ({ content, theme }) => {
       : columns === '4'
       ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'
       : 'grid-cols-1 md:grid-cols-3';
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 5,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  const items = useMemo(() => ensureItemIds(content.items, 'feat'), [content.items]);
+  const itemIds = useMemo(() => items.map((it) => it.id), [items]);
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (over && active.id !== over.id) {
+      const oldIndex = items.findIndex((it) => it.id === active.id);
+      const newIndex = items.findIndex((it) => it.id === over.id);
+      if (oldIndex !== -1 && newIndex !== -1) {
+        const reordered = arrayMove(items, oldIndex, newIndex);
+        onUpdateContent?.({ ...content, items: reordered });
+      }
+    }
+  };
 
   return (
     <section id="features" className={`${paddingClass} bg-white`}>
@@ -59,27 +167,50 @@ export const FeaturesSection: React.FC<Props> = ({ content, theme }) => {
           )}
         </div>
 
-        <div className={`grid ${gridClass} gap-8`}>
-          {content.items?.map((item, idx) => (
-            <div
-              key={idx}
-              className="p-8 rounded-2xl border border-slate-100 bg-slate-50/50 hover:bg-white hover:border-slate-200 hover:shadow-md transition-all space-y-4 text-center sm:text-left"
-            >
-              <div
-                className="w-12 h-12 rounded-xl flex items-center justify-center text-white mx-auto sm:mx-0 shadow-xs"
-                style={{ backgroundColor: primaryColor }}
-              >
-                {ICON_MAP[item.icon || 'shield'] || <CheckCircle className="w-6 h-6" />}
+        {isEditor && onUpdateContent ? (
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCorners}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext items={itemIds} strategy={rectSortingStrategy}>
+              <div className={`grid ${gridClass} gap-8`}>
+                {items.map((item, idx) => (
+                  <SortableFeatureCard
+                    key={item.id}
+                    id={item.id}
+                    item={item}
+                    idx={idx}
+                    isEditor={isEditor}
+                    primaryColor={primaryColor}
+                  />
+                ))}
               </div>
-              <h3 className="text-lg font-bold text-slate-900">
-                {item.title}
-              </h3>
-              <p className="text-sm text-slate-600 leading-relaxed">
-                {item.description}
-              </p>
-            </div>
-          ))}
-        </div>
+            </SortableContext>
+          </DndContext>
+        ) : (
+          <div className={`grid ${gridClass} gap-8`}>
+            {items.map((item, idx) => (
+              <div
+                key={item.id || idx}
+                className="p-8 rounded-2xl border border-slate-100 bg-slate-50/50 hover:bg-white hover:border-slate-200 hover:shadow-md transition-all space-y-4 text-center sm:text-left"
+              >
+                <div
+                  className="w-12 h-12 rounded-xl flex items-center justify-center text-white mx-auto sm:mx-0 shadow-xs"
+                  style={{ backgroundColor: primaryColor }}
+                >
+                  {ICON_MAP[item.icon || 'shield'] || <CheckCircle className="w-6 h-6" />}
+                </div>
+                <h3 className="text-lg font-bold text-slate-900">
+                  {item.title}
+                </h3>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  {item.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

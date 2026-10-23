@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Section, ThemeConfig } from '../../types/schema';
+import { Section, ThemeConfig, BusinessInfo } from '../../types/schema';
 import { NavbarSection } from '../sections/NavbarSection';
 import { HeroSection } from '../sections/HeroSection';
 import { AboutSection } from '../sections/AboutSection';
@@ -8,8 +8,10 @@ import { FeaturesSection } from '../sections/FeaturesSection';
 import { GallerySection } from '../sections/GallerySection';
 import { TestimonialsSection } from '../sections/TestimonialsSection';
 import { CtaSection } from '../sections/CtaSection';
+import { FaqSection } from '../sections/FaqSection';
 import { ContactSection } from '../sections/ContactSection';
 import { FooterSection } from '../sections/FooterSection';
+import { FloatingWhatsAppButton } from '../common/FloatingWhatsAppButton';
 import {
   GripVertical,
   ChevronUp,
@@ -22,24 +24,54 @@ import {
 interface Props {
   sections: Section[];
   theme: ThemeConfig;
+  businessInfo?: BusinessInfo;
+  slug?: string;
   isEditor?: boolean;
   activeSectionId?: string | null;
   onSelectSection?: (sectionId: string) => void;
   onMoveSection?: (index: number, direction: 'up' | 'down') => void;
   onDeleteSection?: (sectionId: string) => void;
   onReorderSections?: (newSections: Section[]) => void;
+  onUpdateSectionContent?: (sectionId: string, content: any) => void;
   showGridLines?: boolean;
 }
+
+export const getFontFamilyClass = (font?: string) => {
+  switch (font) {
+    case 'serif':
+    case 'playfair':
+      return 'font-playfair';
+    case 'poppins':
+      return 'font-poppins';
+    case 'oswald':
+      return 'font-oswald tracking-wide';
+    case 'lora':
+      return 'font-lora';
+    case 'montserrat':
+      return 'font-montserrat';
+    case 'cinzel':
+      return 'font-cinzel';
+    case 'inter':
+      return 'font-inter';
+    case 'sans':
+    case 'jakarta':
+    default:
+      return 'font-jakarta';
+  }
+};
 
 export const WebsiteRenderer: React.FC<Props> = ({
   sections,
   theme,
+  businessInfo,
+  slug,
   isEditor = false,
   activeSectionId,
   onSelectSection,
   onMoveSection,
   onDeleteSection,
   onReorderSections,
+  onUpdateSectionContent,
   showGridLines = false,
 }) => {
   const sortedSections = [...sections].sort((a, b) => a.position - b.position);
@@ -58,6 +90,7 @@ export const WebsiteRenderer: React.FC<Props> = ({
       case 'gallery': return 'Galeri Foto (Grid Layout)';
       case 'testimonials': return 'Testimoni Klien (Grid)';
       case 'cta': return 'Call To Action (Banner)';
+      case 'faq': return 'FAQ Tanya Jawab (Accordion)';
       case 'contact': return 'Kontak & WhatsApp';
       case 'footer': return 'Footer Website';
       default: return type;
@@ -73,17 +106,54 @@ export const WebsiteRenderer: React.FC<Props> = ({
       case 'about':
         return <AboutSection content={section.content as any} theme={theme} isEditor={isEditor} />;
       case 'services':
-        return <ServicesSection content={section.content as any} theme={theme} isEditor={isEditor} />;
+        return (
+          <ServicesSection
+            content={section.content as any}
+            theme={theme}
+            isEditor={isEditor}
+            onUpdateContent={(c) => onUpdateSectionContent?.(section.id, c)}
+          />
+        );
       case 'features':
-        return <FeaturesSection content={section.content as any} theme={theme} isEditor={isEditor} />;
+        return (
+          <FeaturesSection
+            content={section.content as any}
+            theme={theme}
+            isEditor={isEditor}
+            onUpdateContent={(c) => onUpdateSectionContent?.(section.id, c)}
+          />
+        );
       case 'gallery':
-        return <GallerySection content={section.content as any} theme={theme} isEditor={isEditor} />;
+        return (
+          <GallerySection
+            content={section.content as any}
+            theme={theme}
+            isEditor={isEditor}
+            onUpdateContent={(c) => onUpdateSectionContent?.(section.id, c)}
+          />
+        );
       case 'testimonials':
-        return <TestimonialsSection content={section.content as any} theme={theme} isEditor={isEditor} />;
+        return (
+          <TestimonialsSection
+            content={section.content as any}
+            theme={theme}
+            isEditor={isEditor}
+            onUpdateContent={(c) => onUpdateSectionContent?.(section.id, c)}
+          />
+        );
       case 'cta':
         return <CtaSection content={section.content as any} theme={theme} isEditor={isEditor} />;
+      case 'faq':
+        return (
+          <FaqSection
+            content={section.content as any}
+            theme={theme}
+            isEditor={isEditor}
+            onUpdateContent={(c) => onUpdateSectionContent?.(section.id, c)}
+          />
+        );
       case 'contact':
-        return <ContactSection content={section.content as any} theme={theme} isEditor={isEditor} />;
+        return <ContactSection content={section.content as any} theme={theme} isEditor={isEditor} slug={slug} />;
       case 'footer':
         return <FooterSection content={section.content as any} theme={theme} isEditor={isEditor} />;
       default:
@@ -135,9 +205,7 @@ export const WebsiteRenderer: React.FC<Props> = ({
 
   return (
     <div
-      className={`min-h-screen bg-white transition-all relative ${
-        theme.font === 'serif' ? 'font-serif' : 'font-sans'
-      }`}
+      className={`min-h-screen bg-white transition-all relative ${getFontFamilyClass(theme.font)}`}
       style={{
         backgroundColor: theme.backgroundColor || '#ffffff',
       }}
@@ -287,6 +355,20 @@ export const WebsiteRenderer: React.FC<Props> = ({
           </div>
         );
       })}
+
+      {/* Floating WhatsApp Action Button */}
+      {businessInfo?.enableFloatingWhatsapp !== false && (businessInfo?.whatsapp || isEditor) && (
+        <FloatingWhatsAppButton
+          phone={businessInfo?.whatsapp || ''}
+          businessName={businessInfo?.name || ''}
+          templateMessage={businessInfo?.whatsappMessageTemplate}
+          slug={slug}
+          operatingHours={businessInfo?.operatingHours}
+          openTime={businessInfo?.openTime}
+          closeTime={businessInfo?.closeTime}
+          isEditor={isEditor}
+        />
+      )}
     </div>
   );
 };

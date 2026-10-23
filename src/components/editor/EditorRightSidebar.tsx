@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Section } from '../../types/schema';
+import { ImageUploadInput } from '../common/ImageUploadInput';
+import { ensureItemIds } from '../../utils/dndUtils';
 import {
   Plus,
   Trash2,
@@ -13,6 +15,108 @@ import {
   ChevronUp,
   ChevronDown,
 } from 'lucide-react';
+import {
+  DndContext,
+  closestCorners,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+  useSortable,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+
+interface SortableSidebarItemProps {
+  id: string;
+  children: (handleProps: { attributes: any; listeners: any }) => React.ReactNode;
+}
+
+const SortableSidebarItem: React.FC<SortableSidebarItemProps> = ({ id, children }) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id });
+
+  const style: React.CSSProperties = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    zIndex: isDragging ? 50 : undefined,
+    opacity: isDragging ? 0.75 : 1,
+  };
+
+  return (
+    <div ref={setNodeRef} style={style}>
+      {children({ attributes, listeners })}
+    </div>
+  );
+};
+
+interface SortableSidebarListProps {
+  items: any[];
+  idPrefix: string;
+  onReorder: (oldIndex: number, newIndex: number) => void;
+  renderItem: (item: any, idx: number, handleProps: { attributes: any; listeners: any }) => React.ReactNode;
+}
+
+const SortableSidebarList: React.FC<SortableSidebarListProps> = ({
+  items,
+  idPrefix,
+  onReorder,
+  renderItem,
+}) => {
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 5,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  const safeItems = useMemo(() => ensureItemIds(items, idPrefix), [items, idPrefix]);
+  const ids = useMemo(() => safeItems.map((it) => it.id), [safeItems]);
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (over && active.id !== over.id) {
+      const oldIndex = safeItems.findIndex((it) => it.id === active.id);
+      const newIndex = safeItems.findIndex((it) => it.id === over.id);
+      if (oldIndex !== -1 && newIndex !== -1) {
+        onReorder(oldIndex, newIndex);
+      }
+    }
+  };
+
+  return (
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCorners}
+      onDragEnd={handleDragEnd}
+    >
+      <SortableContext items={ids} strategy={verticalListSortingStrategy}>
+        <div className="space-y-3">
+          {safeItems.map((item, idx) => (
+            <SortableSidebarItem key={item.id} id={item.id}>
+              {(handleProps) => renderItem(item, idx, handleProps)}
+            </SortableSidebarItem>
+          ))}
+        </div>
+      </SortableContext>
+    </DndContext>
+  );
+};
 
 interface Props {
   section: Section | null;
@@ -66,6 +170,7 @@ export const EditorRightSidebar: React.FC<Props> = ({
       case 'gallery': return 'Pengaturan Galeri';
       case 'testimonials': return 'Pengaturan Testimoni';
       case 'cta': return 'Pengaturan Call to Action';
+      case 'faq': return 'Pengaturan Tanya Jawab (FAQ)';
       case 'contact': return 'Pengaturan Kontak';
       case 'footer': return 'Pengaturan Footer';
       default: return 'Pengaturan Section';
@@ -274,21 +379,12 @@ export const EditorRightSidebar: React.FC<Props> = ({
             </div>
 
             <div>
-              <label className="block font-semibold text-slate-700 mb-1">
-                URL Gambar Hero
-              </label>
-              <input
-                type="text"
+              <ImageUploadInput
+                label="Foto / Gambar Hero Banner"
                 value={content.imageUrl || ''}
-                onChange={(e) => handleChange('imageUrl', e.target.value)}
-                placeholder="https://images.unsplash.com/..."
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg outline-none font-mono text-[11px]"
+                onChange={(url) => handleChange('imageUrl', url)}
+                placeholder="https://... atau upload langsung dari laptop"
               />
-              {content.imageUrl && (
-                <div className="mt-2 rounded-lg overflow-hidden border border-slate-200 h-28">
-                  <img src={content.imageUrl} alt="Hero preview" className="w-full h-full object-cover" />
-                </div>
-              )}
             </div>
 
             <div>
@@ -422,39 +518,21 @@ export const EditorRightSidebar: React.FC<Props> = ({
             </div>
 
             <div>
-              <label className="block font-semibold text-slate-700 mb-1">
-                URL Gambar Utama
-              </label>
-              <input
-                type="text"
+              <ImageUploadInput
+                label="Foto Profil / Cerita Utama"
                 value={content.imageUrl || ''}
-                onChange={(e) => handleChange('imageUrl', e.target.value)}
-                placeholder="https://images.unsplash.com/..."
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg outline-none font-mono text-[11px]"
+                onChange={(url) => handleChange('imageUrl', url)}
+                placeholder="https://... atau upload langsung"
               />
-              {content.imageUrl && (
-                <div className="mt-2 rounded-lg overflow-hidden border border-slate-200 h-24">
-                  <img src={content.imageUrl} alt="About preview" className="w-full h-full object-cover" />
-                </div>
-              )}
             </div>
 
             <div>
-              <label className="block font-semibold text-slate-700 mb-1">
-                URL Gambar Sekunder (Kolase Foto #2)
-              </label>
-              <input
-                type="text"
+              <ImageUploadInput
+                label="Foto Sekunder (Kolase Foto #2 - Opsional)"
                 value={content.secondaryImageUrl || ''}
-                onChange={(e) => handleChange('secondaryImageUrl', e.target.value)}
-                placeholder="https://images.unsplash.com/... (opsional)"
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg outline-none font-mono text-[11px]"
+                onChange={(url) => handleChange('secondaryImageUrl', url)}
+                placeholder="https://... atau upload langsung"
               />
-              {content.secondaryImageUrl && (
-                <div className="mt-2 rounded-lg overflow-hidden border border-slate-200 h-20 w-32">
-                  <img src={content.secondaryImageUrl} alt="Secondary preview" className="w-full h-full object-cover" />
-                </div>
-              )}
             </div>
           </div>
         )}
@@ -485,11 +563,22 @@ export const EditorRightSidebar: React.FC<Props> = ({
               </button>
             </div>
 
-            <div className="space-y-3">
-              {(content.items || []).map((item: any, idx: number) => (
+            <SortableSidebarList
+              items={content.items || []}
+              idPrefix="service-item"
+              onReorder={(from, to) => moveItemToIndex('items', from, to)}
+              renderItem={(item, idx, { attributes, listeners }) => (
                 <div key={idx} className="p-3 rounded-xl border border-slate-200 bg-slate-50 space-y-2.5">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1.5">
+                      <div
+                        {...attributes}
+                        {...listeners}
+                        className="cursor-grab active:cursor-grabbing text-slate-400 hover:text-blue-600 p-0.5 rounded transition"
+                        title="Tarik (drag) untuk geser urutan"
+                      >
+                        <GripVertical className="w-3.5 h-3.5" />
+                      </div>
                       <span className="font-bold text-slate-700 text-[11px]">Item #{idx + 1}</span>
 
                       {/* Urutan / Index Selector */}
@@ -521,7 +610,7 @@ export const EditorRightSidebar: React.FC<Props> = ({
                         </button>
                         <button
                           type="button"
-                          disabled={idx === content.items.length - 1}
+                          disabled={idx === (content.items || []).length - 1}
                           onClick={() => moveItemToIndex('items', idx, idx + 1)}
                           className="p-0.5 rounded hover:bg-slate-200 text-slate-500 disabled:opacity-20"
                           title="Geser ke bawah"
@@ -545,27 +634,17 @@ export const EditorRightSidebar: React.FC<Props> = ({
                     </button>
                   </div>
 
-                  {/* Thumbnail & Image URL */}
-                  <div className="flex items-center gap-2">
-                    {item.imageUrl ? (
-                      <img src={item.imageUrl} alt="Thumb" className="w-9 h-9 rounded-lg object-cover shrink-0 border border-slate-200" />
-                    ) : (
-                      <div className="w-9 h-9 rounded-lg bg-slate-200 flex items-center justify-center shrink-0 text-slate-400">
-                        <Image className="w-4 h-4" />
-                      </div>
-                    )}
-                    <input
-                      type="text"
-                      value={item.imageUrl || ''}
-                      onChange={(e) => {
-                        const items = [...content.items];
-                        items[idx] = { ...items[idx], imageUrl: e.target.value };
-                        handleChange('items', items);
-                      }}
-                      placeholder="URL Foto Menu (opsional)"
-                      className="flex-1 px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg outline-none font-mono text-[10px]"
-                    />
-                  </div>
+                  {/* Thumbnail & Image Upload */}
+                  <ImageUploadInput
+                    label="Foto Layanan / Menu"
+                    value={item.imageUrl || ''}
+                    onChange={(url) => {
+                      const items = [...content.items];
+                      items[idx] = { ...items[idx], imageUrl: url };
+                      handleChange('items', items);
+                    }}
+                    placeholder="Upload foto produk/menu..."
+                  />
 
                   <input
                     type="text"
@@ -601,8 +680,8 @@ export const EditorRightSidebar: React.FC<Props> = ({
                     className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg outline-none text-[11px]"
                   />
                 </div>
-              ))}
-            </div>
+              )}
+            />
           </div>
         )}
 
@@ -940,27 +1019,17 @@ export const EditorRightSidebar: React.FC<Props> = ({
                     </button>
                   </div>
 
-                  {/* Thumbnail & URL */}
-                  <div className="flex items-center gap-2">
-                    {img.imageUrl ? (
-                      <img src={img.imageUrl} alt="Thumb" className="w-10 h-10 rounded-lg object-cover shrink-0 border border-slate-200" />
-                    ) : (
-                      <div className="w-10 h-10 rounded-lg bg-slate-200 flex items-center justify-center shrink-0 text-slate-400">
-                        <Image className="w-4 h-4" />
-                      </div>
-                    )}
-                    <input
-                      type="text"
-                      value={img.imageUrl || ''}
-                      onChange={(e) => {
-                        const images = [...content.images];
-                        images[idx] = { ...images[idx], imageUrl: e.target.value };
-                        handleChange('images', images);
-                      }}
-                      placeholder="URL Gambar"
-                      className="flex-1 px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg outline-none font-mono text-[10px]"
-                    />
-                  </div>
+                  {/* Thumbnail & Image Upload */}
+                  <ImageUploadInput
+                    label="File Foto Galeri"
+                    value={img.imageUrl || ''}
+                    onChange={(url) => {
+                      const images = [...content.images];
+                      images[idx] = { ...images[idx], imageUrl: url };
+                      handleChange('images', images);
+                    }}
+                    placeholder="Upload foto galeri..."
+                  />
 
                   <input
                     type="text"
@@ -970,7 +1039,7 @@ export const EditorRightSidebar: React.FC<Props> = ({
                       images[idx] = { ...images[idx], caption: e.target.value };
                       handleChange('images', images);
                     }}
-                    placeholder="Keterangan Caption"
+                    placeholder="Keterangan Caption Foto"
                     className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg outline-none"
                   />
                 </div>
@@ -1018,6 +1087,116 @@ export const EditorRightSidebar: React.FC<Props> = ({
                 placeholder="Respon cepat dalam 5 menit"
                 className="w-full px-3 py-2 border border-slate-200 rounded-lg outline-none"
               />
+            </div>
+          </div>
+        )}
+
+        {/* FAQ SPECIFIC */}
+        {section.type === 'faq' && (
+          <div className="space-y-4 pt-2 border-t border-slate-100">
+            <div className="flex items-center justify-between">
+              <label className="font-semibold text-slate-700">Daftar Tanya Jawab (FAQ)</label>
+              <button
+                type="button"
+                onClick={() => {
+                  const items = content.items || [];
+                  handleChange('items', [
+                    ...items,
+                    {
+                      question: 'Pertanyaan baru seputar layanan?',
+                      answer: 'Jawaban detail untuk pertanyaan tersebut...',
+                    },
+                  ]);
+                }}
+                className="text-[11px] font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1 cursor-pointer"
+              >
+                <Plus className="w-3.5 h-3.5" /> Tambah FAQ
+              </button>
+            </div>
+
+            <div className="space-y-3">
+              {(content.items || []).map((item: any, idx: number) => (
+                <div key={idx} className="p-3 rounded-xl border border-slate-200 bg-slate-50 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold text-slate-700 text-[11px]">FAQ #{idx + 1}</span>
+
+                      {/* Urutan / Index Selector */}
+                      <div className="flex items-center gap-1 bg-white border border-slate-200 rounded-md px-1 py-0.5 shadow-2xs">
+                        <span className="text-[10px] text-slate-400 font-medium">Index:</span>
+                        <select
+                          value={idx + 1}
+                          onChange={(e) => moveItemToIndex('items', idx, parseInt(e.target.value) - 1)}
+                          className="text-[10px] font-bold text-blue-600 bg-transparent outline-none cursor-pointer"
+                        >
+                          {(content.items || []).map((_: any, optIdx: number) => (
+                            <option key={optIdx} value={optIdx + 1}>
+                              Ke-{optIdx + 1}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div className="flex items-center">
+                        <button
+                          type="button"
+                          disabled={idx === 0}
+                          onClick={() => moveItemToIndex('items', idx, idx - 1)}
+                          className="p-0.5 rounded hover:bg-slate-200 text-slate-500 disabled:opacity-20"
+                          title="Geser ke atas"
+                        >
+                          <ChevronUp className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          type="button"
+                          disabled={idx === content.items.length - 1}
+                          onClick={() => moveItemToIndex('items', idx, idx + 1)}
+                          className="p-0.5 rounded hover:bg-slate-200 text-slate-500 disabled:opacity-20"
+                          title="Geser ke bawah"
+                        >
+                          <ChevronDown className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const items = [...content.items];
+                        items.splice(idx, 1);
+                        handleChange('items', items);
+                      }}
+                      className="text-red-500 hover:text-red-700 p-0.5 cursor-pointer"
+                      title="Hapus FAQ"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+
+                  <input
+                    type="text"
+                    value={item.question || ''}
+                    onChange={(e) => {
+                      const items = [...content.items];
+                      items[idx] = { ...items[idx], question: e.target.value };
+                      handleChange('items', items);
+                    }}
+                    placeholder="Pertanyaan (misal: Apakah menerima pembayaran QRIS?)"
+                    className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg outline-none font-semibold text-slate-900"
+                  />
+                  <textarea
+                    rows={3}
+                    value={item.answer || ''}
+                    onChange={(e) => {
+                      const items = [...content.items];
+                      items[idx] = { ...items[idx], answer: e.target.value };
+                      handleChange('items', items);
+                    }}
+                    placeholder="Tuliskan jawaban yang ramah dan jelas..."
+                    className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg outline-none text-[11px]"
+                  />
+                </div>
+              ))}
             </div>
           </div>
         )}

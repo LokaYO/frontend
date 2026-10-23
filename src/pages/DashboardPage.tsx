@@ -23,8 +23,14 @@ import {
   Eye,
   AlertTriangle,
   ShieldCheck,
+  MessageCircle,
+  TrendingUp,
+  QrCode,
+  Inbox,
 } from 'lucide-react';
 import { AdminMonitoringPanel } from '../components/admin/AdminMonitoringPanel';
+import { QrCodeModal } from '../components/common/QrCodeModal';
+import { LeadsModal } from '../components/common/LeadsModal';
 
 interface Props {
   onOpenEditor: (websiteId: string) => void;
@@ -43,6 +49,9 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
   );
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [copiedSlug, setCopiedSlug] = useState<string | null>(null);
+  const [selectedQrSite, setSelectedQrSite] = useState<Website | null>(null);
+  const [selectedLeadsSite, setSelectedLeadsSite] = useState<Website | null>(null);
+  const [duplicatingId, setDuplicatingId] = useState<string | null>(null);
 
   // Fetch all websites belonging to user (Khusus role 'user', admin tidak punya website pribadi)
   const fetchWebsites = useCallback(async () => {
@@ -91,6 +100,19 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
       setWebsites((prev) => prev.filter((w) => w.id !== websiteId));
     } catch (err) {
       console.error('Delete website error:', err);
+    }
+  };
+
+  // Duplicate website
+  const handleDuplicateWebsite = async (id: string) => {
+    try {
+      setDuplicatingId(id);
+      await websiteService.duplicateWebsite(id);
+      await fetchWebsites();
+    } catch (err: any) {
+      alert(err.message || 'Gagal menduplikasi website');
+    } finally {
+      setDuplicatingId(null);
     }
   };
 
@@ -312,6 +334,51 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
                 </div>
               </div>
 
+              {/* Analytics Summary Banner */}
+              {!loading && websites.length > 0 && (
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-2xs flex items-center gap-3.5">
+                    <div className="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                      <Eye className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="text-[11px] text-slate-500 font-semibold uppercase tracking-wider">Total Pengunjung</p>
+                      <h4 className="text-xl font-extrabold text-slate-900">
+                        {websites.reduce((acc, w) => acc + (w.viewsCount || 0), 0)}
+                      </h4>
+                    </div>
+                  </div>
+
+                  <div className="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-2xs flex items-center gap-3.5">
+                    <div className="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                      <MessageCircle className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="text-[11px] text-slate-500 font-semibold uppercase tracking-wider">Klik WhatsApp (Leads)</p>
+                      <h4 className="text-xl font-extrabold text-emerald-700">
+                        {websites.reduce((acc, w) => acc + (w.whatsappClicksCount || 0), 0)}
+                      </h4>
+                    </div>
+                  </div>
+
+                  <div className="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-2xs flex items-center gap-3.5">
+                    <div className="w-11 h-11 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
+                      <TrendingUp className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="text-[11px] text-slate-500 font-semibold uppercase tracking-wider">Rata-rata Konversi</p>
+                      <h4 className="text-xl font-extrabold text-indigo-700">
+                        {(() => {
+                          const totalViews = websites.reduce((acc, w) => acc + (w.viewsCount || 0), 0);
+                          const totalClicks = websites.reduce((acc, w) => acc + (w.whatsappClicksCount || 0), 0);
+                          return totalViews > 0 ? ((totalClicks / totalViews) * 100).toFixed(1) + '%' : '0%';
+                        })()}
+                      </h4>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Website Cards Grid */}
               {loading ? (
                 <div className="py-20 text-center space-y-3">
@@ -389,9 +456,55 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
                             {site.businessInfo?.description || 'Landing page bisnis lokal dengan navigasi, penawaran menarik, dan tautan WhatsApp resmi.'}
                           </div>
 
+                          {/* Analytics Counter Chips */}
+                          <div className="p-2.5 bg-slate-50 rounded-xl border border-slate-100 flex items-center justify-between text-[11px] font-semibold">
+                            <div className="flex items-center gap-1.5 text-slate-600" title="Total Pengunjung">
+                              <Eye className="w-3.5 h-3.5 text-blue-500" />
+                              <span>{site.viewsCount || 0} Pengunjung</span>
+                            </div>
+                            <div className="flex items-center gap-1.5 text-emerald-700 font-bold" title="Total Calon Pelanggan Klik WhatsApp">
+                              <MessageCircle className="w-3.5 h-3.5 text-emerald-600" />
+                              <span>{site.whatsappClicksCount || 0} Klik WA</span>
+                            </div>
+                          </div>
+
                           <div className="pt-2 flex items-center justify-between text-[11px] text-slate-400 border-t border-slate-100">
                             <span>Lokasi: {site.businessInfo?.location || 'Indonesia'}</span>
                             <span>{site.sections?.length || 0} Section</span>
+                          </div>
+
+                          {/* Quick Tools Row: QR Stand, Leads Inbox, Duplicate */}
+                          <div className="grid grid-cols-3 gap-1.5 pt-2 border-t border-slate-100">
+                            <button
+                              type="button"
+                              onClick={() => setSelectedQrSite(site)}
+                              className="py-1.5 px-2 bg-slate-50 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-200 border border-slate-200/90 rounded-xl text-[11px] font-bold text-slate-700 flex items-center justify-center gap-1 transition cursor-pointer"
+                              title="Cetak Stand Meja QR Code"
+                            >
+                              <QrCode className="w-3.5 h-3.5 text-blue-600" />
+                              <span>QR Meja</span>
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => setSelectedLeadsSite(site)}
+                              className="py-1.5 px-2 bg-slate-50 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 border border-slate-200/90 rounded-xl text-[11px] font-bold text-slate-700 flex items-center justify-center gap-1 transition cursor-pointer"
+                              title="Lihat Pesan Masuk / Buku Tamu"
+                            >
+                              <Inbox className="w-3.5 h-3.5 text-emerald-600" />
+                              <span>Pesan</span>
+                            </button>
+
+                            <button
+                              type="button"
+                              disabled={duplicatingId === site.id}
+                              onClick={() => handleDuplicateWebsite(site.id)}
+                              className="py-1.5 px-2 bg-slate-50 hover:bg-indigo-50 hover:text-indigo-700 hover:border-indigo-200 border border-slate-200/90 rounded-xl text-[11px] font-bold text-slate-700 flex items-center justify-center gap-1 transition cursor-pointer disabled:opacity-50"
+                              title="Duplikasi Website Ini (1-Click Clone)"
+                            >
+                              <Copy className="w-3.5 h-3.5 text-indigo-600" />
+                              <span>{duplicatingId === site.id ? '...' : 'Duplikat'}</span>
+                            </button>
                           </div>
                         </div>
 
@@ -653,14 +766,30 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
 
       {/* Create Website Modal (Khusus Client Pengguna Saja) */}
       {!isAdmin && (
-        <CreateWebsiteModal
-          isOpen={isCreateModalOpen}
-          onClose={() => setIsCreateModalOpen(false)}
-          onWebsiteCreated={(newWebsiteId) => {
-            setIsCreateModalOpen(false);
-            onOpenEditor(newWebsiteId);
-          }}
-        />
+        <>
+          <CreateWebsiteModal
+            isOpen={isCreateModalOpen}
+            onClose={() => setIsCreateModalOpen(false)}
+            onWebsiteCreated={(newWebsiteId) => {
+              setIsCreateModalOpen(false);
+              onOpenEditor(newWebsiteId);
+            }}
+          />
+
+          {/* QR Code Stand Meja Kasir Modal */}
+          <QrCodeModal
+            isOpen={!!selectedQrSite}
+            onClose={() => setSelectedQrSite(null)}
+            website={selectedQrSite}
+          />
+
+          {/* Leads & Buku Tamu Modal */}
+          <LeadsModal
+            isOpen={!!selectedLeadsSite}
+            onClose={() => setSelectedLeadsSite(null)}
+            website={selectedLeadsSite}
+          />
+        </>
       )}
     </div>
   );

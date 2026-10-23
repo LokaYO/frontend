@@ -23,6 +23,13 @@ export const PublicSitePage: React.FC<Props> = ({ slug }) => {
 
         const data = await websiteService.getPublicWebsite(slug);
         setWebsite(data);
+
+        // Track view analitik publik otomatis
+        fetch(`/api/public/sites/${slug}/track`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ type: 'view' }),
+        }).catch(() => {});
       } catch (err: any) {
         console.error('Fetch public site failed:', err);
         if (err.details?.isDraft || err.status === 403) {
@@ -38,6 +45,42 @@ export const PublicSitePage: React.FC<Props> = ({ slug }) => {
       loadPublicSite();
     }
   }, [slug]);
+
+  // Dynamically update document title and meta OpenGraph tags for SEO
+  useEffect(() => {
+    if (!website) return;
+
+    const info = website.businessInfo || {};
+    const title = info.seoTitle || website.title || info.name || 'Website Resmi';
+    const description = info.seoDescription || info.tagline || 'Selamat datang di website resmi kami.';
+    const imageUrl = info.ogImageUrl || info.logo || '';
+
+    document.title = title;
+
+    const setMeta = (attr: 'name' | 'property', key: string, content: string) => {
+      if (!content) return;
+      let el = document.querySelector(`meta[${attr}="${key}"]`) as HTMLMetaElement | null;
+      if (!el) {
+        el = document.createElement('meta');
+        el.setAttribute(attr, key);
+        document.head.appendChild(el);
+      }
+      el.content = content;
+    };
+
+    setMeta('name', 'description', description);
+    setMeta('property', 'og:title', title);
+    setMeta('property', 'og:description', description);
+    setMeta('property', 'og:type', 'website');
+    setMeta('property', 'og:url', window.location.href);
+    if (imageUrl) {
+      setMeta('property', 'og:image', imageUrl);
+      setMeta('name', 'twitter:image', imageUrl);
+    }
+    setMeta('name', 'twitter:card', 'summary_large_image');
+    setMeta('name', 'twitter:title', title);
+    setMeta('name', 'twitter:description', description);
+  }, [website]);
 
   if (loading) {
     return (
@@ -100,6 +143,8 @@ export const PublicSitePage: React.FC<Props> = ({ slug }) => {
       <WebsiteRenderer
         sections={website.sections || []}
         theme={website.theme}
+        businessInfo={website.businessInfo}
+        slug={slug}
         isEditor={false}
       />
     </div>

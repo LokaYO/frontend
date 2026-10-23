@@ -198,6 +198,18 @@ export const EditorPage: React.FC<Props> = ({ websiteId, onBackToDashboard }) =>
     setWebsite({ ...website, sections: updated });
   };
 
+  // Update section content by section ID directly (for canvas drag-and-drop)
+  const handleUpdateSectionContentById = (sectionId: string, newContent: any) => {
+    if (!website?.sections) return;
+    const updated = website.sections.map((s) => {
+      if (s.id === sectionId) {
+        return { ...s, content: newContent };
+      }
+      return s;
+    });
+    setWebsite({ ...website, sections: updated });
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
@@ -233,9 +245,9 @@ export const EditorPage: React.FC<Props> = ({ websiteId, onBackToDashboard }) =>
   const getViewportWidthClass = () => {
     switch (viewport) {
       case 'mobile':
-        return 'w-[375px] my-6 shadow-2xl rounded-2xl overflow-hidden border-4 border-slate-800';
+        return 'w-[375px] my-6 shadow-2xl rounded-2xl overflow-clip border-4 border-slate-800';
       case 'tablet':
-        return 'w-[768px] my-6 shadow-2xl rounded-2xl overflow-hidden border-4 border-slate-800';
+        return 'w-[768px] my-6 shadow-2xl rounded-2xl overflow-clip border-4 border-slate-800';
       case 'desktop':
       default:
         return 'w-full min-h-full';
@@ -271,6 +283,7 @@ export const EditorPage: React.FC<Props> = ({ websiteId, onBackToDashboard }) =>
             onMoveSection={handleMoveSection}
             onDeleteSection={handleDeleteSection}
             onOpenAddSection={() => setIsAddSectionOpen(true)}
+            onReorderSections={(reordered) => setWebsite({ ...website, sections: reordered })}
             theme={website.theme}
             onUpdateTheme={(theme) => setWebsite({ ...website, theme })}
             businessInfo={website.businessInfo}
@@ -289,16 +302,19 @@ export const EditorPage: React.FC<Props> = ({ websiteId, onBackToDashboard }) =>
             </div>
           )}
 
-          <div className={`transition-all duration-300 origin-top bg-white ${getViewportWidthClass()}`}>
+          <div className={`transition-all duration-300 origin-top bg-white relative ${getViewportWidthClass()}`}>
             <WebsiteRenderer
               sections={website.sections || []}
               theme={website.theme}
+              businessInfo={website.businessInfo}
+              slug={website.slug}
               isEditor={!previewMode}
               activeSectionId={activeSectionId}
               onSelectSection={handleSelectSection}
               onMoveSection={handleMoveSection}
               onDeleteSection={handleDeleteSection}
               onReorderSections={(reordered) => setWebsite({ ...website, sections: reordered })}
+              onUpdateSectionContent={handleUpdateSectionContentById}
               showGridLines={showGrid}
             />
           </div>

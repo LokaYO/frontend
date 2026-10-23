@@ -51,5 +51,26 @@ export const websiteService = {
     const data = await apiClient.get<{ website: Website }>(`/api/public/sites/${slug}`);
     return data.website;
   },
+
+  async duplicateWebsite(id: string): Promise<{ success: boolean; websiteId: string; slug: string; name: string }> {
+    return apiClient.post(`/api/websites/${id}/duplicate`);
+  },
+
+  async getWebsiteLeads(websiteId: string): Promise<any[]> {
+    const data = await apiClient.get<{ leads: any[] }>(`/api/websites/${websiteId}/leads`);
+    return data.leads || [];
+  },
+
+  async markLeadRead(websiteId: string, leadId: string): Promise<{ success: boolean }> {
+    return apiClient.patch(`/api/websites/${websiteId}/leads/${leadId}/read`);
+  },
+
+  async deleteLead(websiteId: string, leadId: string): Promise<{ success: boolean }> {
+    return apiClient.delete(`/api/websites/${websiteId}/leads/${leadId}`);
+  },
+
+  async submitPublicLead(slug: string, leadData: { name: string; phone: string; message: string; serviceInterest?: string }): Promise<{ success: boolean; message: string; leadId: string }> {
+    return apiClient.post(`/api/public/sites/${slug}/leads`, leadData);
+  },
 };
 
