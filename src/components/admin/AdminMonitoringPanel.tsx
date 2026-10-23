@@ -37,6 +37,7 @@ import {
   Megaphone,
   FileSpreadsheet,
   History,
+  Crown,
 } from 'lucide-react';
 import { AdminModerationTab } from './AdminModerationTab';
 import { AdminAnnouncementsTab } from './AdminAnnouncementsTab';
@@ -312,6 +313,7 @@ interface ClientDetailViewProps {
   onBack: () => void;
   currentAdminRole: string;
   onRoleChange: (userId: string, newRole: 'admin' | 'support' | 'user') => Promise<void>;
+  onPlanChange: (userId: string, newPlan: 'free' | 'pro', durationDays?: number) => Promise<void>;
   onDelete: (userId: string, name: string) => Promise<void>;
   actionLoading: string | null;
 }
@@ -321,6 +323,7 @@ const ClientDetailView: React.FC<ClientDetailViewProps> = ({
   onBack,
   currentAdminRole,
   onRoleChange,
+  onPlanChange,
   onDelete,
   actionLoading,
 }) => {
@@ -439,6 +442,16 @@ const ClientDetailView: React.FC<ClientDetailViewProps> = ({
                 >
                   {user.role}
                 </span>
+                {user.plan === 'pro' ? (
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[10px] font-black uppercase bg-amber-100 text-amber-800 border border-amber-300">
+                    <Crown className="w-3 h-3 text-amber-600 fill-amber-500" />
+                    <span>PRO PLAN</span>
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold uppercase bg-slate-100 text-slate-600">
+                    FREE PLAN
+                  </span>
+                )}
                 {data.activeSessions.length > 0 ? (
                   <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
@@ -454,9 +467,9 @@ const ClientDetailView: React.FC<ClientDetailViewProps> = ({
             </div>
           </div>
 
-          {/* Role Change & Delete Controls for Super Admin */}
+          {/* Role Change & Plan Controls for Super Admin */}
           {currentAdminRole === 'admin' && (
-            <div className="flex items-center gap-2 shrink-0">
+            <div className="flex items-center gap-2 flex-wrap shrink-0">
               <div className="space-y-1">
                 <span className="text-[10px] uppercase tracking-wider font-bold text-slate-400 block">
                   Ubah Role
@@ -470,6 +483,40 @@ const ClientDetailView: React.FC<ClientDetailViewProps> = ({
                   <option value="user">User (Client UMKM)</option>
                   <option value="support">Support Team</option>
                   <option value="admin">Administrator</option>
+                </select>
+              </div>
+
+              {/* Plan Access Control for Admin */}
+              <div className="space-y-1">
+                <span className="text-[10px] uppercase tracking-wider font-bold text-slate-400 block">
+                  Akses Plan
+                </span>
+                <select
+                  value={user.plan === 'pro' ? 'pro_active' : 'free'}
+                  disabled={actionLoading === user.id}
+                  onChange={async (e) => {
+                    const val = e.target.value;
+                    if (val === 'free') {
+                      await onPlanChange(user.id, 'free');
+                      setData((prev) => prev ? { ...prev, user: { ...prev.user, plan: 'free', subscription_until: null } } : null);
+                    } else if (val === 'pro_30') {
+                      await onPlanChange(user.id, 'pro', 30);
+                      setData((prev) => prev ? { ...prev, user: { ...prev.user, plan: 'pro' } } : null);
+                    } else if (val === 'pro_365') {
+                      await onPlanChange(user.id, 'pro', 365);
+                      setData((prev) => prev ? { ...prev, user: { ...prev.user, plan: 'pro' } } : null);
+                    }
+                  }}
+                  className={`text-xs border rounded-xl px-3 py-2 outline-none font-bold cursor-pointer transition ${
+                    user.plan === 'pro'
+                      ? 'bg-amber-50 text-amber-900 border-amber-300 ring-1 ring-amber-300'
+                      : 'bg-slate-50 text-slate-800 border-slate-200'
+                  }`}
+                >
+                  <option value="free">FREE Plan (Standar)</option>
+                  {user.plan === 'pro' && <option value="pro_active">👑 PRO Aktif</option>}
+                  <option value="pro_30">⭐ Beri PRO (30 Hari)</option>
+                  <option value="pro_365">👑 Beri PRO (1 Tahun)</option>
                 </select>
               </div>
 
@@ -493,12 +540,21 @@ const ClientDetailView: React.FC<ClientDetailViewProps> = ({
         </div>
 
         {/* Info Grid Metadata */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5 text-xs">
           <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-1">
             <span className="text-[11px] text-slate-400 font-semibold flex items-center gap-1.5">
               <Clock className="w-3.5 h-3.5 text-slate-400" /> Tanggal Registrasi
             </span>
             <p className="font-bold text-slate-800">{formatDate(user.created_at)}</p>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-1">
+            <span className="text-[11px] text-slate-400 font-semibold flex items-center gap-1.5">
+              <Crown className="w-3.5 h-3.5 text-amber-500" /> Status Plan
+            </span>
+            <p className={`font-bold ${user.plan === 'pro' ? 'text-amber-800' : 'text-slate-700'}`}>
+              {user.plan === 'pro' ? '👑 PRO (White-label)' : 'FREE Plan'}
+            </p>
           </div>
 
           <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-1">
@@ -668,6 +724,21 @@ export const AdminMonitoringPanel: React.FC = () => {
     }
   };
 
+  const handlePlanChange = async (userId: string, newPlan: 'free' | 'pro', durationDays: number = 30) => {
+    try {
+      setActionLoading(userId);
+      const res = await adminService.updateUserPlan(userId, newPlan, durationDays);
+      setUsers((prev) =>
+        prev.map((u) => (u.id === userId ? { ...u, plan: newPlan } : u))
+      );
+      toast.success('Akses Paket Diperbarui', res.message);
+    } catch (err: any) {
+      toast.error('Gagal Mengubah Paket', err.message || 'Terjadi kesalahan sistem');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
   const handleDeleteUser = async (userId: string, userName: string) => {
     if (!window.confirm(`Yakin ingin menghapus user "${userName}" beserta seluruh websitenya?`)) return;
     try {
@@ -723,6 +794,7 @@ export const AdminMonitoringPanel: React.FC = () => {
         onBack={() => setSelectedUserId(null)}
         currentAdminRole={user?.role || ''}
         onRoleChange={handleRoleChange}
+        onPlanChange={handlePlanChange}
         onDelete={handleDeleteUser}
         actionLoading={actionLoading}
       />
@@ -975,6 +1047,7 @@ export const AdminMonitoringPanel: React.FC = () => {
                   {activeCategory === 'clients' ? 'Client' : activeCategory === 'internal' ? 'Staf Internal' : 'Pengguna'}
                 </th>
                 <th className="py-3.5 px-4">Role</th>
+                <th className="py-3.5 px-4">Plan Akses</th>
                 <th className="py-3.5 px-4">Status Sesi</th>
                 <th className="py-3.5 px-4">Terakhir Login</th>
                 {activeCategory !== 'internal' && <th className="py-3.5 px-4">Website Dibuat</th>}
@@ -985,14 +1058,14 @@ export const AdminMonitoringPanel: React.FC = () => {
             <tbody className="divide-y divide-slate-100 text-xs text-slate-700">
               {loading && users.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="py-16 text-center text-slate-400 text-xs">
+                  <td colSpan={8} className="py-16 text-center text-slate-400 text-xs">
                     <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-purple-600" />
                     Memuat data pengguna dari PostgreSQL...
                   </td>
                 </tr>
               ) : filteredUsers.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="py-16 text-center text-slate-400 text-xs">
+                  <td colSpan={8} className="py-16 text-center text-slate-400 text-xs">
                     Tidak ada data pengguna pada kategori ini.
                   </td>
                 </tr>
@@ -1041,6 +1114,20 @@ export const AdminMonitoringPanel: React.FC = () => {
                         >
                           {u.role}
                         </span>
+                      </td>
+
+                      {/* Plan Badge */}
+                      <td className="py-4 px-4">
+                        {u.plan === 'pro' ? (
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[10px] font-black uppercase bg-amber-100 text-amber-900 border border-amber-300">
+                            <Crown className="w-3 h-3 text-amber-600 fill-amber-500" />
+                            <span>PRO</span>
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold uppercase bg-slate-100 text-slate-500">
+                            FREE
+                          </span>
+                        )}
                       </td>
 
                       {/* Online Status */}

@@ -5,6 +5,8 @@ export interface MonitoringUser {
   name: string;
   email: string;
   role: 'admin' | 'support' | 'user';
+  plan: 'free' | 'pro';
+  subscriptionUntil: string | null;
   lastLoginAt: string | null;
   createdAt: string;
   totalWebsites: number;
@@ -70,6 +72,8 @@ export interface UserDetails {
     name: string;
     email: string;
     role: string;
+    plan?: 'free' | 'pro';
+    subscription_until?: string | null;
     last_login_at: string | null;
     created_at: string;
   };
@@ -130,6 +134,14 @@ export const adminService = {
 
   async updateUserRole(userId: string, role: 'admin' | 'support' | 'user'): Promise<{ success: boolean; message: string }> {
     return apiClient.put(`/api/admin/users/${userId}/role`, { role });
+  },
+
+  async updateUserPlan(
+    userId: string,
+    plan: 'free' | 'pro',
+    durationDays: number = 30
+  ): Promise<{ success: boolean; message: string }> {
+    return apiClient.put(`/api/admin/users/${userId}/plan`, { plan, durationDays });
   },
 
   async deleteUser(userId: string): Promise<{ success: boolean; message: string }> {
