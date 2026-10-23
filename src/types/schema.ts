@@ -11,7 +11,7 @@ export interface User {
   createdAt: string;
 }
 
-export type WebsiteStatus = 'draft' | 'published';
+export type WebsiteStatus = 'draft' | 'published' | 'suspended';
 
 export interface BusinessInfo {
   name: string;
@@ -225,6 +225,7 @@ export interface Website {
   slug: string;
   status: WebsiteStatus;
   template?: string;
+  suspendReason?: string;
   businessInfo: BusinessInfo;
   theme: ThemeConfig;
   viewsCount?: number;

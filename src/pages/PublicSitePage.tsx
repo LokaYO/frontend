@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Website } from '../types/schema';
 import { websiteService } from '../services/website.service';
 import { WebsiteRenderer } from '../components/renderer/WebsiteRenderer';
-import { AlertCircle, ArrowLeft, Globe } from 'lucide-react';
+import { AlertCircle, ArrowLeft, Globe, ShieldAlert } from 'lucide-react';
 
 interface Props {
   slug: string;
@@ -13,6 +13,8 @@ export const PublicSitePage: React.FC<Props> = ({ slug }) => {
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isDraft, setIsDraft] = useState(false);
+  const [isSuspended, setIsSuspended] = useState(false);
+  const [suspendReason, setSuspendReason] = useState<string | null>(null);
 
   useEffect(() => {
     async function loadPublicSite() {
@@ -20,6 +22,8 @@ export const PublicSitePage: React.FC<Props> = ({ slug }) => {
         setLoading(true);
         setErrorMsg(null);
         setIsDraft(false);
+        setIsSuspended(false);
+        setSuspendReason(null);
 
         const data = await websiteService.getPublicWebsite(slug);
         setWebsite(data);
@@ -32,7 +36,10 @@ export const PublicSitePage: React.FC<Props> = ({ slug }) => {
         }).catch(() => {});
       } catch (err: any) {
         console.error('Fetch public site failed:', err);
-        if (err.details?.isDraft || err.status === 403) {
+        if (err.details?.isSuspended || err.isSuspended) {
+          setIsSuspended(true);
+          setSuspendReason(err.details?.suspendReason || err.suspendReason || err.message);
+        } else if (err.details?.isDraft || err.status === 403) {
           setIsDraft(true);
         }
         setErrorMsg(err.message || 'Halaman tidak dapat diakses.');
@@ -88,6 +95,40 @@ export const PublicSitePage: React.FC<Props> = ({ slug }) => {
         <div className="text-center space-y-3">
           <div className="w-10 h-10 border-3 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto" />
           <p className="text-sm font-medium text-slate-500">Memuat landing page...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (isSuspended) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-900 p-4">
+        <div className="bg-slate-800 text-white p-8 rounded-3xl shadow-2xl border border-red-500/30 text-center max-w-md space-y-4">
+          <div className="w-16 h-16 rounded-3xl bg-red-500/10 text-red-400 border border-red-500/20 flex items-center justify-center mx-auto shadow-inner">
+            <ShieldAlert className="w-8 h-8" />
+          </div>
+          <div className="space-y-1">
+            <span className="text-[10px] font-black tracking-widest text-red-400 uppercase bg-red-950/80 px-2.5 py-0.5 rounded-full border border-red-800/60 inline-block">
+              Tindakan Administrator
+            </span>
+            <h2 className="text-xl font-black text-white">Website Telah Ditangguhkan</h2>
+          </div>
+          <div className="p-3.5 bg-slate-900/80 rounded-2xl border border-slate-700/60 text-left space-y-1">
+            <span className="text-[10px] font-bold text-slate-400 uppercase block">Alasan Penangguhan:</span>
+            <p className="text-xs text-red-300 font-medium leading-relaxed">
+              {suspendReason || 'Website ini dinonaktifkan sementara oleh Administrator karena melanggar ketentuan layanan platform LOKA.'}
+            </p>
+          </div>
+          <p className="text-xs text-slate-400 leading-relaxed">
+            Jika Anda adalah pemilik website ini dan merasa ada kekeliruan, silakan hubungi tim administrator platform untuk klarifikasi dan verifikasi akun.
+          </p>
+          <a
+            href="/"
+            className="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-700 hover:bg-slate-600 text-white rounded-xl text-xs font-bold transition cursor-pointer"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>Kembali ke Beranda</span>
+          </a>
         </div>
       </div>
     );

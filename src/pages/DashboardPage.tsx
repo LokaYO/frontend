@@ -27,10 +27,15 @@ import {
   TrendingUp,
   QrCode,
   Inbox,
+  Megaphone,
+  X,
+  ShieldAlert,
 } from 'lucide-react';
 import { AdminMonitoringPanel } from '../components/admin/AdminMonitoringPanel';
 import { QrCodeModal } from '../components/common/QrCodeModal';
 import { LeadsModal } from '../components/common/LeadsModal';
+import { adminService, AdminAnnouncement } from '../services/admin.service';
+import { useToast } from '../context/ToastContext';
 
 interface Props {
   onOpenEditor: (websiteId: string) => void;
@@ -40,6 +45,7 @@ interface Props {
 
 export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite, initialNav }) => {
   const { user, token, logout } = useAuth();
+  const toast = useToast();
   const isAdmin = user?.role === 'admin' || user?.role === 'support';
   const [websites, setWebsites] = useState<Website[]>([]);
   const [loading, setLoading] = useState(true);
@@ -52,6 +58,31 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
   const [selectedQrSite, setSelectedQrSite] = useState<Website | null>(null);
   const [selectedLeadsSite, setSelectedLeadsSite] = useState<Website | null>(null);
   const [duplicatingId, setDuplicatingId] = useState<string | null>(null);
+  const [announcements, setAnnouncements] = useState<AdminAnnouncement[]>([]);
+  const [dismissedAnnouncements, setDismissedAnnouncements] = useState<string[]>(() => {
+    try {
+      return JSON.parse(sessionStorage.getItem('loka_dismissed_announcements') || '[]');
+    } catch {
+      return [];
+    }
+  });
+
+  const dismissAnnouncement = (id: string) => {
+    setDismissedAnnouncements((prev) => {
+      const updated = [...prev, id];
+      sessionStorage.setItem('loka_dismissed_announcements', JSON.stringify(updated));
+      return updated;
+    });
+  };
+
+  // Fetch active system announcements for clients
+  useEffect(() => {
+    if (!isAdmin) {
+      adminService.getActiveAnnouncements()
+        .then((data) => setAnnouncements(data))
+        .catch(() => {});
+    }
+  }, [isAdmin]);
 
   // Fetch all websites belonging to user (Khusus role 'user', admin tidak punya website pribadi)
   const fetchWebsites = useCallback(async () => {
@@ -74,17 +105,35 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
   // Toggle publish / unpublish
   const handleTogglePublish = async (website: Website) => {
     if (!token) return;
+
+    if (website.status === 'suspended') {
+      toast.suspend(
+        `Website "${website.name}" Ditangguhkan`,
+        `Alasan: ${website.suspendReason || 'Pelanggaran ketentuan layanan platform'}. Silakan hubungi tim administrator untuk proses pemulihan.`
+      );
+      return;
+    }
+
     const isPublished = website.status === 'published';
 
     try {
       if (isPublished) {
         await websiteService.unpublishWebsite(website.id);
+        toast.info(
+          'Website Diubah ke Draft',
+          `"${website.name}" dinonaktifkan sementara dan tidak dapat diakses publik.`
+        );
       } else {
         await websiteService.publishWebsite(website.id);
+        toast.success(
+          'Website Berhasil Dipublikasikan!',
+          `"${website.name}" kini live dan dapat diakses publik.`
+        );
       }
       fetchWebsites();
-    } catch (err) {
+    } catch (err: any) {
       console.error('Toggle publish error:', err);
+      toast.error('Gagal Mengubah Status', err.message || 'Terjadi kesalahan sistem.');
     }
   };
 
@@ -98,8 +147,10 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
     try {
       await websiteService.deleteWebsite(websiteId);
       setWebsites((prev) => prev.filter((w) => w.id !== websiteId));
-    } catch (err) {
+      toast.info('Website Dihapus', `"${websiteName}" telah dihapus secara permanen.`);
+    } catch (err: any) {
       console.error('Delete website error:', err);
+      toast.error('Gagal Menghapus Website', err.message || 'Terjadi kesalahan saat menghapus.');
     }
   };
 
@@ -107,10 +158,14 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
   const handleDuplicateWebsite = async (id: string) => {
     try {
       setDuplicatingId(id);
-      await websiteService.duplicateWebsite(id);
+      const res = await websiteService.duplicateWebsite(id);
       await fetchWebsites();
+      toast.success(
+        'Website Berhasil Diduplikasi!',
+        `Salinan baru "${res.website?.name || 'Website Copy'}" siap dikustomisasi.`
+      );
     } catch (err: any) {
-      alert(err.message || 'Gagal menduplikasi website');
+      toast.error('Gagal Menduplikasi', err.message || 'Terjadi kendala saat kloning website.');
     } finally {
       setDuplicatingId(null);
     }
@@ -120,6 +175,7 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
     const url = `${window.location.origin}/sites/${slug}`;
     navigator.clipboard.writeText(url);
     setCopiedSlug(slug);
+    toast.success('Tautan Tersalin!', 'Alamat link landing page berhasil disalin ke clipboard.');
     setTimeout(() => setCopiedSlug(null), 2000);
   };
 
@@ -334,6 +390,53 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
                 </div>
               </div>
 
+              {/* ── Broadcast Pengumuman Sistem Banner ── */}
+              {announcements.filter((a) => !dismissedAnnouncements.includes(a.id)).map((ann) => {
+                const typeStyle = {
+                  info: 'bg-blue-50/90 border-blue-200 text-blue-900',
+                  warning: 'bg-amber-50/90 border-amber-200 text-amber-900',
+                  alert: 'bg-red-50/90 border-red-200 text-red-900',
+                  success: 'bg-emerald-50/90 border-emerald-200 text-emerald-900',
+                }[ann.type] || 'bg-blue-50/90 border-blue-200 text-blue-900';
+
+                const badgeBg = {
+                  info: 'bg-blue-600 text-white',
+                  warning: 'bg-amber-600 text-white',
+                  alert: 'bg-red-600 text-white',
+                  success: 'bg-emerald-600 text-white',
+                }[ann.type] || 'bg-blue-600 text-white';
+
+                return (
+                  <div
+                    key={ann.id}
+                    className={`p-4 rounded-2xl border ${typeStyle} shadow-xs flex items-start justify-between gap-4 transition-all`}
+                  >
+                    <div className="flex items-start gap-3 min-w-0">
+                      <span className="p-2 rounded-xl bg-white/80 shadow-2xs shrink-0 mt-0.5">
+                        <Megaphone className="w-4 h-4 text-slate-700" />
+                      </span>
+                      <div className="space-y-0.5 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-md ${badgeBg}`}>
+                            {ann.type === 'alert' ? 'PENTING' : ann.type === 'warning' ? 'PERHATIAN' : 'PENGUMUMAN'}
+                          </span>
+                          <h4 className="text-xs font-bold truncate">{ann.title}</h4>
+                        </div>
+                        <p className="text-xs opacity-90 leading-relaxed">{ann.message}</p>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => dismissAnnouncement(ann.id)}
+                      className="p-1.5 rounded-lg hover:bg-black/5 text-slate-500 hover:text-slate-800 transition shrink-0"
+                      title="Tutup pengumuman"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                );
+              })}
+
               {/* Analytics Summary Banner */}
               {!loading && websites.length > 0 && (
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -425,15 +528,22 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
                           }}
                         >
                           <div className="flex items-center justify-between z-10">
-                            <span
-                              className={`px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase shadow-xs ${
-                                isPublished
-                                  ? 'bg-emerald-500 text-white'
-                                  : 'bg-amber-400 text-slate-900'
-                              }`}
-                            >
-                              {isPublished ? '● Published' : '○ Draft'}
-                            </span>
+                            {site.status === 'suspended' ? (
+                              <span className="px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase shadow-xs bg-red-600 text-white flex items-center gap-1">
+                                <ShieldAlert className="w-3 h-3" />
+                                Ditangguhkan
+                              </span>
+                            ) : (
+                              <span
+                                className={`px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase shadow-xs ${
+                                  isPublished
+                                    ? 'bg-emerald-500 text-white'
+                                    : 'bg-amber-400 text-slate-900'
+                                }`}
+                              >
+                                {isPublished ? '● Published' : '○ Draft'}
+                              </span>
+                            )}
 
                             <span className="text-[10px] text-slate-500 font-semibold bg-white/90 px-2 py-0.5 rounded-md shadow-2xs">
                               {site.businessInfo?.category || 'Bisnis Lokal'}

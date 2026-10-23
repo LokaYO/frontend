@@ -34,7 +34,15 @@ import {
   UserCheck,
   Building2,
   SlidersHorizontal,
+  Megaphone,
+  FileSpreadsheet,
+  History,
 } from 'lucide-react';
+import { AdminModerationTab } from './AdminModerationTab';
+import { AdminAnnouncementsTab } from './AdminAnnouncementsTab';
+import { AdminExportTab } from './AdminExportTab';
+import { AdminAuditLogsTab } from './AdminAuditLogsTab';
+import { useToast } from '../../context/ToastContext';
 
 // ─── Section Preview Component ─────────────────────────────────────────────────
 
@@ -617,6 +625,8 @@ const ClientDetailView: React.FC<ClientDetailViewProps> = ({
 
 export const AdminMonitoringPanel: React.FC = () => {
   const { user } = useAuth();
+  const toast = useToast();
+  const [mainTab, setMainTab] = useState<'users' | 'moderation' | 'announcements' | 'export' | 'audit'>('users');
   const [users, setUsers] = useState<MonitoringUser[]>([]);
   const [stats, setStats] = useState<PlatformStats | null>(null);
   const [loading, setLoading] = useState(true);
@@ -650,8 +660,9 @@ export const AdminMonitoringPanel: React.FC = () => {
       setActionLoading(userId);
       await adminService.updateUserRole(userId, newRole);
       setUsers((prev) => prev.map((u) => (u.id === userId ? { ...u, role: newRole } : u)));
+      toast.success('Role Berhasil Diubah', `Otoritas akses diubah menjadi '${newRole}'.`);
     } catch (err: any) {
-      alert(err.message || 'Gagal mengubah role');
+      toast.error('Gagal Mengubah Role', err.message || 'Terjadi kesalahan sistem');
     } finally {
       setActionLoading(null);
     }
@@ -665,8 +676,9 @@ export const AdminMonitoringPanel: React.FC = () => {
       setUsers((prev) => prev.filter((u) => u.id !== userId));
       setSelectedUserId(null);
       loadData();
+      toast.info('Akun Pengguna Dihapus', `User "${userName}" beserta seluruh websitenya telah dihapus.`);
     } catch (err: any) {
-      alert(err.message || 'Gagal menghapus user');
+      toast.error('Gagal Menghapus User', err.message || 'Terjadi kesalahan sistem');
     } finally {
       setActionLoading(null);
     }
@@ -719,8 +731,99 @@ export const AdminMonitoringPanel: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* ── Top Header ───────────────────────────────────── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-slate-200 shadow-xs">
+      {/* ── Admin Management Navigation Tabs (5 Fitur Utama) ── */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-1 bg-white p-2 rounded-2xl border border-slate-200/90 shadow-2xs">
+        <button
+          type="button"
+          onClick={() => setMainTab('users')}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-extrabold transition shrink-0 cursor-pointer ${
+            mainTab === 'users'
+              ? 'bg-purple-600 text-white shadow-xs'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+          }`}
+        >
+          <Users className="w-4 h-4" />
+          <span>Pengguna & Sesi</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setMainTab('moderation')}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-extrabold transition shrink-0 cursor-pointer ${
+            mainTab === 'moderation'
+              ? 'bg-purple-600 text-white shadow-xs'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+          }`}
+        >
+          <ShieldAlert className="w-4 h-4" />
+          <span>Moderasi Website</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setMainTab('announcements')}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-extrabold transition shrink-0 cursor-pointer ${
+            mainTab === 'announcements'
+              ? 'bg-purple-600 text-white shadow-xs'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+          }`}
+        >
+          <Megaphone className="w-4 h-4" />
+          <span>Broadcast Pengumuman</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setMainTab('export')}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-extrabold transition shrink-0 cursor-pointer ${
+            mainTab === 'export'
+              ? 'bg-purple-600 text-white shadow-xs'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+          }`}
+        >
+          <FileSpreadsheet className="w-4 h-4" />
+          <span>Ekspor Laporan (Excel)</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setMainTab('audit')}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-extrabold transition shrink-0 cursor-pointer ${
+            mainTab === 'audit'
+              ? 'bg-purple-600 text-white shadow-xs'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+          }`}
+        >
+          <History className="w-4 h-4" />
+          <span>Log Aktivitas (Audit)</span>
+        </button>
+      </div>
+
+      {/* ── TAB 2: MODERASI WEBSITE ── */}
+      {mainTab === 'moderation' && (
+        <AdminModerationTab currentAdminRole={user?.role || ''} />
+      )}
+
+      {/* ── TAB 3: BROADCAST PENGUMUMAN ── */}
+      {mainTab === 'announcements' && (
+        <AdminAnnouncementsTab />
+      )}
+
+      {/* ── TAB 4: EKSPOR LAPORAN (EXCEL) ── */}
+      {mainTab === 'export' && (
+        <AdminExportTab />
+      )}
+
+      {/* ── TAB 5: LOG AKTIVITAS (AUDIT TRAIL) ── */}
+      {mainTab === 'audit' && (
+        <AdminAuditLogsTab />
+      )}
+
+      {/* ── TAB 1: PENGGUNA & CLIENT MONITORING ── */}
+      {mainTab === 'users' && (
+        <>
+          {/* ── Top Header ───────────────────────────────────── */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-slate-200 shadow-xs">
         <div>
           <div className="flex items-center gap-2">
             <span className="p-2 rounded-xl bg-purple-50 text-purple-700">
@@ -1023,6 +1126,8 @@ export const AdminMonitoringPanel: React.FC = () => {
           </p>
         </div>
       </div>
+      </>
+      )}
     </div>
   );
 };

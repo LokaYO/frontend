@@ -77,6 +77,47 @@ export interface UserDetails {
   activeSessions: AdminActiveSession[];
 }
 
+export interface AdminModerationWebsite {
+  id: string;
+  userId: string;
+  ownerName: string;
+  ownerEmail: string;
+  name: string;
+  slug: string;
+  status: 'draft' | 'published' | 'suspended';
+  template: string | null;
+  suspendReason: string | null;
+  viewsCount: number;
+  whatsappClicksCount: number;
+  createdAt: string;
+  updatedAt: string;
+  sectionCount: number;
+}
+
+export interface AdminAnnouncement {
+  id: string;
+  title: string;
+  message: string;
+  type: 'info' | 'warning' | 'success' | 'alert';
+  isActive: boolean;
+  createdBy: string | null;
+  authorName?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AuditLogItem {
+  id: string;
+  userId?: string | null;
+  userName?: string | null;
+  userEmail?: string | null;
+  action: string;
+  details: Record<string, any>;
+  ipAddress?: string | null;
+  userAgent?: string | null;
+  createdAt: string;
+}
+
 export const adminService = {
   async getMonitoringUsers(): Promise<MonitoringUser[]> {
     const data = await apiClient.get<{ users: MonitoringUser[] }>('/api/admin/users');
@@ -98,5 +139,59 @@ export const adminService = {
   async getStats(): Promise<PlatformStats> {
     const data = await apiClient.get<{ stats: PlatformStats }>('/api/admin/stats');
     return data.stats;
+  },
+
+  // Moderasi Konten & Suspend Website
+  async getModerationWebsites(): Promise<AdminModerationWebsite[]> {
+    const data = await apiClient.get<{ websites: AdminModerationWebsite[] }>('/api/admin/websites');
+    return data.websites || [];
+  },
+
+  async suspendWebsite(websiteId: string, reason: string): Promise<{ success: boolean; message: string }> {
+    return apiClient.post(`/api/admin/websites/${websiteId}/suspend`, { reason });
+  },
+
+  async unsuspendWebsite(websiteId: string): Promise<{ success: boolean; message: string }> {
+    return apiClient.post(`/api/admin/websites/${websiteId}/unsuspend`, {});
+  },
+
+  // Broadcast Pengumuman Sistem
+  async getAnnouncements(): Promise<AdminAnnouncement[]> {
+    const data = await apiClient.get<{ announcements: AdminAnnouncement[] }>('/api/admin/announcements');
+    return data.announcements || [];
+  },
+
+  async getActiveAnnouncements(): Promise<AdminAnnouncement[]> {
+    const data = await apiClient.get<{ announcements: AdminAnnouncement[] }>('/api/announcements/active');
+    return data.announcements || [];
+  },
+
+  async createAnnouncement(params: {
+    title: string;
+    message: string;
+    type: 'info' | 'warning' | 'success' | 'alert';
+  }): Promise<{ announcement: AdminAnnouncement }> {
+    return apiClient.post('/api/admin/announcements', params);
+  },
+
+  async toggleAnnouncement(id: string): Promise<{ success: boolean; isActive: boolean }> {
+    return apiClient.patch(`/api/admin/announcements/${id}/toggle`, {});
+  },
+
+  async deleteAnnouncement(id: string): Promise<{ success: boolean; message: string }> {
+    return apiClient.delete(`/api/admin/announcements/${id}`);
+  },
+
+  // Log Aktivitas Sistem (Audit Trail)
+  async getAuditLogs(params?: { limit?: number; offset?: number; action?: string }): Promise<{
+    logs: AuditLogItem[];
+    total: number;
+  }> {
+    const q = new URLSearchParams();
+    if (params?.limit) q.set('limit', String(params.limit));
+    if (params?.offset) q.set('offset', String(params.offset));
+    if (params?.action) q.set('action', params.action);
+    const qs = q.toString() ? `?${q.toString()}` : '';
+    return apiClient.get(`/api/admin/audit-logs${qs}`);
   },
 };

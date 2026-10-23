@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ToastProvider } from './context/ToastContext';
 import { AuthPage } from './pages/AuthPage';
 import { AdminLoginPage } from './pages/AdminLoginPage';
 import { DashboardPage } from './pages/DashboardPage';
@@ -154,7 +155,9 @@ function MainApp() {
 export default function App() {
   return (
     <AuthProvider>
-      <MainApp />
+      <ToastProvider>
+        <MainApp />
+      </ToastProvider>
     </AuthProvider>
   );
 }
