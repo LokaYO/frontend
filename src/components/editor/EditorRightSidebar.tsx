@@ -215,13 +215,16 @@ export const EditorRightSidebar: React.FC<Props> = ({ section, onUpdateContent, 
           </div>
         </div>
         {/* COMMON: Badge */}
-        {"badge" in content && (
+        {("badge" in content || "badgeText" in content || section.type === "hero") && (
           <div>
             <label className="block font-semibold text-slate-700 mb-1">Badge / Label Atas</label>
             <input
               type="text"
-              value={content.badge || ""}
-              onChange={(e) => handleChange("badge", e.target.value)}
+              value={content.badge ?? content.badgeText ?? ""}
+              onChange={(e) => {
+                handleChange("badge", e.target.value);
+                if ("badgeText" in content) handleChange("badgeText", e.target.value);
+              }}
               placeholder="Contoh: ✨ Promo Spesial"
               className="w-full px-3 py-2 border border-slate-200 rounded-lg outline-none focus:ring-1 focus:ring-blue-500"
             />
@@ -229,18 +232,34 @@ export const EditorRightSidebar: React.FC<Props> = ({ section, onUpdateContent, 
         )}
 
         {/* COMMON: Title */}
-        {"title" in content && (
+        {("title" in content || "headline" in content || section.type === "hero") && (
           <div>
             <label className="block font-semibold text-slate-700 mb-1">Judul Utama (Title)</label>
-            <input type="text" value={content.title || ""} onChange={(e) => handleChange("title", e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 font-medium" />
+            <input
+              type="text"
+              value={content.title ?? content.headline ?? ""}
+              onChange={(e) => {
+                handleChange("title", e.target.value);
+                if ("headline" in content) handleChange("headline", e.target.value);
+              }}
+              className="w-full px-3 py-2 border border-slate-200 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 font-medium"
+            />
           </div>
         )}
 
         {/* COMMON: Subtitle / Description */}
-        {"description" in content && (
+        {("description" in content || "subheadline" in content || section.type === "hero") && (
           <div>
             <label className="block font-semibold text-slate-700 mb-1">Deskripsi Teks</label>
-            <textarea rows={3} value={content.description || ""} onChange={(e) => handleChange("description", e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-lg outline-none focus:ring-1 focus:ring-blue-500" />
+            <textarea
+              rows={3}
+              value={content.description ?? content.subheadline ?? ""}
+              onChange={(e) => {
+                handleChange("description", e.target.value);
+                if ("subheadline" in content) handleChange("subheadline", e.target.value);
+              }}
+              className="w-full px-3 py-2 border border-slate-200 rounded-lg outline-none focus:ring-1 focus:ring-blue-500"
+            />
           </div>
         )}
 
@@ -256,15 +275,26 @@ export const EditorRightSidebar: React.FC<Props> = ({ section, onUpdateContent, 
           <div className="space-y-4 pt-2 border-t border-slate-100">
             <div>
               <label className="block font-semibold text-slate-700 mb-1">Teks Tombol Utama (WhatsApp)</label>
-              <input type="text" value={content.buttonText || ""} onChange={(e) => handleChange("buttonText", e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-lg outline-none" />
+              <input
+                type="text"
+                value={content.buttonText ?? content.ctaText ?? ""}
+                onChange={(e) => {
+                  handleChange("buttonText", e.target.value);
+                  if ("ctaText" in content) handleChange("ctaText", e.target.value);
+                }}
+                className="w-full px-3 py-2 border border-slate-200 rounded-lg outline-none"
+              />
             </div>
 
             <div>
               <label className="block font-semibold text-slate-700 mb-1">Link URL Tombol Utama</label>
               <input
                 type="text"
-                value={content.buttonUrl || ""}
-                onChange={(e) => handleChange("buttonUrl", e.target.value)}
+                value={content.buttonUrl ?? content.ctaUrl ?? ""}
+                onChange={(e) => {
+                  handleChange("buttonUrl", e.target.value);
+                  if ("ctaUrl" in content) handleChange("ctaUrl", e.target.value);
+                }}
                 placeholder="https://wa.me/..."
                 className="w-full px-3 py-2 border border-slate-200 rounded-lg outline-none font-mono text-[11px]"
               />

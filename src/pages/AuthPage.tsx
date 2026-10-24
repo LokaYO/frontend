@@ -1,21 +1,21 @@
-import React, { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
-import { authService } from '../services/auth.service';
-import { Sparkles, ArrowRight, Lock, Mail, User, CheckCircle2, ShieldCheck, ArrowLeft } from 'lucide-react';
-import logoOfficialWithTagline from '../assets/Logo Loka (2).png';
+import React, { useState } from "react";
+import { useAuth } from "../context/AuthContext";
+import { authService } from "../services/auth.service";
+import { ArrowRight, Lock, Mail, User, CheckCircle2, ShieldCheck, ArrowLeft } from "lucide-react";
+import logoOfficialWithTagline from "../assets/Logo Loka (2).png";
 
 interface Props {
   onNavigateAdmin?: () => void;
   onNavigateHome?: () => void;
-  initialMode?: 'login' | 'register';
+  initialMode?: "login" | "register";
 }
 
-export const AuthPage: React.FC<Props> = ({ onNavigateAdmin, onNavigateHome, initialMode = 'login' }) => {
+export const AuthPage: React.FC<Props> = ({ onNavigateAdmin, onNavigateHome, initialMode = "login" }) => {
   const { login } = useAuth();
-  const [isRegister, setIsRegister] = useState(initialMode === 'register');
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [isRegister, setIsRegister] = useState(initialMode === "register");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
@@ -25,33 +25,17 @@ export const AuthPage: React.FC<Props> = ({ onNavigateAdmin, onNavigateHome, ini
     setLoading(true);
 
     try {
-      const data = isRegister
-        ? await authService.register(name, email, password)
-        : await authService.login(email, password);
+      const data = isRegister ? await authService.register(name, email, password) : await authService.login(email, password);
 
       login(data.token, data.user);
 
       // Jika yang login ternyata admin, arahkan ke /admin
-      if ((data.user.role === 'admin' || data.user.role === 'support') && onNavigateAdmin) {
+      if ((data.user.role === "admin" || data.user.role === "support") && onNavigateAdmin) {
         onNavigateAdmin();
       }
     } catch (err: any) {
-      console.error('Auth error:', err);
-      setErrorMsg(err.message || 'Gagal masuk');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Instant 1-click Demo Account Login
-  const handleDemoLogin = async () => {
-    setErrorMsg(null);
-    setLoading(true);
-    try {
-      const data = await authService.login('demo@lokalsite.id', 'password123');
-      login(data.token, data.user);
-    } catch (err: any) {
-      setErrorMsg(err.message || 'Gagal login akun demo');
+      console.error("Auth error:", err);
+      setErrorMsg(err.message || "Gagal masuk");
     } finally {
       setLoading(false);
     }
@@ -63,50 +47,20 @@ export const AuthPage: React.FC<Props> = ({ onNavigateAdmin, onNavigateHome, ini
         {/* Top Back Nav */}
         {onNavigateHome && (
           <div className="flex items-center justify-between">
-            <button
-              type="button"
-              onClick={onNavigateHome}
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-800 transition cursor-pointer"
-            >
+            <button type="button" onClick={onNavigateHome} className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-800 transition cursor-pointer">
               <ArrowLeft className="w-4 h-4" />
               <span>Kembali ke Beranda</span>
             </button>
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-              Login Merchant
-            </span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider"></span>
           </div>
         )}
 
         {/* Logo & Headline */}
         <div className="text-center space-y-3">
           <div className="flex justify-center">
-            <img
-              src={logoOfficialWithTagline}
-              alt="Loka - Your Bussines, Online"
-              className="h-16 w-auto object-contain drop-shadow-xs"
-            />
+            <img src={logoOfficialWithTagline} alt="Loka - Your Bussines, Online" className="h-16 w-auto object-contain drop-shadow-xs" />
           </div>
-          <p className="text-xs text-slate-500 max-w-xs mx-auto">
-            Platform B2B SaaS pembuatan landing page profesional untuk UMKM & bisnis lokal secara mandiri.
-          </p>
-        </div>
-
-        {/* 1-Click Demo Login Banner */}
-        <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/90 flex items-center justify-between gap-3">
-          <div className="space-y-0.5">
-            <span className="text-[11px] font-bold text-slate-900 block">Ingin langsung mencoba?</span>
-            <span className="text-[10px] text-slate-500 block">Akses instan sebagai Blackiee (Akun Demo)</span>
-          </div>
-          <button
-            type="button"
-            onClick={handleDemoLogin}
-            disabled={loading}
-            style={{ backgroundColor: '#425B9A' }}
-            className="px-3.5 py-1.5 rounded-xl text-white text-xs font-bold shadow-xs flex items-center gap-1 active:scale-95 transition shrink-0 disabled:opacity-50 cursor-pointer hover:opacity-95"
-          >
-            <Sparkles className="w-3.5 h-3.5 text-[#76C0EC]" />
-            <span>Login Demo</span>
-          </button>
+          <p className="text-xs text-slate-500 max-w-xs mx-auto">Platform B2B SaaS pembuatan landing page profesional untuk UMKM & bisnis lokal secara mandiri.</p>
         </div>
 
         {/* Auth Mode Toggle */}
@@ -117,11 +71,9 @@ export const AuthPage: React.FC<Props> = ({ onNavigateAdmin, onNavigateHome, ini
               setIsRegister(false);
               setErrorMsg(null);
             }}
-            className={`flex-1 py-2 text-xs font-bold rounded-lg transition cursor-pointer ${
-              !isRegister ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500 hover:text-slate-900'
-            }`}
+            className={`flex-1 py-2 text-xs font-bold rounded-lg transition cursor-pointer ${!isRegister ? "bg-white text-slate-900 shadow-xs" : "text-slate-500 hover:text-slate-900"}`}
           >
-            Masuk (Login)
+            Masuk
           </button>
           <button
             type="button"
@@ -129,28 +81,20 @@ export const AuthPage: React.FC<Props> = ({ onNavigateAdmin, onNavigateHome, ini
               setIsRegister(true);
               setErrorMsg(null);
             }}
-            className={`flex-1 py-2 text-xs font-bold rounded-lg transition cursor-pointer ${
-              isRegister ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500 hover:text-slate-900'
-            }`}
+            className={`flex-1 py-2 text-xs font-bold rounded-lg transition cursor-pointer ${isRegister ? "bg-white text-slate-900 shadow-xs" : "text-slate-500 hover:text-slate-900"}`}
           >
             Daftar Baru
           </button>
         </div>
 
         {/* Error Notification */}
-        {errorMsg && (
-          <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-red-600 text-xs">
-            {errorMsg}
-          </div>
-        )}
+        {errorMsg && <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-red-600 text-xs">{errorMsg}</div>}
 
         {/* Auth Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           {isRegister && (
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Nama Lengkap / Nama Bisnis
-              </label>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">Nama Lengkap / Nama Bisnis</label>
               <div className="relative">
                 <User className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
@@ -158,7 +102,7 @@ export const AuthPage: React.FC<Props> = ({ onNavigateAdmin, onNavigateHome, ini
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="Contoh: Budi Santoso"
+                  placeholder="Contoh: M Atha"
                   className="w-full pl-9 pr-3 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:ring-2 focus:ring-blue-500"
                 />
               </div>
@@ -166,9 +110,7 @@ export const AuthPage: React.FC<Props> = ({ onNavigateAdmin, onNavigateHome, ini
           )}
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
-              Alamat Email
-            </label>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">Alamat Email</label>
             <div className="relative">
               <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
@@ -183,9 +125,7 @@ export const AuthPage: React.FC<Props> = ({ onNavigateAdmin, onNavigateHome, ini
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
-              Password
-            </label>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">Password</label>
             <div className="relative">
               <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
@@ -202,10 +142,10 @@ export const AuthPage: React.FC<Props> = ({ onNavigateAdmin, onNavigateHome, ini
           <button
             type="submit"
             disabled={loading}
-            style={{ backgroundColor: '#425B9A' }}
+            style={{ backgroundColor: "#425B9A" }}
             className="w-full py-3 text-white rounded-xl text-xs font-bold shadow-md hover:opacity-95 transition active:scale-95 flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
           >
-            <span>{loading ? 'Memproses...' : isRegister ? 'Daftar Sekarang' : 'Masuk ke Dashboard'}</span>
+            <span>{loading ? "Memproses..." : isRegister ? "Daftar Sekarang" : "Masuk ke Dashboard"}</span>
             <ArrowRight className="w-4 h-4 text-[#76C0EC]" />
           </button>
         </form>

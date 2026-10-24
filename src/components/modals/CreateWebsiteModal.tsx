@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { PRESET_TEMPLATES, PresetTemplate } from '../../templates/presetTemplates';
-import { BusinessInfo } from '../../types/schema';
+import { BusinessInfo, SectionType } from '../../types/schema';
 import { useAuth } from '../../context/AuthContext';
 import { aiService } from '../../services/ai.service';
 import { websiteService } from '../../services/website.service';
@@ -21,7 +21,101 @@ import {
   MapPin,
   MessageCircle,
   Crown,
+  Palette,
+  PenTool,
+  Sliders,
 } from 'lucide-react';
+
+const createStarterScratchSections = (
+  businessName: string,
+  category: string,
+  whatsapp: string,
+  primaryColor: string
+) => {
+  const cleanPhone = whatsapp.replace(/\D/g, '') || '6281234567890';
+  return [
+    {
+      type: 'navbar' as SectionType,
+      content: {
+        brandName: businessName,
+        logoUrl: '',
+        links: [
+          { label: 'Beranda', href: '#hero' },
+          { label: 'Tentang Kami', href: '#about' },
+          { label: 'Layanan', href: '#services' },
+          { label: 'Kontak', href: '#contact' },
+        ],
+        ctaText: 'Hubungi WhatsApp',
+        ctaUrl: `https://wa.me/${cleanPhone}?text=Halo%20${encodeURIComponent(businessName)},%20saya%20tertarik%20dengan%20layanan%20Anda`,
+        phone: whatsapp || '0812-3456-7890',
+      },
+    },
+    {
+      type: 'hero' as SectionType,
+      content: {
+        title: `Selamat Datang di ${businessName}`,
+        headline: `Selamat Datang di ${businessName}`,
+        description: `Solusi profesional terpercaya untuk kebutuhan ${category.toLowerCase()} Anda. Siap melayani dengan produk & layanan terbaik.`,
+        subheadline: `Solusi profesional terpercaya untuk kebutuhan ${category.toLowerCase()} Anda. Siap melayani dengan produk & layanan terbaik.`,
+        badge: 'Usaha Lokal Terverifikasi',
+        badgeText: 'Usaha Lokal Terverifikasi',
+        buttonText: 'Hubungi Kami via WhatsApp',
+        ctaText: 'Hubungi Kami via WhatsApp',
+        buttonUrl: `https://wa.me/${cleanPhone}?text=Halo%20${encodeURIComponent(businessName)},%20saya%20ingin%20tanya-tanya`,
+        ctaUrl: `https://wa.me/${cleanPhone}?text=Halo%20${encodeURIComponent(businessName)},%20saya%20ingin%20tanya-tanya`,
+        imageUrl: 'https://images.unsplash.com/photo-1556742049-0a67c5574f73?auto=format&fit=crop&w=1200&q=80',
+        layoutVariant: 'image-right',
+      },
+    },
+    {
+      type: 'services' as SectionType,
+      content: {
+        title: 'Layanan & Produk Pilihan',
+        subtitle: 'Kustomisasi daftar produk, katalog harga, dan deskripsi layanan Anda di visual editor.',
+        items: [
+          {
+            name: 'Layanan / Produk Utama',
+            description: 'Penjelasan singkat mengenai keunggulan produk atau layanan unggulan bisnis Anda.',
+            price: 'Hubungi Kami',
+            imageUrl: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
+          },
+          {
+            name: 'Paket / Layanan Populer',
+            description: 'Pilihan favorit pelanggan dengan penawaran terbaik dan kualitas terjamin.',
+            price: 'Hubungi Kami',
+            imageUrl: 'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=600&q=80',
+          },
+          {
+            name: 'Layanan Khusus & Kustom',
+            description: 'Layanan khusus yang dapat disesuaikan langsung dengan kebutuhan pelanggan Anda.',
+            price: 'Hubungi Kami',
+            imageUrl: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=600&q=80',
+          },
+        ],
+      },
+    },
+    {
+      type: 'contact' as SectionType,
+      content: {
+        title: 'Hubungi Kami Langsung',
+        subtitle: 'Kunjungi lokasi kami atau langsung terhubung dengan admin kami via WhatsApp.',
+        address: 'Alamat lengkap lokasi bisnis atau toko Anda',
+        phone: whatsapp || '0812-3456-7890',
+        whatsapp: cleanPhone,
+        workingHours: 'Senin - Minggu: 09:00 - 21:00 WIB',
+        mapEmbedUrl: '',
+      },
+    },
+    {
+      type: 'footer' as SectionType,
+      content: {
+        brandName: businessName,
+        tagline: 'Kepuasan dan kenyamanan pelanggan adalah komitmen utama kami.',
+        copyrightText: `© ${new Date().getFullYear()} ${businessName}. Seluruh hak cipta dilindungi.`,
+      },
+    },
+  ];
+};
 
 interface Props {
   isOpen: boolean;
@@ -39,7 +133,7 @@ export const CreateWebsiteModal: React.FC<Props> = ({
   onOpenPricing,
 }) => {
   const { token, user } = useAuth();
-  const [step, setStep] = useState<'choose_method' | 'ai_form' | 'template_gallery'>('choose_method');
+  const [step, setStep] = useState<'choose_method' | 'ai_form' | 'template_gallery' | 'custom_scratch'>('choose_method');
   const [selectedTemplate, setSelectedTemplate] = useState<PresetTemplate | null>(null);
   const [loading, setLoading] = useState(false);
   const [loadingStatus, setLoadingStatus] = useState<string>('');
@@ -70,6 +164,15 @@ export const CreateWebsiteModal: React.FC<Props> = ({
   // Template Form State
   const [templateSiteName, setTemplateSiteName] = useState('');
 
+  // Scratch Form State
+  const [scratchForm, setScratchForm] = useState({
+    name: '',
+    category: 'Coffee Shop & Kafe',
+    whatsapp: '',
+    primaryColor: '#425B9A',
+    font: 'sans' as 'sans' | 'serif' | 'mono',
+  });
+
   if (!isOpen) return null;
 
   const handleReset = () => {
@@ -77,11 +180,67 @@ export const CreateWebsiteModal: React.FC<Props> = ({
     setSelectedTemplate(null);
     setLoading(false);
     setErrorMsg(null);
+    setScratchForm({
+      name: '',
+      category: 'Coffee Shop & Kafe',
+      whatsapp: '',
+      primaryColor: '#425B9A',
+      font: 'sans',
+    });
   };
 
   const handleClose = () => {
     handleReset();
     onClose();
+  };
+
+  // Submit Custom Build from Scratch
+  const handleCreateFromScratch = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!scratchForm.name.trim()) {
+      setErrorMsg('Nama website atau bisnis wajib diisi');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setErrorMsg(null);
+      setLoadingStatus('Menyiapkan kanvas website custom...');
+
+      const initialSections = createStarterScratchSections(
+        scratchForm.name.trim(),
+        scratchForm.category,
+        scratchForm.whatsapp.trim(),
+        scratchForm.primaryColor
+      );
+
+      const created = await websiteService.createWebsite({
+        name: scratchForm.name.trim(),
+        businessInfo: {
+          name: scratchForm.name.trim(),
+          category: scratchForm.category,
+          description: `Website resmi untuk ${scratchForm.name.trim()}.`,
+          location: 'Indonesia',
+          whatsapp: scratchForm.whatsapp.trim() || '6281234567890',
+        },
+        theme: {
+          primaryColor: scratchForm.primaryColor,
+          secondaryColor: '#0f172a',
+          font: scratchForm.font,
+          accentColor: '#76C0EC',
+          backgroundColor: '#ffffff',
+        },
+        sections: initialSections,
+      });
+
+      handleClose();
+      onWebsiteCreated(created.websiteId);
+    } catch (err: any) {
+      console.error('Scratch creation error:', err);
+      setErrorMsg(err.message || 'Gagal membuat website baru');
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Submit AI Website Generation
@@ -149,8 +308,8 @@ export const CreateWebsiteModal: React.FC<Props> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fade-in">
+      <div className="bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden animate-scale-up">
         {/* Modal Top Header */}
         <div className="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2">
@@ -158,7 +317,7 @@ export const CreateWebsiteModal: React.FC<Props> = ({
               <button
                 type="button"
                 onClick={() => setStep('choose_method')}
-                className="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition mr-1"
+                className="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition mr-1 cursor-pointer"
               >
                 <ArrowLeft className="w-4 h-4" />
               </button>
@@ -167,9 +326,10 @@ export const CreateWebsiteModal: React.FC<Props> = ({
               {step === 'choose_method' && 'Buat Website Baru'}
               {step === 'ai_form' && '✨ Buat dengan Gemini AI'}
               {step === 'template_gallery' && '🎨 Pilih dari Template Siap Pakai'}
+              {step === 'custom_scratch' && '🛠️ Kustomisasi Mandiri (Build from Scratch)'}
             </h3>
             {user?.plan === 'pro' && (
-              <span className="ml-2 inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-100 text-amber-800 text-[10px] font-bold">
+              <span className="ml-2 inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 text-[10px] font-black border border-amber-300">
                 <Crown className="w-3 h-3 text-amber-600 fill-amber-500" />
                 <span>PRO: Clean URL</span>
               </span>
@@ -178,7 +338,7 @@ export const CreateWebsiteModal: React.FC<Props> = ({
           <button
             type="button"
             onClick={handleClose}
-            className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition"
+            className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -195,26 +355,26 @@ export const CreateWebsiteModal: React.FC<Props> = ({
           {/* STEP 1: CHOOSE METHOD */}
           {step === 'choose_method' && (
             <div className="space-y-6">
-              <div className="text-center max-w-md mx-auto space-y-2">
+              <div className="text-center max-w-xl mx-auto space-y-2">
                 <h4 className="text-lg font-bold text-slate-900">Bagaimana Anda ingin memulainya?</h4>
-                <p className="text-xs text-slate-500">
-                  Pilih AI untuk dibuatkan copywriting & section otomatis, atau pilih template yang sudah didesain khusus untuk jenis bisnis Anda.
+                <p className="text-xs text-slate-500 leading-relaxed">
+                  Pilih AI untuk dibuatkan copywriting & section otomatis, pilih template siap pakai, atau bangun dari nol dengan kustomisasi mandiri.
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
                 {/* Option A: AI */}
                 <button
                   type="button"
                   onClick={() => setStep('ai_form')}
-                  className="p-6 rounded-2xl border-2 border-slate-200 hover:border-blue-600 hover:bg-blue-50/30 text-left transition group space-y-4 flex flex-col justify-between"
+                  className="p-6 rounded-2xl border-2 border-slate-200 hover:border-[#425B9A] hover:bg-[#425B9A]/5 text-left transition-all group space-y-4 flex flex-col justify-between cursor-pointer active:scale-98 shadow-2xs hover:shadow-md"
                 >
-                  <div className="space-y-3">
-                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center shadow-md shadow-blue-500/20">
-                      <Sparkles className="w-6 h-6" />
+                  <div className="space-y-3.5">
+                    <div className="w-13 h-13 rounded-2xl bg-[#425B9A] text-white flex items-center justify-center shadow-md shadow-[#425B9A]/20 group-hover:scale-105 transition-transform">
+                      <Sparkles className="w-6 h-6 text-[#76C0EC]" />
                     </div>
                     <div>
-                      <h5 className="text-sm font-bold text-slate-900 group-hover:text-blue-600 transition">
+                      <h5 className="text-sm font-bold text-slate-900 group-hover:text-[#425B9A] transition">
                         Generate dengan AI
                       </h5>
                       <p className="text-xs text-slate-500 leading-relaxed mt-1">
@@ -222,9 +382,9 @@ export const CreateWebsiteModal: React.FC<Props> = ({
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center text-xs font-bold text-blue-600 gap-1 pt-2">
+                  <div className="flex items-center text-xs font-bold text-[#425B9A] gap-1.5 pt-2">
                     <span>Mulai dengan AI</span>
-                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition" />
+                    <ArrowRight className="w-3.5 h-3.5 text-[#76C0EC] group-hover:translate-x-1 transition-transform" />
                   </div>
                 </button>
 
@@ -232,14 +392,14 @@ export const CreateWebsiteModal: React.FC<Props> = ({
                 <button
                   type="button"
                   onClick={() => setStep('template_gallery')}
-                  className="p-6 rounded-2xl border-2 border-slate-200 hover:border-indigo-600 hover:bg-indigo-50/30 text-left transition group space-y-4 flex flex-col justify-between"
+                  className="p-6 rounded-2xl border-2 border-slate-200 hover:border-[#425B9A] hover:bg-[#76C0EC]/10 text-left transition-all group space-y-4 flex flex-col justify-between cursor-pointer active:scale-98 shadow-2xs hover:shadow-md"
                 >
-                  <div className="space-y-3">
-                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-600 to-violet-600 text-white flex items-center justify-center shadow-md shadow-indigo-500/20">
-                      <LayoutTemplate className="w-6 h-6" />
+                  <div className="space-y-3.5">
+                    <div className="w-13 h-13 rounded-2xl bg-gradient-to-tr from-[#425B9A] to-[#76C0EC] text-white flex items-center justify-center shadow-md shadow-[#76C0EC]/20 group-hover:scale-105 transition-transform">
+                      <LayoutTemplate className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h5 className="text-sm font-bold text-slate-900 group-hover:text-indigo-600 transition">
+                      <h5 className="text-sm font-bold text-slate-900 group-hover:text-[#425B9A] transition">
                         Gunakan Template
                       </h5>
                       <p className="text-xs text-slate-500 leading-relaxed mt-1">
@@ -247,9 +407,34 @@ export const CreateWebsiteModal: React.FC<Props> = ({
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center text-xs font-bold text-indigo-600 gap-1 pt-2">
+                  <div className="flex items-center text-xs font-bold text-[#425B9A] gap-1.5 pt-2">
                     <span>Lihat Galeri Template</span>
-                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition" />
+                    <ArrowRight className="w-3.5 h-3.5 text-[#76C0EC] group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </button>
+
+                {/* Option C: Build from Scratch / Custom */}
+                <button
+                  type="button"
+                  onClick={() => setStep('custom_scratch')}
+                  className="p-6 rounded-2xl border-2 border-slate-200 hover:border-[#425B9A] hover:bg-slate-50 text-left transition-all group space-y-4 flex flex-col justify-between cursor-pointer active:scale-98 shadow-2xs hover:shadow-md"
+                >
+                  <div className="space-y-3.5">
+                    <div className="w-13 h-13 rounded-2xl bg-[#0f172a] text-white flex items-center justify-center shadow-md shadow-slate-900/20 group-hover:scale-105 transition-transform">
+                      <Palette className="w-6 h-6 text-[#76C0EC]" />
+                    </div>
+                    <div>
+                      <h5 className="text-sm font-bold text-slate-900 group-hover:text-[#425B9A] transition">
+                        Kustomisasi Mandiri
+                      </h5>
+                      <p className="text-xs text-slate-500 leading-relaxed mt-1">
+                        Mulai dari nol atau kanvas bersih. Rancang bebas susunan komponen, warna, teks, dan section langsung di visual editor.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center text-xs font-bold text-[#425B9A] gap-1.5 pt-2">
+                    <span>Build from Scratch</span>
+                    <ArrowRight className="w-3.5 h-3.5 text-[#76C0EC] group-hover:translate-x-1 transition-transform" />
                   </div>
                 </button>
               </div>
@@ -270,7 +455,7 @@ export const CreateWebsiteModal: React.FC<Props> = ({
                     value={aiForm.name}
                     onChange={(e) => setAiForm({ ...aiForm, name: e.target.value })}
                     placeholder="Contoh: Kopi Senja Roastery"
-                    className="w-full text-xs px-3 py-2.5 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full text-xs px-3 py-2.5 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-[#425B9A]/30 focus:border-[#425B9A]"
                   />
                 </div>
 
@@ -281,7 +466,7 @@ export const CreateWebsiteModal: React.FC<Props> = ({
                   <select
                     value={aiForm.category}
                     onChange={(e) => setAiForm({ ...aiForm, category: e.target.value })}
-                    className="w-full text-xs px-3 py-2.5 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                    className="w-full text-xs px-3 py-2.5 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-[#425B9A]/30 focus:border-[#425B9A] bg-white"
                   >
                     <option value="Coffee Shop & Kafe">Coffee Shop & Kafe</option>
                     <option value="Barbershop & Grooming">Barbershop & Salon</option>
@@ -304,7 +489,7 @@ export const CreateWebsiteModal: React.FC<Props> = ({
                   value={aiForm.description}
                   onChange={(e) => setAiForm({ ...aiForm, description: e.target.value })}
                   placeholder="Ceritakan apa yang Anda jual, apa keunggulannya, dan suasana tempat Anda..."
-                  className="w-full text-xs px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full text-xs px-3 py-2 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-[#425B9A]/30 focus:border-[#425B9A]"
                 />
               </div>
 
@@ -319,7 +504,7 @@ export const CreateWebsiteModal: React.FC<Props> = ({
                     value={aiForm.location}
                     onChange={(e) => setAiForm({ ...aiForm, location: e.target.value })}
                     placeholder="Contoh: Jl. Sudirman, Bandar Lampung"
-                    className="w-full text-xs px-3 py-2.5 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full text-xs px-3 py-2.5 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-[#425B9A]/30 focus:border-[#425B9A]"
                   />
                 </div>
 
@@ -333,7 +518,7 @@ export const CreateWebsiteModal: React.FC<Props> = ({
                     value={aiForm.whatsapp}
                     onChange={(e) => setAiForm({ ...aiForm, whatsapp: e.target.value })}
                     placeholder="Contoh: 6281234567890"
-                    className="w-full text-xs px-3 py-2.5 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full text-xs px-3 py-2.5 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-[#425B9A]/30 focus:border-[#425B9A]"
                   />
                 </div>
               </div>
@@ -348,7 +533,7 @@ export const CreateWebsiteModal: React.FC<Props> = ({
                     value={aiForm.services || ''}
                     onChange={(e) => setAiForm({ ...aiForm, services: e.target.value })}
                     placeholder="Contoh: Espresso, Manual Brew, Pastry"
-                    className="w-full text-xs px-3 py-2.5 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full text-xs px-3 py-2.5 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-[#425B9A]/30 focus:border-[#425B9A]"
                   />
                 </div>
 
@@ -359,7 +544,7 @@ export const CreateWebsiteModal: React.FC<Props> = ({
                   <select
                     value={aiForm.preferredStyle}
                     onChange={(e) => setAiForm({ ...aiForm, preferredStyle: e.target.value as any })}
-                    className="w-full text-xs px-3 py-2.5 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                    className="w-full text-xs px-3 py-2.5 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-[#425B9A]/30 focus:border-[#425B9A] bg-white"
                   >
                     <option value="modern">Modern & Clean (Biru)</option>
                     <option value="warm">Warm & Cozy (Cokelat Amber)</option>
@@ -371,25 +556,25 @@ export const CreateWebsiteModal: React.FC<Props> = ({
               </div>
 
               {loading ? (
-                <div className="p-6 rounded-2xl bg-blue-50/70 border border-blue-200 text-center space-y-3">
-                  <div className="w-8 h-8 border-3 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto" />
-                  <p className="text-xs font-bold text-blue-900">{loadingStatus}</p>
-                  <p className="text-[11px] text-blue-700">Mohon tunggu beberapa detik...</p>
+                <div className="p-6 rounded-2xl bg-slate-50 border border-slate-200 text-center space-y-3">
+                  <div className="w-8 h-8 border-3 border-[#425B9A] border-t-transparent rounded-full animate-spin mx-auto" />
+                  <p className="text-xs font-bold text-slate-900">{loadingStatus}</p>
+                  <p className="text-[11px] text-slate-500">Mohon tunggu beberapa detik...</p>
                 </div>
               ) : (
                 <div className="pt-3 flex items-center justify-end gap-2">
                   <button
                     type="button"
                     onClick={() => setStep('choose_method')}
-                    className="px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition"
+                    className="px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition cursor-pointer"
                   >
                     Kembali
                   </button>
                   <button
                     type="submit"
-                    className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-xs font-bold text-white shadow-sm flex items-center gap-2 active:scale-95 transition"
+                    className="px-6 py-2.5 rounded-xl bg-[#425B9A] hover:bg-[#354a7d] text-xs font-bold text-white shadow-sm flex items-center gap-2 active:scale-95 transition cursor-pointer"
                   >
-                    <Sparkles className="w-4 h-4" />
+                    <Sparkles className="w-4 h-4 text-[#76C0EC]" />
                     <span>Generate Landing Page Sekarang</span>
                   </button>
                 </div>
@@ -418,7 +603,7 @@ export const CreateWebsiteModal: React.FC<Props> = ({
                         isLocked
                           ? 'border-amber-200/90 bg-amber-50/20 hover:border-amber-400'
                           : selectedTemplate?.id === tpl.id
-                          ? 'border-blue-600 ring-2 ring-blue-100 shadow-md'
+                          ? 'border-[#425B9A] ring-2 ring-[#76C0EC]/40 shadow-md'
                           : 'border-slate-200 hover:border-slate-300'
                       }`}
                     >
@@ -448,7 +633,7 @@ export const CreateWebsiteModal: React.FC<Props> = ({
                             {tpl.isPro && <Crown className="w-3.5 h-3.5 text-amber-500 fill-amber-400" />}
                           </span>
                           {selectedTemplate?.id === tpl.id && (
-                            <Check className="w-4 h-4 text-blue-600" />
+                            <Check className="w-4 h-4 text-[#425B9A]" />
                           )}
                         </h5>
                         <p className="text-[11px] text-slate-500 line-clamp-2">
@@ -489,7 +674,7 @@ export const CreateWebsiteModal: React.FC<Props> = ({
                       value={templateSiteName}
                       onChange={(e) => setTemplateSiteName(e.target.value)}
                       placeholder={selectedTemplate.name}
-                      className="w-full text-xs px-3 py-2 bg-white border border-slate-200 rounded-xl outline-none focus:ring-1 focus:ring-blue-500"
+                      className="w-full text-xs px-3 py-2 bg-white border border-slate-200 rounded-xl outline-none focus:ring-1 focus:ring-[#425B9A]"
                     />
                   </div>
 
@@ -498,15 +683,157 @@ export const CreateWebsiteModal: React.FC<Props> = ({
                       type="button"
                       onClick={() => handleSelectTemplateSubmit(selectedTemplate)}
                       disabled={loading}
-                      className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-xs font-bold text-white shadow-sm flex items-center gap-2 active:scale-95 transition disabled:opacity-50"
+                      className="px-6 py-2.5 rounded-xl bg-[#425B9A] hover:bg-[#354a7d] text-xs font-bold text-white shadow-sm flex items-center gap-2 active:scale-95 transition disabled:opacity-50 cursor-pointer"
                     >
                       <span>{loading ? 'Menyiapkan...' : `Gunakan Template ${selectedTemplate.name}`}</span>
-                      <ArrowRight className="w-4 h-4" />
+                      <ArrowRight className="w-4 h-4 text-[#76C0EC]" />
                     </button>
                   </div>
                 </div>
               )}
             </div>
+          )}
+
+          {/* STEP 2C: CUSTOM BUILD FROM SCRATCH */}
+          {step === 'custom_scratch' && (
+            <form onSubmit={handleCreateFromScratch} className="space-y-5">
+              <div className="p-4 rounded-2xl bg-[#425B9A]/5 border border-[#425B9A]/20 flex items-start gap-3.5">
+                <div className="w-10 h-10 rounded-xl bg-[#425B9A] text-white flex items-center justify-center shrink-0 shadow-2xs">
+                  <Palette className="w-5 h-5 text-[#76C0EC]" />
+                </div>
+                <div className="text-xs space-y-0.5">
+                  <p className="font-bold text-slate-900">Kanvas Siap Kustomisasi</p>
+                  <p className="text-slate-500 leading-relaxed">
+                    Website Anda akan disiapkan dengan komponen dasar (Navbar, Hero, Layanan, Kontak WhatsApp, & Footer) yang 100% bebas Anda ubah, susun ulang, atau tambahkan section baru di visual editor drag & drop.
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    Nama Website / Bisnis *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={scratchForm.name}
+                    onChange={(e) => setScratchForm({ ...scratchForm, name: e.target.value })}
+                    placeholder="Contoh: Toko Berkah Mandiri"
+                    className="w-full text-xs px-3 py-2.5 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-[#425B9A]/30 focus:border-[#425B9A]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    Kategori Bisnis
+                  </label>
+                  <select
+                    value={scratchForm.category}
+                    onChange={(e) => setScratchForm({ ...scratchForm, category: e.target.value })}
+                    className="w-full text-xs px-3 py-2.5 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-[#425B9A]/30 focus:border-[#425B9A] bg-white"
+                  >
+                    <option value="Coffee Shop & Kafe">Coffee Shop & Kafe</option>
+                    <option value="Barbershop & Grooming">Barbershop & Salon</option>
+                    <option value="Laundry & Dry Clean">Laundry & Cuci Pakaian</option>
+                    <option value="Restoran & Kuliner">Restoran & Kuliner</option>
+                    <option value="Bengkel & Servis Otomotif">Bengkel & Otomotif</option>
+                    <option value="Klinik & Kesehatan">Klinik & Kesehatan</option>
+                    <option value="Toko & Retail Lokal">Toko & Retail Lokal</option>
+                    <option value="Jasa & UMKM Lokal">Jasa & UMKM Lokal Lainnya</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    Nomor WhatsApp Pemesanan
+                  </label>
+                  <input
+                    type="text"
+                    value={scratchForm.whatsapp}
+                    onChange={(e) => setScratchForm({ ...scratchForm, whatsapp: e.target.value })}
+                    placeholder="Contoh: 081234567890"
+                    className="w-full text-xs px-3 py-2.5 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-[#425B9A]/30 focus:border-[#425B9A]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    Gaya Font Utama
+                  </label>
+                  <select
+                    value={scratchForm.font}
+                    onChange={(e) => setScratchForm({ ...scratchForm, font: e.target.value as any })}
+                    className="w-full text-xs px-3 py-2.5 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-[#425B9A]/30 focus:border-[#425B9A] bg-white"
+                  >
+                    <option value="sans">Inter (Modern & Bersih)</option>
+                    <option value="serif">Playfair Display (Elegan & Mewah)</option>
+                    <option value="mono">JetBrains Mono (Teknis & Minimalis)</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Pilihan Warna Primer */}
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-2">
+                  Pilih Warna Primer Dasar:
+                </label>
+                <div className="flex items-center gap-3 flex-wrap">
+                  {[
+                    { label: 'LOKA Blue', color: '#425B9A' },
+                    { label: 'Emerald', color: '#059669' },
+                    { label: 'Warm Amber', color: '#d97706' },
+                    { label: 'Slate Dark', color: '#0f172a' },
+                    { label: 'Crimson', color: '#dc2626' },
+                    { label: 'Royal Purple', color: '#7c3aed' },
+                  ].map((c) => (
+                    <button
+                      key={c.color}
+                      type="button"
+                      onClick={() => setScratchForm({ ...scratchForm, primaryColor: c.color })}
+                      className={`flex items-center gap-2 px-3 py-2 rounded-xl border text-xs font-semibold transition cursor-pointer active:scale-95 ${
+                        scratchForm.primaryColor === c.color
+                          ? 'border-slate-900 bg-slate-900 text-white shadow-xs'
+                          : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300'
+                      }`}
+                    >
+                      <span
+                        className="w-3.5 h-3.5 rounded-full border border-white/40 shrink-0"
+                        style={{ backgroundColor: c.color }}
+                      />
+                      <span>{c.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {loading ? (
+                <div className="p-6 rounded-2xl bg-slate-50 border border-slate-200 text-center space-y-3">
+                  <div className="w-8 h-8 border-3 border-[#425B9A] border-t-transparent rounded-full animate-spin mx-auto" />
+                  <p className="text-xs font-bold text-slate-900">{loadingStatus}</p>
+                  <p className="text-[11px] text-slate-500">Mempersiapkan editor website...</p>
+                </div>
+              ) : (
+                <div className="pt-3 flex items-center justify-end gap-2 border-t border-slate-100">
+                  <button
+                    type="button"
+                    onClick={() => setStep('choose_method')}
+                    className="px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition cursor-pointer"
+                  >
+                    Kembali
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-6 py-2.5 rounded-xl bg-[#425B9A] hover:bg-[#354a7d] text-xs font-bold text-white shadow-sm flex items-center gap-2 active:scale-95 transition cursor-pointer"
+                  >
+                    <span>Buka Visual Editor Sekarang</span>
+                    <ArrowRight className="w-4 h-4 text-[#76C0EC]" />
+                  </button>
+                </div>
+              )}
+            </form>
           )}
         </div>
       </div>

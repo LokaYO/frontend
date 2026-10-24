@@ -89,7 +89,171 @@ export const MerchantMarketingView: React.FC<Props> = ({ websites, onOpenPublicS
   };
 
   const handlePrint = () => {
-    window.print();
+    if (!selectedWebsite || !qrDataUrl) {
+      toast.error('Gagal Mencetak', 'QR Code belum siap untuk dicetak.');
+      return;
+    }
+
+    // Create or reuse hidden print iframe for 100% isolated clean print
+    let iframe = document.getElementById('loka-print-frame') as HTMLIFrameElement;
+    if (!iframe) {
+      iframe = document.createElement('iframe');
+      iframe.id = 'loka-print-frame';
+      iframe.style.position = 'fixed';
+      iframe.style.right = '0';
+      iframe.style.bottom = '0';
+      iframe.style.width = '0';
+      iframe.style.height = '0';
+      iframe.style.border = '0';
+      document.body.appendChild(iframe);
+    }
+
+    const doc = iframe.contentWindow?.document;
+    if (!doc) return;
+
+    const printHtml = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Stand Meja QR - ${businessName}</title>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
+            @page {
+              size: A5 portrait;
+              margin: 1cm;
+            }
+            * {
+              box-sizing: border-box;
+              margin: 0;
+              padding: 0;
+            }
+            body {
+              font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+              background-color: #ffffff;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              min-height: 100vh;
+              padding: 20px;
+              -webkit-print-color-adjust: exact;
+              print-color-adjust: exact;
+            }
+            .card {
+              width: 100%;
+              max-width: 370px;
+              background: #ffffff;
+              border: 3.5px solid #0f172a;
+              border-radius: 28px;
+              padding: 32px 28px;
+              text-align: center;
+              margin: 0 auto;
+            }
+            .avatar {
+              width: 50px;
+              height: 50px;
+              border-radius: 16px;
+              margin: 0 auto 12px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              color: #ffffff;
+              font-size: 22px;
+              font-weight: 900;
+              background-color: ${qrColor};
+            }
+            .title {
+              font-size: 20px;
+              font-weight: 900;
+              color: #0f172a;
+              line-height: 1.25;
+              margin-bottom: 4px;
+            }
+            .category {
+              font-size: 10px;
+              font-weight: 700;
+              color: #64748b;
+              text-transform: uppercase;
+              letter-spacing: 1.5px;
+              margin-bottom: 20px;
+            }
+            .qr-wrapper {
+              background: #f8fafc;
+              border: 2px dashed #cbd5e1;
+              border-radius: 20px;
+              padding: 16px;
+              display: inline-block;
+              margin: 0 auto 18px;
+            }
+            .qr-img {
+              width: 210px;
+              height: 210px;
+              display: block;
+              margin: 0 auto;
+              border-radius: 12px;
+            }
+            .cta-title {
+              font-size: 13px;
+              font-weight: 800;
+              color: #0f172a;
+              margin-bottom: 4px;
+            }
+            .cta-sub {
+              font-size: 10px;
+              color: #64748b;
+              margin-bottom: 22px;
+              line-height: 1.4;
+            }
+            .footer {
+              padding-top: 14px;
+              border-top: 1px solid #e2e8f0;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              font-size: 10px;
+              font-family: monospace;
+              color: #94a3b8;
+            }
+            .logo-text {
+              font-family: 'Inter', sans-serif;
+              font-weight: 900;
+              color: #425B9A;
+              font-size: 14px;
+              letter-spacing: -0.5px;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="card">
+            <div class="avatar">${businessName.charAt(0).toUpperCase()}</div>
+            <div class="title">${standTitle || businessName}</div>
+            <div class="category">${category}</div>
+            
+            <div class="qr-wrapper">
+              <img class="qr-img" src="${qrDataUrl}" alt="QR Code" />
+            </div>
+
+            <div class="cta-title">${standSubtitle || 'Scan QR untuk Buka Katalog Menu & Layanan'}</div>
+            <div class="cta-sub">Buka Kamera Ponsel &bull; Arahkan ke Kode QR &bull; Buka Katalog Online</div>
+
+            <div class="footer">
+              <span>/sites/${selectedWebsite?.slug}</span>
+              <span class="logo-text">Loka</span>
+            </div>
+          </div>
+        </body>
+      </html>
+    `;
+
+    doc.open();
+    doc.write(printHtml);
+    doc.close();
+
+    // Beri jeda 250ms agar gambar QR termuat sempurna sebelum dialog print muncul
+    setTimeout(() => {
+      iframe.contentWindow?.focus();
+      iframe.contentWindow?.print();
+    }, 250);
   };
 
   const handleShareWhatsApp = () => {

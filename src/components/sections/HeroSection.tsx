@@ -19,6 +19,12 @@ export const HeroSection: React.FC<Props> = ({ content, theme, isEditor }) => {
   const isCenter = layoutVariant === 'center';
   const isImageLeft = layoutVariant === 'image-left';
 
+  const heroTitle = content.title || (content as any).headline || '';
+  const heroDescription = content.description || (content as any).subheadline || '';
+  const heroBadge = content.badge || (content as any).badgeText || '';
+  const heroButtonText = content.buttonText || (content as any).ctaText || '';
+  const heroButtonUrl = content.buttonUrl || (content as any).ctaUrl || '#contact';
+
   // Background Cover layout variant
   if (isBackground && content.imageUrl) {
     return (
@@ -27,32 +33,32 @@ export const HeroSection: React.FC<Props> = ({ content, theme, isEditor }) => {
         <div className="absolute inset-0 z-0">
           <img
             src={content.imageUrl}
-            alt={content.title}
+            alt={heroTitle}
             className="w-full h-full object-cover object-center filter brightness-[0.45]"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/60 to-slate-950/70" />
         </div>
 
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
-          {content.badge && (
+          {heroBadge && (
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide border border-white/20 bg-white/10 shadow-xs backdrop-blur-md text-amber-300 mx-auto">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>{content.badge}</span>
+              <span>{heroBadge}</span>
             </div>
           )}
 
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-tight">
-            {content.title}
+            {heroTitle}
           </h1>
 
           <p className="text-base sm:text-xl text-slate-200 leading-relaxed font-normal max-w-2xl mx-auto">
-            {content.description}
+            {heroDescription}
           </p>
 
           <div className="pt-4 flex flex-wrap gap-4 items-center justify-center">
-            {content.buttonText && (
+            {heroButtonText && (
               <a
-                href={isEditor ? '#!' : (content.buttonUrl || '#contact')}
+                href={isEditor ? '#!' : heroButtonUrl}
                 target={isEditor ? undefined : '_blank'}
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl text-base font-semibold text-white shadow-xl hover:shadow-2xl active:scale-95 transition-all"
@@ -125,30 +131,30 @@ export const HeroSection: React.FC<Props> = ({ content, theme, isEditor }) => {
                 : 'order-1'
             } space-y-4 sm:space-y-6`}
           >
-            {content.badge && (
+            {heroBadge && (
               <div
                 className={`inline-flex items-center gap-2 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-semibold tracking-wide border border-slate-200 bg-white/80 shadow-xs backdrop-blur-sm text-slate-800 ${
                   isCenter || isMobile ? 'mx-auto' : ''
                 }`}
               >
                 <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                <span>{content.badge}</span>
+                <span>{heroBadge}</span>
               </div>
             )}
 
             <h1 className={`${titleSize} text-slate-900 tracking-tight leading-snug sm:leading-tight`}>
-              {content.title}
+              {heroTitle}
             </h1>
 
             <p className={`${descSize} text-slate-600 leading-relaxed font-normal`}>
-              {content.description}
+              {heroDescription}
             </p>
 
             {/* Buttons */}
             <div className={buttonContainer}>
-              {content.buttonText && (
+              {heroButtonText && (
                 <a
-                  href={isEditor ? '#!' : (content.buttonUrl || '#contact')}
+                  href={isEditor ? '#!' : heroButtonUrl}
                   target={isEditor ? undefined : '_blank'}
                   rel="noopener noreferrer"
                   className={`inline-flex items-center gap-2.5 rounded-xl font-bold text-white shadow-md hover:shadow-lg active:scale-95 transition-all ${buttonStyle}`}
@@ -158,7 +164,7 @@ export const HeroSection: React.FC<Props> = ({ content, theme, isEditor }) => {
                   }}
                 >
                   <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5" />
-                  <span>{content.buttonText}</span>
+                  <span>{heroButtonText}</span>
                 </a>
               )}
 

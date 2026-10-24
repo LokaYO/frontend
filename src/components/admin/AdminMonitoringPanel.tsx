@@ -1,12 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import {
-  adminService,
-  MonitoringUser,
-  PlatformStats,
-  UserDetails,
-  AdminWebsite,
-} from '../../services/admin.service';
-import { useAuth } from '../../context/AuthContext';
+import React, { useState, useEffect, useCallback } from "react";
+import { adminService, MonitoringUser, PlatformStats, UserDetails, AdminWebsite } from "../../services/admin.service";
+import { useAuth } from "../../context/AuthContext";
 import {
   Users,
   ShieldCheck,
@@ -38,17 +32,17 @@ import {
   FileSpreadsheet,
   History,
   Crown,
-} from 'lucide-react';
-import { AdminModerationTab } from './AdminModerationTab';
-import { AdminAnnouncementsTab } from './AdminAnnouncementsTab';
-import { AdminExportTab } from './AdminExportTab';
-import { AdminAuditLogsTab } from './AdminAuditLogsTab';
-import { useToast } from '../../context/ToastContext';
+} from "lucide-react";
+import { AdminModerationTab } from "./AdminModerationTab";
+import { AdminAnnouncementsTab } from "./AdminAnnouncementsTab";
+import { AdminExportTab } from "./AdminExportTab";
+import { AdminAuditLogsTab } from "./AdminAuditLogsTab";
+import { useToast } from "../../context/ToastContext";
 
 // ─── Section Preview Component ─────────────────────────────────────────────────
 
 interface SectionPreviewProps {
-  section: AdminWebsite['sections'][0];
+  section: AdminWebsite["sections"][0];
 }
 
 const SectionPreview: React.FC<SectionPreviewProps> = ({ section }) => {
@@ -56,56 +50,44 @@ const SectionPreview: React.FC<SectionPreviewProps> = ({ section }) => {
   const c = section.content as Record<string, any>;
 
   const sectionTypeLabel: Record<string, string> = {
-    hero: 'Hero Banner',
-    about: 'Tentang Bisnis',
-    services: 'Layanan',
-    gallery: 'Galeri Foto',
-    testimonials: 'Testimoni Pelanggan',
-    contact: 'Kontak & WhatsApp',
-    cta: 'Call to Action',
-    faq: 'FAQ Tanya Jawab',
-    map: 'Peta / Lokasi Toko',
-    footer: 'Footer Website',
+    hero: "Hero Banner",
+    about: "Tentang Bisnis",
+    services: "Layanan",
+    gallery: "Galeri Foto",
+    testimonials: "Testimoni Pelanggan",
+    contact: "Kontak & WhatsApp",
+    cta: "Call to Action",
+    faq: "FAQ Tanya Jawab",
+    map: "Peta / Lokasi Toko",
+    footer: "Footer Website",
   };
 
   const sectionColor: Record<string, string> = {
-    hero: 'bg-blue-50/80 border-blue-200 text-blue-700',
-    about: 'bg-teal-50/80 border-teal-200 text-teal-700',
-    services: 'bg-indigo-50/80 border-indigo-200 text-indigo-700',
-    gallery: 'bg-pink-50/80 border-pink-200 text-pink-700',
-    testimonials: 'bg-amber-50/80 border-amber-200 text-amber-700',
-    contact: 'bg-emerald-50/80 border-emerald-200 text-emerald-700',
-    cta: 'bg-orange-50/80 border-orange-200 text-orange-700',
-    faq: 'bg-violet-50/80 border-violet-200 text-violet-700',
-    map: 'bg-cyan-50/80 border-cyan-200 text-cyan-700',
-    footer: 'bg-slate-100 border-slate-200 text-slate-600',
+    hero: "bg-blue-50/80 border-blue-200 text-blue-700",
+    about: "bg-teal-50/80 border-teal-200 text-teal-700",
+    services: "bg-indigo-50/80 border-indigo-200 text-indigo-700",
+    gallery: "bg-pink-50/80 border-pink-200 text-pink-700",
+    testimonials: "bg-amber-50/80 border-amber-200 text-amber-700",
+    contact: "bg-emerald-50/80 border-emerald-200 text-emerald-700",
+    cta: "bg-orange-50/80 border-orange-200 text-orange-700",
+    faq: "bg-violet-50/80 border-violet-200 text-violet-700",
+    map: "bg-cyan-50/80 border-cyan-200 text-cyan-700",
+    footer: "bg-slate-100 border-slate-200 text-slate-600",
   };
 
-  const colorClass = sectionColor[section.type] || 'bg-slate-50 border-slate-200 text-slate-600';
+  const colorClass = sectionColor[section.type] || "bg-slate-50 border-slate-200 text-slate-600";
   const title = c.title || c.heading || c.name || null;
   const subtitle = c.subtitle || c.description || c.tagline || null;
 
   return (
     <div className="rounded-2xl border border-slate-200/90 overflow-hidden bg-white shadow-2xs text-xs">
-      <button
-        type="button"
-        onClick={() => setExpanded((v) => !v)}
-        className={`w-full flex items-center gap-3 px-4 py-3 ${colorClass} transition hover:opacity-90 cursor-pointer`}
-      >
-        <span className="w-6 h-6 rounded-lg bg-white/80 shadow-xs flex items-center justify-center text-[10px] font-black text-slate-800">
-          {section.position + 1}
-        </span>
+      <button type="button" onClick={() => setExpanded((v) => !v)} className={`w-full flex items-center gap-3 px-4 py-3 ${colorClass} transition hover:opacity-90 cursor-pointer`}>
+        <span className="w-6 h-6 rounded-lg bg-white/80 shadow-xs flex items-center justify-center text-[10px] font-black text-slate-800">{section.position + 1}</span>
         <div className="text-left min-w-0 flex-1">
           <span className="font-extrabold">{sectionTypeLabel[section.type] || section.type}</span>
-          {title && (
-            <span className="ml-2 font-normal opacity-80 truncate block sm:inline">
-              &bull; &ldquo;{title}&rdquo;
-            </span>
-          )}
+          {title && <span className="ml-2 font-normal opacity-80 truncate block sm:inline">&bull; &ldquo;{title}&rdquo;</span>}
         </div>
-        <span className="ml-auto shrink-0 text-slate-500">
-          {expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-        </span>
+        <span className="ml-auto shrink-0 text-slate-500">{expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}</span>
       </button>
 
       {expanded && (
@@ -125,9 +107,7 @@ const SectionPreview: React.FC<SectionPreviewProps> = ({ section }) => {
           {c.buttonText && (
             <div className="flex items-start gap-2">
               <span className="text-slate-400 font-semibold w-20 shrink-0">Tombol:</span>
-              <span className="px-2 py-0.5 rounded bg-blue-100 text-blue-700 font-bold text-[11px]">
-                {c.buttonText}
-              </span>
+              <span className="px-2 py-0.5 rounded bg-blue-100 text-blue-700 font-bold text-[11px]">{c.buttonText}</span>
             </div>
           )}
           {c.phone && (
@@ -174,7 +154,7 @@ interface WebsiteCardProps {
 
 const WebsiteCard: React.FC<WebsiteCardProps> = ({ website }) => {
   const [sectionsExpanded, setSectionsExpanded] = useState(true);
-  const isPublished = website.status === 'published';
+  const isPublished = website.status === "published";
   const publicUrl = `${window.location.origin}/sites/${website.slug}`;
   const bi = website.businessInfo || {};
 
@@ -184,29 +164,17 @@ const WebsiteCard: React.FC<WebsiteCardProps> = ({ website }) => {
       <div
         className="p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
         style={{
-          borderBottom: '1px solid #e2e8f0',
-          backgroundColor: website.theme?.backgroundColor || '#f8fafc',
+          borderBottom: "1px solid #e2e8f0",
+          backgroundColor: website.theme?.backgroundColor || "#f8fafc",
         }}
       >
         <div className="space-y-1">
           <div className="flex items-center gap-2 flex-wrap">
-            <span
-              className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${
-                isPublished
-                  ? 'bg-emerald-500 text-white shadow-xs'
-                  : 'bg-amber-400 text-slate-900 shadow-xs'
-              }`}
-            >
-              {isPublished ? '● LIVE' : 'DRAFT'}
+            <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${isPublished ? "bg-emerald-500 text-white shadow-xs" : "bg-amber-400 text-slate-900 shadow-xs"}`}>
+              {isPublished ? "● LIVE" : "DRAFT"}
             </span>
-            {website.template && (
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-white/80 border border-slate-200 text-slate-700">
-                Template: {website.template}
-              </span>
-            )}
-            <span className="text-slate-400 text-xs">
-              Diperbarui: {new Date(website.updatedAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}
-            </span>
+            {website.template && <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-white/80 border border-slate-200 text-slate-700">Template: {website.template}</span>}
+            <span className="text-slate-400 text-xs">Diperbarui: {new Date(website.updatedAt).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" })}</span>
           </div>
 
           <h3 className="text-lg font-black text-slate-900 tracking-tight">{website.name}</h3>
@@ -216,12 +184,7 @@ const WebsiteCard: React.FC<WebsiteCardProps> = ({ website }) => {
         {/* Action Link */}
         <div className="flex items-center gap-2">
           {isPublished && (
-            <a
-              href={publicUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-xs transition"
-            >
+            <a href={publicUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-xs transition">
               <ExternalLink className="w-3.5 h-3.5" />
               <span>Buka Website Publik</span>
             </a>
@@ -270,19 +233,17 @@ const WebsiteCard: React.FC<WebsiteCardProps> = ({ website }) => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Layers className="w-4 h-4 text-purple-600" />
-            <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-900">
-              Isi Konten & Sections ({website.sections?.length || 0})
-            </h4>
+            <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-900">Isi Konten & Sections ({website.sections?.length || 0})</h4>
           </div>
-          <button
-            type="button"
-            onClick={() => setSectionsExpanded((v) => !v)}
-            className="text-xs font-bold text-purple-600 hover:text-purple-700 flex items-center gap-1 cursor-pointer"
-          >
+          <button type="button" onClick={() => setSectionsExpanded((v) => !v)} className="text-xs font-bold text-purple-600 hover:text-purple-700 flex items-center gap-1 cursor-pointer">
             {sectionsExpanded ? (
-              <><ChevronUp className="w-3.5 h-3.5" /> Sembunyikan Sections</>
+              <>
+                <ChevronUp className="w-3.5 h-3.5" /> Sembunyikan Sections
+              </>
             ) : (
-              <><ChevronDown className="w-3.5 h-3.5" /> Tampilkan Sections</>
+              <>
+                <ChevronDown className="w-3.5 h-3.5" /> Tampilkan Sections
+              </>
             )}
           </button>
         </div>
@@ -290,14 +251,10 @@ const WebsiteCard: React.FC<WebsiteCardProps> = ({ website }) => {
         {/* Sections List */}
         {sectionsExpanded && (
           <div className="space-y-2.5">
-            {(!website.sections || website.sections.length === 0) ? (
-              <p className="text-xs text-slate-400 italic py-4 text-center bg-slate-50 rounded-2xl">
-                Client belum menambahkan section pada website ini.
-              </p>
+            {!website.sections || website.sections.length === 0 ? (
+              <p className="text-xs text-slate-400 italic py-4 text-center bg-slate-50 rounded-2xl">Client belum menambahkan section pada website ini.</p>
             ) : (
-              website.sections.map((section) => (
-                <SectionPreview key={section.id} section={section} />
-              ))
+              website.sections.map((section) => <SectionPreview key={section.id} section={section} />)
             )}
           </div>
         )}
@@ -312,24 +269,16 @@ interface ClientDetailViewProps {
   userId: string;
   onBack: () => void;
   currentAdminRole: string;
-  onRoleChange: (userId: string, newRole: 'admin' | 'support' | 'user') => Promise<void>;
-  onPlanChange: (userId: string, newPlan: 'free' | 'pro', durationDays?: number) => Promise<void>;
+  onRoleChange: (userId: string, newRole: "admin" | "support" | "user") => Promise<void>;
+  onPlanChange: (userId: string, newPlan: "free" | "pro", durationDays?: number) => Promise<void>;
   onDelete: (userId: string, name: string) => Promise<void>;
   actionLoading: string | null;
 }
 
-const ClientDetailView: React.FC<ClientDetailViewProps> = ({
-  userId,
-  onBack,
-  currentAdminRole,
-  onRoleChange,
-  onPlanChange,
-  onDelete,
-  actionLoading,
-}) => {
+const ClientDetailView: React.FC<ClientDetailViewProps> = ({ userId, onBack, currentAdminRole, onRoleChange, onPlanChange, onDelete, actionLoading }) => {
   const [data, setData] = useState<UserDetails | null>(null);
   const [loading, setLoading] = useState(true);
-  const [filterStatus, setFilterStatus] = useState<'all' | 'published' | 'draft'>('all');
+  const [filterStatus, setFilterStatus] = useState<"all" | "published" | "draft">("all");
 
   useEffect(() => {
     let active = true;
@@ -343,7 +292,7 @@ const ClientDetailView: React.FC<ClientDetailViewProps> = ({
         }
       })
       .catch((err) => {
-        console.error('Fetch user detail error:', err);
+        console.error("Fetch user detail error:", err);
         if (active) setLoading(false);
       });
     return () => {
@@ -352,19 +301,19 @@ const ClientDetailView: React.FC<ClientDetailViewProps> = ({
   }, [userId]);
 
   const formatDate = (iso: string | null) => {
-    if (!iso) return 'Belum pernah login';
-    return new Date(iso).toLocaleString('id-ID', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
+    if (!iso) return "Belum pernah login";
+    return new Date(iso).toLocaleString("id-ID", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
   const filteredWebsites =
     data?.websites.filter((w) => {
-      if (filterStatus === 'all') return true;
+      if (filterStatus === "all") return true;
       return w.status === filterStatus;
     }) || [];
 
@@ -381,11 +330,7 @@ const ClientDetailView: React.FC<ClientDetailViewProps> = ({
     return (
       <div className="p-8 text-center bg-white rounded-3xl border border-slate-200 space-y-4">
         <p className="text-sm text-red-500">Gagal memuat detail pengguna.</p>
-        <button
-          type="button"
-          onClick={onBack}
-          className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold"
-        >
+        <button type="button" onClick={onBack} className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold">
           Kembali ke Daftar
         </button>
       </div>
@@ -394,13 +339,13 @@ const ClientDetailView: React.FC<ClientDetailViewProps> = ({
 
   const { user } = data;
   const initials = user.name
-    .split(' ')
+    .split(" ")
     .map((n) => n[0])
     .slice(0, 2)
-    .join('')
+    .join("")
     .toUpperCase();
 
-  const totalPublished = data.websites.filter((w) => w.status === 'published').length;
+  const totalPublished = data.websites.filter((w) => w.status === "published").length;
   const totalSections = data.websites.reduce((acc, w) => acc + (w.sectionCount || 0), 0);
 
   return (
@@ -425,32 +370,22 @@ const ClientDetailView: React.FC<ClientDetailViewProps> = ({
       <div className="bg-white rounded-3xl border border-slate-200 shadow-xs p-6 sm:p-8 space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pb-6 border-b border-slate-100">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-3xl bg-gradient-to-tr from-purple-600 to-indigo-600 text-white font-black text-2xl flex items-center justify-center shadow-lg shadow-purple-500/20 shrink-0">
-              {initials || 'U'}
-            </div>
+            <div className="w-16 h-16 rounded-3xl bg-gradient-to-tr from-purple-600 to-indigo-600 text-white font-black text-2xl flex items-center justify-center shadow-lg shadow-purple-500/20 shrink-0">{initials || "U"}</div>
             <div className="space-y-1">
               <div className="flex items-center gap-2 flex-wrap">
                 <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">{user.name}</h2>
                 <span
-                  className={`px-2.5 py-0.5 rounded-md text-[10px] font-black uppercase ${
-                    user.role === 'admin'
-                      ? 'bg-purple-100 text-purple-800'
-                      : user.role === 'support'
-                      ? 'bg-amber-100 text-amber-800'
-                      : 'bg-blue-100 text-blue-800'
-                  }`}
+                  className={`px-2.5 py-0.5 rounded-md text-[10px] font-black uppercase ${user.role === "admin" ? "bg-purple-100 text-purple-800" : user.role === "support" ? "bg-amber-100 text-amber-800" : "bg-blue-100 text-blue-800"}`}
                 >
                   {user.role}
                 </span>
-                {user.plan === 'pro' ? (
+                {user.plan === "pro" ? (
                   <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[10px] font-black uppercase bg-amber-100 text-amber-800 border border-amber-300">
                     <Crown className="w-3 h-3 text-amber-600 fill-amber-500" />
                     <span>PRO PLAN</span>
                   </span>
                 ) : (
-                  <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold uppercase bg-slate-100 text-slate-600">
-                    FREE PLAN
-                  </span>
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold uppercase bg-slate-100 text-slate-600">FREE PLAN</span>
                 )}
                 {data.activeSessions.length > 0 ? (
                   <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
@@ -458,9 +393,7 @@ const ClientDetailView: React.FC<ClientDetailViewProps> = ({
                     Sedang Online
                   </span>
                 ) : (
-                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-400">
-                    Offline
-                  </span>
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-400">Offline</span>
                 )}
               </div>
               <p className="text-xs text-slate-500 font-medium">{user.email}</p>
@@ -468,12 +401,10 @@ const ClientDetailView: React.FC<ClientDetailViewProps> = ({
           </div>
 
           {/* Role Change & Plan Controls for Super Admin */}
-          {currentAdminRole === 'admin' && (
+          {currentAdminRole === "admin" && (
             <div className="flex items-center gap-2 flex-wrap shrink-0">
               <div className="space-y-1">
-                <span className="text-[10px] uppercase tracking-wider font-bold text-slate-400 block">
-                  Ubah Role
-                </span>
+                <span className="text-[10px] uppercase tracking-wider font-bold text-slate-400 block">Ubah Role</span>
                 <select
                   value={user.role}
                   disabled={actionLoading === user.id}
@@ -488,42 +419,36 @@ const ClientDetailView: React.FC<ClientDetailViewProps> = ({
 
               {/* Plan Access Control for Admin */}
               <div className="space-y-1">
-                <span className="text-[10px] uppercase tracking-wider font-bold text-slate-400 block">
-                  Akses Plan
-                </span>
+                <span className="text-[10px] uppercase tracking-wider font-bold text-slate-400 block">Akses Plan</span>
                 <select
-                  value={user.plan === 'pro' ? 'pro_active' : 'free'}
+                  value={user.plan === "pro" ? "pro_active" : "free"}
                   disabled={actionLoading === user.id}
                   onChange={async (e) => {
                     const val = e.target.value;
-                    if (val === 'free') {
-                      await onPlanChange(user.id, 'free');
-                      setData((prev) => prev ? { ...prev, user: { ...prev.user, plan: 'free', subscription_until: null } } : null);
-                    } else if (val === 'pro_30') {
-                      await onPlanChange(user.id, 'pro', 30);
-                      setData((prev) => prev ? { ...prev, user: { ...prev.user, plan: 'pro' } } : null);
-                    } else if (val === 'pro_365') {
-                      await onPlanChange(user.id, 'pro', 365);
-                      setData((prev) => prev ? { ...prev, user: { ...prev.user, plan: 'pro' } } : null);
+                    if (val === "free") {
+                      await onPlanChange(user.id, "free");
+                      setData((prev) => (prev ? { ...prev, user: { ...prev.user, plan: "free", subscription_until: null } } : null));
+                    } else if (val === "pro_30") {
+                      await onPlanChange(user.id, "pro", 30);
+                      setData((prev) => (prev ? { ...prev, user: { ...prev.user, plan: "pro" } } : null));
+                    } else if (val === "pro_365") {
+                      await onPlanChange(user.id, "pro", 365);
+                      setData((prev) => (prev ? { ...prev, user: { ...prev.user, plan: "pro" } } : null));
                     }
                   }}
                   className={`text-xs border rounded-xl px-3 py-2 outline-none font-bold cursor-pointer transition ${
-                    user.plan === 'pro'
-                      ? 'bg-amber-50 text-amber-900 border-amber-300 ring-1 ring-amber-300'
-                      : 'bg-slate-50 text-slate-800 border-slate-200'
+                    user.plan === "pro" ? "bg-amber-50 text-amber-900 border-amber-300 ring-1 ring-amber-300" : "bg-slate-50 text-slate-800 border-slate-200"
                   }`}
                 >
                   <option value="free">FREE Plan (Standar)</option>
-                  {user.plan === 'pro' && <option value="pro_active">👑 PRO Aktif</option>}
+                  {user.plan === "pro" && <option value="pro_active">👑 PRO Aktif</option>}
                   <option value="pro_30">⭐ Beri PRO (30 Hari)</option>
                   <option value="pro_365">👑 Beri PRO (1 Tahun)</option>
                 </select>
               </div>
 
               <div className="space-y-1">
-                <span className="text-[10px] uppercase tracking-wider font-bold text-slate-400 block">
-                  Tindakan
-                </span>
+                <span className="text-[10px] uppercase tracking-wider font-bold text-slate-400 block">Tindakan</span>
                 <button
                   type="button"
                   disabled={actionLoading === user.id}
@@ -552,9 +477,7 @@ const ClientDetailView: React.FC<ClientDetailViewProps> = ({
             <span className="text-[11px] text-slate-400 font-semibold flex items-center gap-1.5">
               <Crown className="w-3.5 h-3.5 text-amber-500" /> Status Plan
             </span>
-            <p className={`font-bold ${user.plan === 'pro' ? 'text-amber-800' : 'text-slate-700'}`}>
-              {user.plan === 'pro' ? '👑 PRO (White-label)' : 'FREE Plan'}
-            </p>
+            <p className={`font-bold ${user.plan === "pro" ? "text-amber-800" : "text-slate-700"}`}>{user.plan === "pro" ? "👑 PRO (White-label)" : "FREE Plan"}</p>
           </div>
 
           <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-1">
@@ -596,19 +519,18 @@ const ClientDetailView: React.FC<ClientDetailViewProps> = ({
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {data.activeSessions.map((s, idx) => (
-                <div
-                  key={idx}
-                  className="p-3.5 rounded-2xl bg-purple-50/50 border border-purple-100 text-xs flex items-start gap-3"
-                >
+                <div key={idx} className="p-3.5 rounded-2xl bg-purple-50/50 border border-purple-100 text-xs flex items-start gap-3">
                   <div className="p-2 rounded-xl bg-purple-100 text-purple-700 shrink-0">
                     <Wifi className="w-4 h-4" />
                   </div>
                   <div className="space-y-1 min-w-0 flex-1">
-                    <p className="font-bold text-slate-900 truncate">{s.user_agent || 'Unknown Browser'}</p>
+                    <p className="font-bold text-slate-900 truncate">{s.user_agent || "Unknown Browser"}</p>
                     <div className="flex items-center gap-3 text-[11px] text-slate-500">
-                      <span>IP: <strong className="text-slate-700">{s.ip_address || '-'}</strong></span>
+                      <span>
+                        IP: <strong className="text-slate-700">{s.ip_address || "-"}</strong>
+                      </span>
                       <span>&bull;</span>
-                      <span>Berakhir: {new Date(s.expires_at).toLocaleDateString('id-ID')}</span>
+                      <span>Berakhir: {new Date(s.expires_at).toLocaleDateString("id-ID")}</span>
                     </div>
                   </div>
                 </div>
@@ -625,30 +547,22 @@ const ClientDetailView: React.FC<ClientDetailViewProps> = ({
             <h3 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
               <Globe className="w-5 h-5 text-blue-600" />
               <span>Daftar Landing Page Milik Client</span>
-              <span className="px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 text-xs font-black">
-                {data.websites.length}
-              </span>
+              <span className="px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 text-xs font-black">{data.websites.length}</span>
             </h3>
-            <p className="text-xs text-slate-500 mt-0.5">
-              Pantau seluruh website, struktur section, profil bisnis, dan konten yang sudah dibuat oleh client ini.
-            </p>
+            <p className="text-xs text-slate-500 mt-0.5">Pantau seluruh website, struktur section, profil bisnis, dan konten yang sudah dibuat oleh client ini.</p>
           </div>
 
           {/* Filter Status Website */}
           <div className="flex items-center gap-1.5 self-start sm:self-auto">
             <span className="text-xs text-slate-400 font-semibold">Filter:</span>
-            {(['all', 'published', 'draft'] as const).map((st) => (
+            {(["all", "published", "draft"] as const).map((st) => (
               <button
                 key={st}
                 type="button"
                 onClick={() => setFilterStatus(st)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
-                  filterStatus === st
-                    ? 'bg-purple-600 text-white shadow-xs'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                }`}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${filterStatus === st ? "bg-purple-600 text-white shadow-xs" : "bg-slate-100 text-slate-600 hover:bg-slate-200"}`}
               >
-                {st === 'all' ? 'Semua' : st === 'published' ? 'Live' : 'Draft'}
+                {st === "all" ? "Semua" : st === "published" ? "Live" : "Draft"}
               </button>
             ))}
           </div>
@@ -659,11 +573,7 @@ const ClientDetailView: React.FC<ClientDetailViewProps> = ({
           <div className="bg-white rounded-3xl border border-dashed border-slate-200 p-12 text-center space-y-3">
             <Globe className="w-10 h-10 text-slate-300 mx-auto" />
             <h4 className="font-bold text-slate-700 text-sm">Tidak Ada Website Ditemukan</h4>
-            <p className="text-xs text-slate-400 max-w-sm mx-auto">
-              {data.websites.length === 0
-                ? 'Client ini belum membuat website apapun.'
-                : `Tidak ada website dengan status "${filterStatus}".`}
-            </p>
+            <p className="text-xs text-slate-400 max-w-sm mx-auto">{data.websites.length === 0 ? "Client ini belum membuat website apapun." : `Tidak ada website dengan status "${filterStatus}".`}</p>
           </div>
         ) : (
           <div className="space-y-6">
@@ -679,7 +589,7 @@ const ClientDetailView: React.FC<ClientDetailViewProps> = ({
 
 // ─── MAIN ADMIN MONITORING PANEL ───────────────────────────────────────────────
 
-export type AdminTab = 'users' | 'moderation' | 'announcements' | 'export' | 'audit';
+export type AdminTab = "users" | "moderation" | "announcements" | "export" | "audit";
 
 interface AdminMonitoringPanelProps {
   activeTab?: AdminTab;
@@ -687,35 +597,28 @@ interface AdminMonitoringPanelProps {
   hideNav?: boolean;
 }
 
-export const AdminMonitoringPanel: React.FC<AdminMonitoringPanelProps> = ({
-  activeTab,
-  onTabChange,
-  hideNav = false,
-}) => {
+export const AdminMonitoringPanel: React.FC<AdminMonitoringPanelProps> = ({ activeTab, onTabChange, hideNav = false }) => {
   const { user } = useAuth();
   const toast = useToast();
-  const [internalTab, setInternalTab] = useState<AdminTab>('users');
+  const [internalTab, setInternalTab] = useState<AdminTab>("users");
   const mainTab = activeTab !== undefined ? activeTab : internalTab;
   const setMainTab = onTabChange || setInternalTab;
   const [users, setUsers] = useState<MonitoringUser[]>([]);
   const [stats, setStats] = useState<PlatformStats | null>(null);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
-  const [activeCategory, setActiveCategory] = useState<'clients' | 'internal' | 'all'>('clients');
+  const [search, setSearch] = useState("");
+  const [activeCategory, setActiveCategory] = useState<"clients" | "internal" | "all">("clients");
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
 
   const loadData = useCallback(async () => {
     try {
       setLoading(true);
-      const [usersData, statsData] = await Promise.all([
-        adminService.getMonitoringUsers(),
-        adminService.getStats(),
-      ]);
+      const [usersData, statsData] = await Promise.all([adminService.getMonitoringUsers(), adminService.getStats()]);
       setUsers(usersData);
       setStats(statsData);
     } catch (err: any) {
-      console.error('Failed to load admin monitoring data:', err);
+      console.error("Failed to load admin monitoring data:", err);
     } finally {
       setLoading(false);
     }
@@ -725,29 +628,27 @@ export const AdminMonitoringPanel: React.FC<AdminMonitoringPanelProps> = ({
     loadData();
   }, [loadData]);
 
-  const handleRoleChange = async (userId: string, newRole: 'admin' | 'support' | 'user') => {
+  const handleRoleChange = async (userId: string, newRole: "admin" | "support" | "user") => {
     try {
       setActionLoading(userId);
       await adminService.updateUserRole(userId, newRole);
       setUsers((prev) => prev.map((u) => (u.id === userId ? { ...u, role: newRole } : u)));
-      toast.success('Role Berhasil Diubah', `Otoritas akses diubah menjadi '${newRole}'.`);
+      toast.success("Role Berhasil Diubah", `Otoritas akses diubah menjadi '${newRole}'.`);
     } catch (err: any) {
-      toast.error('Gagal Mengubah Role', err.message || 'Terjadi kesalahan sistem');
+      toast.error("Gagal Mengubah Role", err.message || "Terjadi kesalahan sistem");
     } finally {
       setActionLoading(null);
     }
   };
 
-  const handlePlanChange = async (userId: string, newPlan: 'free' | 'pro', durationDays: number = 30) => {
+  const handlePlanChange = async (userId: string, newPlan: "free" | "pro", durationDays: number = 30) => {
     try {
       setActionLoading(userId);
       const res = await adminService.updateUserPlan(userId, newPlan, durationDays);
-      setUsers((prev) =>
-        prev.map((u) => (u.id === userId ? { ...u, plan: newPlan } : u))
-      );
-      toast.success('Akses Paket Diperbarui', res.message);
+      setUsers((prev) => prev.map((u) => (u.id === userId ? { ...u, plan: newPlan } : u)));
+      toast.success("Akses Paket Diperbarui", res.message);
     } catch (err: any) {
-      toast.error('Gagal Mengubah Paket', err.message || 'Terjadi kesalahan sistem');
+      toast.error("Gagal Mengubah Paket", err.message || "Terjadi kesalahan sistem");
     } finally {
       setActionLoading(null);
     }
@@ -761,40 +662,32 @@ export const AdminMonitoringPanel: React.FC<AdminMonitoringPanelProps> = ({
       setUsers((prev) => prev.filter((u) => u.id !== userId));
       setSelectedUserId(null);
       loadData();
-      toast.info('Akun Pengguna Dihapus', `User "${userName}" beserta seluruh websitenya telah dihapus.`);
+      toast.info("Akun Pengguna Dihapus", `User "${userName}" beserta seluruh websitenya telah dihapus.`);
     } catch (err: any) {
-      toast.error('Gagal Menghapus User', err.message || 'Terjadi kesalahan sistem');
+      toast.error("Gagal Menghapus User", err.message || "Terjadi kesalahan sistem");
     } finally {
       setActionLoading(null);
     }
   };
 
   // Kategorisasi User:
-  const clientUsers = users.filter((u) => u.role === 'user');
-  const internalUsers = users.filter((u) => u.role === 'admin' || u.role === 'support');
+  const clientUsers = users.filter((u) => u.role === "user");
+  const internalUsers = users.filter((u) => u.role === "admin" || u.role === "support");
 
-  const usersInActiveCategory =
-    activeCategory === 'clients'
-      ? clientUsers
-      : activeCategory === 'internal'
-      ? internalUsers
-      : users;
+  const usersInActiveCategory = activeCategory === "clients" ? clientUsers : activeCategory === "internal" ? internalUsers : users;
 
   const filteredUsers = usersInActiveCategory.filter((u) => {
-    return (
-      u.name.toLowerCase().includes(search.toLowerCase()) ||
-      u.email.toLowerCase().includes(search.toLowerCase())
-    );
+    return u.name.toLowerCase().includes(search.toLowerCase()) || u.email.toLowerCase().includes(search.toLowerCase());
   });
 
   const formatDate = (iso: string | null) => {
-    if (!iso) return 'Belum login';
-    return new Date(iso).toLocaleString('id-ID', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
+    if (!iso) return "Belum login";
+    return new Date(iso).toLocaleString("id-ID", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
@@ -806,7 +699,7 @@ export const AdminMonitoringPanel: React.FC<AdminMonitoringPanelProps> = ({
       <ClientDetailView
         userId={selectedUserId}
         onBack={() => setSelectedUserId(null)}
-        currentAdminRole={user?.role || ''}
+        currentAdminRole={user?.role || ""}
         onRoleChange={handleRoleChange}
         onPlanChange={handlePlanChange}
         onDelete={handleDeleteUser}
@@ -822,11 +715,9 @@ export const AdminMonitoringPanel: React.FC<AdminMonitoringPanelProps> = ({
         <div className="flex items-center gap-2 overflow-x-auto pb-1 bg-white p-2 rounded-2xl border border-slate-200/90 shadow-2xs">
           <button
             type="button"
-            onClick={() => setMainTab('users')}
+            onClick={() => setMainTab("users")}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-extrabold transition shrink-0 cursor-pointer ${
-              mainTab === 'users'
-                ? 'bg-[#425B9A] text-white shadow-xs'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+              mainTab === "users" ? "bg-[#425B9A] text-white shadow-xs" : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
             }`}
           >
             <Users className="w-4 h-4" />
@@ -835,11 +726,9 @@ export const AdminMonitoringPanel: React.FC<AdminMonitoringPanelProps> = ({
 
           <button
             type="button"
-            onClick={() => setMainTab('moderation')}
+            onClick={() => setMainTab("moderation")}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-extrabold transition shrink-0 cursor-pointer ${
-              mainTab === 'moderation'
-                ? 'bg-[#425B9A] text-white shadow-xs'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+              mainTab === "moderation" ? "bg-[#425B9A] text-white shadow-xs" : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
             }`}
           >
             <ShieldAlert className="w-4 h-4" />
@@ -848,11 +737,9 @@ export const AdminMonitoringPanel: React.FC<AdminMonitoringPanelProps> = ({
 
           <button
             type="button"
-            onClick={() => setMainTab('announcements')}
+            onClick={() => setMainTab("announcements")}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-extrabold transition shrink-0 cursor-pointer ${
-              mainTab === 'announcements'
-                ? 'bg-[#425B9A] text-white shadow-xs'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+              mainTab === "announcements" ? "bg-[#425B9A] text-white shadow-xs" : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
             }`}
           >
             <Megaphone className="w-4 h-4" />
@@ -861,11 +748,9 @@ export const AdminMonitoringPanel: React.FC<AdminMonitoringPanelProps> = ({
 
           <button
             type="button"
-            onClick={() => setMainTab('export')}
+            onClick={() => setMainTab("export")}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-extrabold transition shrink-0 cursor-pointer ${
-              mainTab === 'export'
-                ? 'bg-[#425B9A] text-white shadow-xs'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+              mainTab === "export" ? "bg-[#425B9A] text-white shadow-xs" : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
             }`}
           >
             <FileSpreadsheet className="w-4 h-4" />
@@ -874,11 +759,9 @@ export const AdminMonitoringPanel: React.FC<AdminMonitoringPanelProps> = ({
 
           <button
             type="button"
-            onClick={() => setMainTab('audit')}
+            onClick={() => setMainTab("audit")}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-extrabold transition shrink-0 cursor-pointer ${
-              mainTab === 'audit'
-                ? 'bg-[#425B9A] text-white shadow-xs'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+              mainTab === "audit" ? "bg-[#425B9A] text-white shadow-xs" : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
             }`}
           >
             <History className="w-4 h-4" />
@@ -888,348 +771,298 @@ export const AdminMonitoringPanel: React.FC<AdminMonitoringPanelProps> = ({
       )}
 
       {/* ── TAB 2: MODERASI WEBSITE ── */}
-      {mainTab === 'moderation' && (
-        <AdminModerationTab currentAdminRole={user?.role || ''} />
-      )}
+      {mainTab === "moderation" && <AdminModerationTab currentAdminRole={user?.role || ""} />}
 
       {/* ── TAB 3: BROADCAST PENGUMUMAN ── */}
-      {mainTab === 'announcements' && (
-        <AdminAnnouncementsTab />
-      )}
+      {mainTab === "announcements" && <AdminAnnouncementsTab />}
 
       {/* ── TAB 4: EKSPOR LAPORAN (EXCEL) ── */}
-      {mainTab === 'export' && (
-        <AdminExportTab />
-      )}
+      {mainTab === "export" && <AdminExportTab />}
 
       {/* ── TAB 5: LOG AKTIVITAS (AUDIT TRAIL) ── */}
-      {mainTab === 'audit' && (
-        <AdminAuditLogsTab />
-      )}
+      {mainTab === "audit" && <AdminAuditLogsTab />}
 
       {/* ── TAB 1: PENGGUNA & CLIENT MONITORING ── */}
-      {mainTab === 'users' && (
+      {mainTab === "users" && (
         <>
           {/* ── Top Header ───────────────────────────────────── */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-slate-200 shadow-xs">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="p-2 rounded-xl bg-[#425B9A]/10 text-[#425B9A]">
-              <ShieldCheck className="w-5 h-5" />
-            </span>
-            <h1 className="text-xl font-extrabold text-slate-900 tracking-tight">
-              Monitoring Pengguna & Client
-            </h1>
-          </div>
-          <p className="text-xs text-slate-500 mt-1">
-            Pantau seluruh client UMKM, website buatan mereka, dan staf internal administrator secara terpisah.
-          </p>
-        </div>
-        <button
-          type="button"
-          onClick={loadData}
-          disabled={loading}
-          className="flex items-center gap-2 px-4 py-2 bg-slate-50 hover:bg-slate-100 text-slate-700 rounded-xl text-xs font-bold transition border border-slate-200 shrink-0 self-start sm:self-auto disabled:opacity-50 cursor-pointer"
-        >
-          <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
-          <span>Segarkan Data</span>
-        </button>
-      </div>
-
-      {/* ── Platform Stats Grid ─────────────────────────── */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Client UMKM</span>
-            <div className="p-2 rounded-xl bg-[#425B9A]/10 text-[#425B9A]"><Users className="w-4 h-4" /></div>
-          </div>
-          <p className="text-2xl font-black text-slate-900">{clientUsers.length}</p>
-          <span className="text-[10px] text-slate-400 mt-1 block">Pemilik usaha lokal</span>
-        </div>
-
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Tim Internal</span>
-            <div className="p-2 rounded-xl bg-[#76C0EC]/15 text-[#425B9A]"><ShieldCheck className="w-4 h-4" /></div>
-          </div>
-          <p className="text-2xl font-black text-slate-900">{internalUsers.length}</p>
-          <span className="text-[10px] text-slate-400 mt-1 block">
-            {stats?.totalAdmins || 0} Admin &bull; {stats?.totalSupports || 0} Support
-          </span>
-        </div>
-
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Sedang Online</span>
-            <div className="p-2 rounded-xl bg-emerald-50 text-emerald-600"><Activity className="w-4 h-4" /></div>
-          </div>
-          <div className="flex items-center gap-2">
-            <p className="text-2xl font-black text-slate-900">{onlineCount}</p>
-            {onlineCount > 0 && <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />}
-          </div>
-          <span className="text-[10px] text-slate-400 mt-1 block">Sesi aktif saat ini</span>
-        </div>
-
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Total Website</span>
-            <div className="p-2 rounded-xl bg-slate-100 text-[#425B9A]"><Globe className="w-4 h-4" /></div>
-          </div>
-          <p className="text-2xl font-black text-slate-900">{stats?.totalWebsites ?? 0}</p>
-          <span className="text-[10px] text-slate-400 mt-1 block">
-            {stats?.totalPublished ?? 0} Berstatus Live
-          </span>
-        </div>
-      </div>
-
-      {/* ── CATEGORY TABS & TABLE ───────────────────────── */}
-      <div className="bg-white rounded-3xl border border-slate-200 shadow-xs overflow-hidden">
-        {/* Navigation Category Tabs */}
-        <div className="p-4 sm:p-5 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex items-center gap-2 bg-slate-100 p-1 rounded-2xl self-start">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="p-2 rounded-xl bg-[#425B9A]/10 text-[#425B9A]">
+                  <ShieldCheck className="w-5 h-5" />
+                </span>
+                <h1 className="text-xl font-extrabold text-slate-900 tracking-tight">Monitoring Pengguna & Client</h1>
+              </div>
+              <p className="text-xs text-slate-500 mt-1">Pantau seluruh client UMKM, website buatan mereka, dan staf internal administrator secara terpisah.</p>
+            </div>
             <button
               type="button"
-              onClick={() => setActiveCategory('clients')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${
-                activeCategory === 'clients'
-                  ? 'bg-white text-[#425B9A] shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
+              onClick={loadData}
+              disabled={loading}
+              className="flex items-center gap-2 px-4 py-2 bg-slate-50 hover:bg-slate-100 text-slate-700 rounded-xl text-xs font-bold transition border border-slate-200 shrink-0 self-start sm:self-auto disabled:opacity-50 cursor-pointer"
             >
-              <Building2 className="w-4 h-4" />
-              <span>Client Pengguna (UMKM)</span>
-              <span className="px-1.5 py-0.5 rounded-full text-[10px] bg-[#425B9A]/15 text-[#425B9A] font-black">
-                {clientUsers.length}
-              </span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActiveCategory('internal')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${
-                activeCategory === 'internal'
-                  ? 'bg-white text-[#425B9A] shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              <ShieldCheck className="w-4 h-4" />
-              <span>Tim Internal & Admin</span>
-              <span className="px-1.5 py-0.5 rounded-full text-[10px] bg-[#76C0EC]/20 text-[#425B9A] font-black">
-                {internalUsers.length}
-              </span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActiveCategory('all')}
-              className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${
-                activeCategory === 'all'
-                  ? 'bg-white text-slate-900 shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              <span>Semua</span>
-              <span className="px-1.5 py-0.5 rounded-full text-[10px] bg-slate-200 text-slate-700 font-black">
-                {users.length}
-              </span>
+              <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
+              <span>Segarkan Data</span>
             </button>
           </div>
 
-          {/* Search Box */}
-          <div className="relative w-full md:w-72">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder={
-                activeCategory === 'clients'
-                  ? 'Cari nama atau email client...'
-                  : activeCategory === 'internal'
-                  ? 'Cari admin / support...'
-                  : 'Cari pengguna...'
-              }
-              className="w-full pl-9 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:ring-2 focus:ring-[#425B9A]"
-            />
+          {/* ── Platform Stats Grid ─────────────────────────── */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Client UMKM</span>
+                <div className="p-2 rounded-xl bg-[#425B9A]/10 text-[#425B9A]">
+                  <Users className="w-4 h-4" />
+                </div>
+              </div>
+              <p className="text-2xl font-black text-slate-900">{clientUsers.length}</p>
+              <span className="text-[10px] text-slate-400 mt-1 block">Pemilik usaha lokal</span>
+            </div>
+
+            <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Tim Internal</span>
+                <div className="p-2 rounded-xl bg-[#76C0EC]/15 text-[#425B9A]">
+                  <ShieldCheck className="w-4 h-4" />
+                </div>
+              </div>
+              <p className="text-2xl font-black text-slate-900">{internalUsers.length}</p>
+              <span className="text-[10px] text-slate-400 mt-1 block">
+                {stats?.totalAdmins || 0} Admin &bull; {stats?.totalSupports || 0} Support
+              </span>
+            </div>
+
+            <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Sedang Online</span>
+                <div className="p-2 rounded-xl bg-emerald-50 text-emerald-600">
+                  <Activity className="w-4 h-4" />
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <p className="text-2xl font-black text-slate-900">{onlineCount}</p>
+                {onlineCount > 0 && <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />}
+              </div>
+              <span className="text-[10px] text-slate-400 mt-1 block">Sesi aktif saat ini</span>
+            </div>
+
+            <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Total Website</span>
+                <div className="p-2 rounded-xl bg-slate-100 text-[#425B9A]">
+                  <Globe className="w-4 h-4" />
+                </div>
+              </div>
+              <p className="text-2xl font-black text-slate-900">{stats?.totalWebsites ?? 0}</p>
+              <span className="text-[10px] text-slate-400 mt-1 block">{stats?.totalPublished ?? 0} Berstatus Live</span>
+            </div>
           </div>
-        </div>
 
-        {/* Table View */}
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-slate-50/70 border-b border-slate-100 text-[10px] uppercase tracking-wider text-slate-400 font-bold">
-                <th className="py-3.5 px-6">
-                  {activeCategory === 'clients' ? 'Client' : activeCategory === 'internal' ? 'Staf Internal' : 'Pengguna'}
-                </th>
-                <th className="py-3.5 px-4">Role</th>
-                <th className="py-3.5 px-4">Plan Akses</th>
-                <th className="py-3.5 px-4">Status Sesi</th>
-                <th className="py-3.5 px-4">Terakhir Login</th>
-                {activeCategory !== 'internal' && <th className="py-3.5 px-4">Website Dibuat</th>}
-                <th className="py-3.5 px-4">Perangkat & IP</th>
-                <th className="py-3.5 px-6 text-right">Rincian & Aksi</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100 text-xs text-slate-700">
-              {loading && users.length === 0 ? (
-                <tr>
-                  <td colSpan={8} className="py-16 text-center text-slate-400 text-xs">
-                    <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-[#425B9A]" />
-                    Memuat data pengguna dari PostgreSQL...
-                  </td>
-                </tr>
-              ) : filteredUsers.length === 0 ? (
-                <tr>
-                  <td colSpan={8} className="py-16 text-center text-slate-400 text-xs">
-                    Tidak ada data pengguna pada kategori ini.
-                  </td>
-                </tr>
-              ) : (
-                filteredUsers.map((u) => {
-                  const userInitials = u.name
-                    .split(' ')
-                    .map((n) => n[0])
-                    .slice(0, 2)
-                    .join('')
-                    .toUpperCase();
+          {/* ── CATEGORY TABS & TABLE ───────────────────────── */}
+          <div className="bg-white rounded-3xl border border-slate-200 shadow-xs overflow-hidden">
+            {/* Navigation Category Tabs */}
+            <div className="p-4 sm:p-5 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="flex items-center gap-2 bg-slate-100 p-1 rounded-2xl self-start">
+                <button
+                  type="button"
+                  onClick={() => setActiveCategory("clients")}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${activeCategory === "clients" ? "bg-white text-[#425B9A] shadow-xs" : "text-slate-600 hover:text-slate-900"}`}
+                >
+                  <Building2 className="w-4 h-4" />
+                  <span>Client Pengguna (UMKM)</span>
+                  <span className="px-1.5 py-0.5 rounded-full text-[10px] bg-[#425B9A]/15 text-[#425B9A] font-black">{clientUsers.length}</span>
+                </button>
 
-                  return (
-                    <tr key={u.id} className="hover:bg-slate-50/80 transition">
-                      {/* User Info */}
-                      <td className="py-4 px-6">
-                        <div className="flex items-center gap-3">
-                          <div
-                            className={`w-9 h-9 rounded-2xl flex items-center justify-center font-black text-xs shrink-0 ${
-                              u.role === 'admin'
-                                ? 'bg-purple-100 text-purple-700'
-                                : u.role === 'support'
-                                ? 'bg-amber-100 text-amber-700'
-                                : 'bg-blue-100 text-blue-700'
-                            }`}
-                          >
-                            {userInitials || 'U'}
-                          </div>
-                          <div className="min-w-0">
-                            <span className="font-extrabold text-slate-900 block truncate">{u.name}</span>
-                            <span className="text-[11px] text-slate-400 block truncate">{u.email}</span>
-                          </div>
-                        </div>
-                      </td>
+                <button
+                  type="button"
+                  onClick={() => setActiveCategory("internal")}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${activeCategory === "internal" ? "bg-white text-[#425B9A] shadow-xs" : "text-slate-600 hover:text-slate-900"}`}
+                >
+                  <ShieldCheck className="w-4 h-4" />
+                  <span>Tim Internal & Admin</span>
+                  <span className="px-1.5 py-0.5 rounded-full text-[10px] bg-[#76C0EC]/20 text-[#425B9A] font-black">{internalUsers.length}</span>
+                </button>
 
-                      {/* Role Badge */}
-                      <td className="py-4 px-4">
-                        <span
-                          className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-[10px] font-black uppercase ${
-                            u.role === 'admin'
-                              ? 'bg-purple-100 text-purple-800'
-                              : u.role === 'support'
-                              ? 'bg-amber-100 text-amber-800'
-                              : 'bg-slate-100 text-slate-700'
-                          }`}
-                        >
-                          {u.role}
-                        </span>
-                      </td>
+                <button
+                  type="button"
+                  onClick={() => setActiveCategory("all")}
+                  className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${activeCategory === "all" ? "bg-white text-slate-900 shadow-xs" : "text-slate-600 hover:text-slate-900"}`}
+                >
+                  <span>Semua</span>
+                  <span className="px-1.5 py-0.5 rounded-full text-[10px] bg-slate-200 text-slate-700 font-black">{users.length}</span>
+                </button>
+              </div>
 
-                      {/* Plan Badge */}
-                      <td className="py-4 px-4">
-                        {u.plan === 'pro' ? (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[10px] font-black uppercase bg-amber-100 text-amber-900 border border-amber-300">
-                            <Crown className="w-3 h-3 text-amber-600 fill-amber-500" />
-                            <span>PRO</span>
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold uppercase bg-slate-100 text-slate-500">
-                            FREE
-                          </span>
-                        )}
-                      </td>
+              {/* Search Box */}
+              <div className="relative w-full md:w-72">
+                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder={activeCategory === "clients" ? "Cari nama atau email client..." : activeCategory === "internal" ? "Cari admin / support..." : "Cari pengguna..."}
+                  className="w-full pl-9 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:ring-2 focus:ring-[#425B9A]"
+                />
+              </div>
+            </div>
 
-                      {/* Online Status */}
-                      <td className="py-4 px-4">
-                        {u.isCurrentlyOnline ? (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                            Online
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-400">
-                            <span className="w-1.5 h-1.5 rounded-full bg-slate-300" />
-                            Offline
-                          </span>
-                        )}
-                      </td>
-
-                      {/* Last Login Time */}
-                      <td className="py-4 px-4">
-                        <div className="flex items-center gap-1.5 text-slate-600">
-                          <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                          <span className="text-[11px]">{formatDate(u.lastLoginAt)}</span>
-                        </div>
-                      </td>
-
-                      {/* Websites Count (Hidden for internal) */}
-                      {activeCategory !== 'internal' && (
-                        <td className="py-4 px-4">
-                          <div className="text-[11px]">
-                            <span className="font-black text-slate-900">{u.totalWebsites}</span>
-                            <span className="text-slate-400"> website</span>
-                            {u.publishedWebsites > 0 && (
-                              <span className="text-emerald-600 font-bold block text-[10px]">
-                                ({u.publishedWebsites} Live)
-                              </span>
-                            )}
-                          </div>
-                        </td>
-                      )}
-
-                      {/* Device & IP */}
-                      <td className="py-4 px-4 max-w-[200px]">
-                        <div className="text-[11px] truncate text-slate-500" title={u.lastDeviceInfo || '-'}>
-                          {u.lastDeviceInfo ? (
-                            <span className="flex items-center gap-1">
-                              <Laptop className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                              <span className="truncate">{u.lastDeviceInfo}</span>
-                            </span>
-                          ) : (
-                            <span className="text-slate-300">-</span>
-                          )}
-                          {u.lastIpAddress && (
-                            <span className="text-[10px] text-slate-400 block truncate">
-                              IP: {u.lastIpAddress}
-                            </span>
-                          )}
-                        </div>
-                      </td>
-
-                      {/* Detail View Button */}
-                      <td className="py-4 px-6 text-right">
-                        <button
-                          type="button"
-                          onClick={() => setSelectedUserId(u.id)}
-                          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-[#425B9A]/10 hover:bg-[#425B9A]/20 text-[#425B9A] transition active:scale-95 cursor-pointer shadow-2xs"
-                        >
-                          <Eye className="w-3.5 h-3.5" />
-                          <span>Buka Detail &rarr;</span>
-                        </button>
+            {/* Table View */}
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-slate-50/70 border-b border-slate-100 text-[10px] uppercase tracking-wider text-slate-400 font-bold">
+                    <th className="py-3.5 px-6">{activeCategory === "clients" ? "Client" : activeCategory === "internal" ? "Staf Internal" : "Pengguna"}</th>
+                    <th className="py-3.5 px-4">Role</th>
+                    <th className="py-3.5 px-4">Plan Akses</th>
+                    <th className="py-3.5 px-4">Status Sesi</th>
+                    <th className="py-3.5 px-4">Terakhir Login</th>
+                    {activeCategory !== "internal" && <th className="py-3.5 px-4">Website Dibuat</th>}
+                    <th className="py-3.5 px-4">Perangkat & IP</th>
+                    <th className="py-3.5 px-6 text-right">Rincian & Aksi</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 text-xs text-slate-700">
+                  {loading && users.length === 0 ? (
+                    <tr>
+                      <td colSpan={8} className="py-16 text-center text-slate-400 text-xs">
+                        <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-[#425B9A]" />
+                        Memuat data pengguna dari PostgreSQL...
                       </td>
                     </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
-        </div>
+                  ) : filteredUsers.length === 0 ? (
+                    <tr>
+                      <td colSpan={8} className="py-16 text-center text-slate-400 text-xs">
+                        Tidak ada data pengguna pada kategori ini.
+                      </td>
+                    </tr>
+                  ) : (
+                    filteredUsers.map((u) => {
+                      const userInitials = u.name
+                        .split(" ")
+                        .map((n) => n[0])
+                        .slice(0, 2)
+                        .join("")
+                        .toUpperCase();
 
-        {/* Table Footer Summary */}
-        <div className="px-6 py-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
-          <p>
-            Menampilkan <strong className="text-slate-700">{filteredUsers.length}</strong> pengguna dalam kategori ini
-          </p>
-        </div>
-      </div>
-      </>
+                      return (
+                        <tr key={u.id} className="hover:bg-slate-50/80 transition">
+                          {/* User Info */}
+                          <td className="py-4 px-6">
+                            <div className="flex items-center gap-3">
+                              <div
+                                className={`w-9 h-9 rounded-2xl flex items-center justify-center font-black text-xs shrink-0 ${
+                                  u.role === "admin" ? "bg-purple-100 text-purple-700" : u.role === "support" ? "bg-amber-100 text-amber-700" : "bg-blue-100 text-blue-700"
+                                }`}
+                              >
+                                {userInitials || "U"}
+                              </div>
+                              <div className="min-w-0">
+                                <span className="font-extrabold text-slate-900 block truncate">{u.name}</span>
+                                <span className="text-[11px] text-slate-400 block truncate">{u.email}</span>
+                              </div>
+                            </div>
+                          </td>
+
+                          {/* Role Badge */}
+                          <td className="py-4 px-4">
+                            <span
+                              className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-[10px] font-black uppercase ${
+                                u.role === "admin" ? "bg-purple-100 text-purple-800" : u.role === "support" ? "bg-amber-100 text-amber-800" : "bg-slate-100 text-slate-700"
+                              }`}
+                            >
+                              {u.role}
+                            </span>
+                          </td>
+
+                          {/* Plan Badge */}
+                          <td className="py-4 px-4">
+                            {u.plan === "pro" ? (
+                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[10px] font-black uppercase bg-amber-100 text-amber-900 border border-amber-300">
+                                <Crown className="w-3 h-3 text-amber-600 fill-amber-500" />
+                                <span>PRO</span>
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold uppercase bg-slate-100 text-slate-500">FREE</span>
+                            )}
+                          </td>
+
+                          {/* Online Status */}
+                          <td className="py-4 px-4">
+                            {u.isCurrentlyOnline ? (
+                              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                                Online
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-400">
+                                <span className="w-1.5 h-1.5 rounded-full bg-slate-300" />
+                                Offline
+                              </span>
+                            )}
+                          </td>
+
+                          {/* Last Login Time */}
+                          <td className="py-4 px-4">
+                            <div className="flex items-center gap-1.5 text-slate-600">
+                              <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                              <span className="text-[11px]">{formatDate(u.lastLoginAt)}</span>
+                            </div>
+                          </td>
+
+                          {/* Websites Count (Hidden for internal) */}
+                          {activeCategory !== "internal" && (
+                            <td className="py-4 px-4">
+                              <div className="text-[11px]">
+                                <span className="font-black text-slate-900">{u.totalWebsites}</span>
+                                <span className="text-slate-400"> website</span>
+                                {u.publishedWebsites > 0 && <span className="text-emerald-600 font-bold block text-[10px]">({u.publishedWebsites} Live)</span>}
+                              </div>
+                            </td>
+                          )}
+
+                          {/* Device & IP */}
+                          <td className="py-4 px-4 max-w-[200px]">
+                            <div className="text-[11px] truncate text-slate-500" title={u.lastDeviceInfo || "-"}>
+                              {u.lastDeviceInfo ? (
+                                <span className="flex items-center gap-1">
+                                  <Laptop className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                                  <span className="truncate">{u.lastDeviceInfo}</span>
+                                </span>
+                              ) : (
+                                <span className="text-slate-300">-</span>
+                              )}
+                              {u.lastIpAddress && <span className="text-[10px] text-slate-400 block truncate">IP: {u.lastIpAddress}</span>}
+                            </div>
+                          </td>
+
+                          {/* Detail View Button */}
+                          <td className="py-4 px-6 text-right">
+                            <button
+                              type="button"
+                              onClick={() => setSelectedUserId(u.id)}
+                              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-[#425B9A]/10 hover:bg-[#425B9A]/20 text-[#425B9A] transition active:scale-95 cursor-pointer shadow-2xs"
+                            >
+                              <Eye className="w-3.5 h-3.5" />
+                              <span>Buka Detail &rarr;</span>
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })
+                  )}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Table Footer Summary */}
+            <div className="px-6 py-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
+              <p>
+                Menampilkan <strong className="text-slate-700">{filteredUsers.length}</strong> pengguna dalam kategori ini
+              </p>
+            </div>
+          </div>
+        </>
       )}
     </div>
   );

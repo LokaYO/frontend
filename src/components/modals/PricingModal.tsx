@@ -169,22 +169,24 @@ export const PricingModal: React.FC<Props> = ({ isOpen, onClose, onUpgraded }) =
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 md:p-6 overflow-hidden">
-      <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[92vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden relative animate-in fade-in zoom-in-95">
-        {/* Header Banner - Fixed at top */}
-        <div className="bg-gradient-to-r from-purple-700 via-indigo-600 to-blue-600 p-5 sm:p-6 text-white relative overflow-hidden shrink-0">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-2xl pointer-events-none" />
+    <div className="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 md:p-6 overflow-hidden animate-fade-in">
+      <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[92vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden relative animate-scale-up">
+        {/* Header Banner - Fixed at top with LOKA Navy Sapphire & Cyan Glow */}
+        <div className="bg-gradient-to-r from-[#1b2744] via-[#425B9A] to-[#206994] p-5 sm:p-6 text-white relative overflow-hidden shrink-0">
+          {/* Ambient luminous glow orbs */}
+          <div className="absolute -top-10 -right-10 w-64 h-64 bg-[#76C0EC]/30 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-10 left-1/3 w-48 h-48 bg-amber-400/20 rounded-full blur-2xl pointer-events-none" />
 
           <button
             type="button"
             onClick={onClose}
-            className="absolute top-4 sm:top-5 right-4 sm:right-5 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition cursor-pointer"
+            className="absolute top-4 sm:top-5 right-4 sm:right-5 p-2 rounded-full bg-white/15 hover:bg-white/25 text-white transition cursor-pointer"
             aria-label="Tutup Modal"
           >
             <X className="w-5 h-5" />
           </button>
 
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400 text-slate-950 font-black text-[10px] uppercase tracking-wider mb-2.5 shadow-xs">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-amber-400 to-amber-300 text-slate-950 font-black text-[10px] uppercase tracking-wider mb-2.5 shadow-md shadow-amber-500/25">
             <Crown className="w-3.5 h-3.5 fill-current" />
             <span>{user?.plan === 'pro' ? 'Status Keanggotaan: PRO AKTIF' : 'LOKA Pro Membership'}</span>
           </div>
@@ -192,7 +194,7 @@ export const PricingModal: React.FC<Props> = ({ isOpen, onClose, onUpgraded }) =
           <h2 className="text-lg sm:text-2xl font-black tracking-tight">
             {user?.plan === 'pro' ? 'Hak Istimewa & Benefit LOKA PRO' : 'Tingkatkan Bisnis ke Level Profesional'}
           </h2>
-          <p className="text-xs sm:text-sm text-purple-100 mt-1 max-w-lg leading-relaxed">
+          <p className="text-xs sm:text-sm text-blue-100/90 mt-1 max-w-lg leading-relaxed">
             {user?.plan === 'pro'
               ? 'Seluruh hak istimewa profesional, domain custom bersih, akses template eksklusif PRO, dan white-label tanpa watermark terbuka penuh di akun Anda.'
               : 'Dapatkan nama domain bersih tanpa angka acak, hilangkan watermark LOKA, akses template eksklusif PRO, dan nikmati fitur lainnya.'}
@@ -287,8 +289,8 @@ export const PricingModal: React.FC<Props> = ({ isOpen, onClose, onUpgraded }) =
               </div>
 
               {/* Benefit 2 */}
-              <div className="p-3.5 rounded-2xl border border-slate-200/90 bg-white shadow-2xs flex items-start gap-3 hover:border-amber-300 transition group">
-                <div className="w-8 h-8 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 group-hover:bg-purple-600 group-hover:text-white transition">
+              <div className="p-3.5 rounded-2xl border border-slate-200/90 bg-white shadow-2xs flex items-start gap-3 hover:border-[#76C0EC] transition group">
+                <div className="w-8 h-8 rounded-xl bg-[#425B9A]/10 text-[#425B9A] flex items-center justify-center shrink-0 group-hover:bg-[#425B9A] group-hover:text-white transition">
                   <ShieldCheck className="w-4 h-4" />
                 </div>
                 <div className="min-w-0">
@@ -305,7 +307,7 @@ export const PricingModal: React.FC<Props> = ({ isOpen, onClose, onUpgraded }) =
               </div>
 
               {/* Benefit 3 */}
-              <div className="p-3.5 rounded-2xl border border-slate-200/90 bg-white shadow-2xs flex items-start gap-3 hover:border-amber-300 transition group">
+              <div className="p-3.5 rounded-2xl border border-slate-200/90 bg-white shadow-2xs flex items-start gap-3 hover:border-[#76C0EC] transition group">
                 <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition">
                   <Inbox className="w-4 h-4" />
                 </div>
@@ -323,7 +325,7 @@ export const PricingModal: React.FC<Props> = ({ isOpen, onClose, onUpgraded }) =
               </div>
 
               {/* Benefit 4 */}
-              <div className="p-3.5 rounded-2xl border border-slate-200/90 bg-white shadow-2xs flex items-start gap-3 hover:border-amber-300 transition group">
+              <div className="p-3.5 rounded-2xl border border-slate-200/90 bg-white shadow-2xs flex items-start gap-3 hover:border-[#76C0EC] transition group">
                 <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 group-hover:bg-amber-600 group-hover:text-white transition">
                   <QrCode className="w-4 h-4" />
                 </div>
@@ -341,8 +343,8 @@ export const PricingModal: React.FC<Props> = ({ isOpen, onClose, onUpgraded }) =
               </div>
 
               {/* Benefit 5 */}
-              <div className="p-3.5 rounded-2xl border border-slate-200/90 bg-white shadow-2xs flex items-start gap-3 hover:border-amber-300 transition group">
-                <div className="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition">
+              <div className="p-3.5 rounded-2xl border border-slate-200/90 bg-white shadow-2xs flex items-start gap-3 hover:border-[#76C0EC] transition group">
+                <div className="w-8 h-8 rounded-xl bg-[#76C0EC]/20 text-[#1b5073] flex items-center justify-center shrink-0 group-hover:bg-[#425B9A] group-hover:text-white transition">
                   <Share2 className="w-4 h-4" />
                 </div>
                 <div className="min-w-0">
@@ -359,7 +361,7 @@ export const PricingModal: React.FC<Props> = ({ isOpen, onClose, onUpgraded }) =
               </div>
 
               {/* Benefit 6 */}
-              <div className="p-3.5 rounded-2xl border border-slate-200/90 bg-white shadow-2xs flex items-start gap-3 hover:border-amber-300 transition group">
+              <div className="p-3.5 rounded-2xl border border-slate-200/90 bg-white shadow-2xs flex items-start gap-3 hover:border-[#76C0EC] transition group">
                 <div className="w-8 h-8 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0 group-hover:bg-rose-600 group-hover:text-white transition">
                   <Zap className="w-4 h-4" />
                 </div>
@@ -394,7 +396,7 @@ export const PricingModal: React.FC<Props> = ({ isOpen, onClose, onUpgraded }) =
                   onClick={() => setSelectedPlan('pro_monthly')}
                   className={`p-4 rounded-2xl border-2 cursor-pointer transition-all relative ${
                     selectedPlan === 'pro_monthly'
-                      ? 'border-purple-600 bg-purple-50/40 shadow-md ring-2 ring-purple-600/20'
+                      ? 'border-[#425B9A] bg-[#425B9A]/5 shadow-md ring-2 ring-[#76C0EC]/40'
                       : 'border-slate-200 hover:border-slate-300'
                   }`}
                 >
@@ -405,7 +407,7 @@ export const PricingModal: React.FC<Props> = ({ isOpen, onClose, onUpgraded }) =
                     <span
                       className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
                         selectedPlan === 'pro_monthly'
-                          ? 'border-purple-600 bg-purple-600 text-white'
+                          ? 'border-[#425B9A] bg-[#425B9A] text-white'
                           : 'border-slate-300'
                       }`}
                     >
@@ -426,7 +428,7 @@ export const PricingModal: React.FC<Props> = ({ isOpen, onClose, onUpgraded }) =
                   onClick={() => setSelectedPlan('pro_yearly')}
                   className={`p-4 rounded-2xl border-2 cursor-pointer transition-all relative ${
                     selectedPlan === 'pro_yearly'
-                      ? 'border-purple-600 bg-purple-50/40 shadow-md ring-2 ring-purple-600/20'
+                      ? 'border-[#425B9A] bg-[#425B9A]/5 shadow-md ring-2 ring-[#76C0EC]/40'
                       : 'border-slate-200 hover:border-slate-300'
                   }`}
                 >
@@ -442,7 +444,7 @@ export const PricingModal: React.FC<Props> = ({ isOpen, onClose, onUpgraded }) =
                     <span
                       className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
                         selectedPlan === 'pro_yearly'
-                          ? 'border-purple-600 bg-purple-600 text-white'
+                          ? 'border-[#425B9A] bg-[#425B9A] text-white'
                           : 'border-slate-300'
                       }`}
                     >
@@ -465,7 +467,7 @@ export const PricingModal: React.FC<Props> = ({ isOpen, onClose, onUpgraded }) =
                   type="button"
                   onClick={handlePayMidtrans}
                   disabled={loading}
-                  className="w-full py-3.5 px-4 bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-bold rounded-2xl shadow-lg shadow-purple-500/25 transition active:scale-98 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 text-sm"
+                  className="w-full py-3.5 px-4 bg-gradient-to-r from-[#293a62] via-[#425B9A] to-[#2572a3] hover:from-[#202f52] hover:to-[#1e5d85] text-white font-black rounded-2xl shadow-lg shadow-[#425B9A]/25 transition active:scale-98 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 text-sm"
                 >
                   <CreditCard className="w-4 h-4" />
                   <span>
