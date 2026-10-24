@@ -679,10 +679,24 @@ const ClientDetailView: React.FC<ClientDetailViewProps> = ({
 
 // ─── MAIN ADMIN MONITORING PANEL ───────────────────────────────────────────────
 
-export const AdminMonitoringPanel: React.FC = () => {
+export type AdminTab = 'users' | 'moderation' | 'announcements' | 'export' | 'audit';
+
+interface AdminMonitoringPanelProps {
+  activeTab?: AdminTab;
+  onTabChange?: (tab: AdminTab) => void;
+  hideNav?: boolean;
+}
+
+export const AdminMonitoringPanel: React.FC<AdminMonitoringPanelProps> = ({
+  activeTab,
+  onTabChange,
+  hideNav = false,
+}) => {
   const { user } = useAuth();
   const toast = useToast();
-  const [mainTab, setMainTab] = useState<'users' | 'moderation' | 'announcements' | 'export' | 'audit'>('users');
+  const [internalTab, setInternalTab] = useState<AdminTab>('users');
+  const mainTab = activeTab !== undefined ? activeTab : internalTab;
+  const setMainTab = onTabChange || setInternalTab;
   const [users, setUsers] = useState<MonitoringUser[]>([]);
   const [stats, setStats] = useState<PlatformStats | null>(null);
   const [loading, setLoading] = useState(true);
@@ -804,72 +818,74 @@ export const AdminMonitoringPanel: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* ── Admin Management Navigation Tabs (5 Fitur Utama) ── */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-1 bg-white p-2 rounded-2xl border border-slate-200/90 shadow-2xs">
-        <button
-          type="button"
-          onClick={() => setMainTab('users')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-extrabold transition shrink-0 cursor-pointer ${
-            mainTab === 'users'
-              ? 'bg-purple-600 text-white shadow-xs'
-              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-          }`}
-        >
-          <Users className="w-4 h-4" />
-          <span>Pengguna & Sesi</span>
-        </button>
+      {!hideNav && (
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 bg-white p-2 rounded-2xl border border-slate-200/90 shadow-2xs">
+          <button
+            type="button"
+            onClick={() => setMainTab('users')}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-extrabold transition shrink-0 cursor-pointer ${
+              mainTab === 'users'
+                ? 'bg-purple-600 text-white shadow-xs'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+            }`}
+          >
+            <Users className="w-4 h-4" />
+            <span>Pengguna & Sesi</span>
+          </button>
 
-        <button
-          type="button"
-          onClick={() => setMainTab('moderation')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-extrabold transition shrink-0 cursor-pointer ${
-            mainTab === 'moderation'
-              ? 'bg-purple-600 text-white shadow-xs'
-              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-          }`}
-        >
-          <ShieldAlert className="w-4 h-4" />
-          <span>Moderasi Website</span>
-        </button>
+          <button
+            type="button"
+            onClick={() => setMainTab('moderation')}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-extrabold transition shrink-0 cursor-pointer ${
+              mainTab === 'moderation'
+                ? 'bg-purple-600 text-white shadow-xs'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+            }`}
+          >
+            <ShieldAlert className="w-4 h-4" />
+            <span>Moderasi Website</span>
+          </button>
 
-        <button
-          type="button"
-          onClick={() => setMainTab('announcements')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-extrabold transition shrink-0 cursor-pointer ${
-            mainTab === 'announcements'
-              ? 'bg-purple-600 text-white shadow-xs'
-              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-          }`}
-        >
-          <Megaphone className="w-4 h-4" />
-          <span>Broadcast Pengumuman</span>
-        </button>
+          <button
+            type="button"
+            onClick={() => setMainTab('announcements')}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-extrabold transition shrink-0 cursor-pointer ${
+              mainTab === 'announcements'
+                ? 'bg-purple-600 text-white shadow-xs'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+            }`}
+          >
+            <Megaphone className="w-4 h-4" />
+            <span>Broadcast Pengumuman</span>
+          </button>
 
-        <button
-          type="button"
-          onClick={() => setMainTab('export')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-extrabold transition shrink-0 cursor-pointer ${
-            mainTab === 'export'
-              ? 'bg-purple-600 text-white shadow-xs'
-              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-          }`}
-        >
-          <FileSpreadsheet className="w-4 h-4" />
-          <span>Ekspor Laporan (Excel)</span>
-        </button>
+          <button
+            type="button"
+            onClick={() => setMainTab('export')}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-extrabold transition shrink-0 cursor-pointer ${
+              mainTab === 'export'
+                ? 'bg-purple-600 text-white shadow-xs'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+            }`}
+          >
+            <FileSpreadsheet className="w-4 h-4" />
+            <span>Ekspor Laporan (Excel)</span>
+          </button>
 
-        <button
-          type="button"
-          onClick={() => setMainTab('audit')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-extrabold transition shrink-0 cursor-pointer ${
-            mainTab === 'audit'
-              ? 'bg-purple-600 text-white shadow-xs'
-              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-          }`}
-        >
-          <History className="w-4 h-4" />
-          <span>Log Aktivitas (Audit)</span>
-        </button>
-      </div>
+          <button
+            type="button"
+            onClick={() => setMainTab('audit')}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-extrabold transition shrink-0 cursor-pointer ${
+              mainTab === 'audit'
+                ? 'bg-purple-600 text-white shadow-xs'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+            }`}
+          >
+            <History className="w-4 h-4" />
+            <span>Log Aktivitas (Audit)</span>
+          </button>
+        </div>
+      )}
 
       {/* ── TAB 2: MODERASI WEBSITE ── */}
       {mainTab === 'moderation' && (

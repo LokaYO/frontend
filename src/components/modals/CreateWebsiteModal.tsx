@@ -27,12 +27,16 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   onWebsiteCreated: (websiteId: string) => void;
+  initialTemplate?: PresetTemplate | null;
+  onOpenPricing?: () => void;
 }
 
 export const CreateWebsiteModal: React.FC<Props> = ({
   isOpen,
   onClose,
   onWebsiteCreated,
+  initialTemplate,
+  onOpenPricing,
 }) => {
   const { token, user } = useAuth();
   const [step, setStep] = useState<'choose_method' | 'ai_form' | 'template_gallery'>('choose_method');
@@ -40,6 +44,15 @@ export const CreateWebsiteModal: React.FC<Props> = ({
   const [loading, setLoading] = useState(false);
   const [loadingStatus, setLoadingStatus] = useState<string>('');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  // Sync initialTemplate if opened directly from template gallery
+  React.useEffect(() => {
+    if (isOpen && initialTemplate) {
+      setStep('template_gallery');
+      setSelectedTemplate(initialTemplate);
+      setTemplateSiteName(initialTemplate.name);
+    }
+  }, [isOpen, initialTemplate]);
 
   // AI Form State
   const [aiForm, setAiForm] = useState<BusinessInfo>({
@@ -388,45 +401,81 @@ export const CreateWebsiteModal: React.FC<Props> = ({
           {step === 'template_gallery' && (
             <div className="space-y-5">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {PRESET_TEMPLATES.map((tpl) => (
-                  <div
-                    key={tpl.id}
-                    onClick={() => {
-                      setSelectedTemplate(tpl);
-                      setTemplateSiteName(tpl.name);
-                    }}
-                    className={`rounded-2xl border-2 overflow-hidden cursor-pointer transition flex flex-col justify-between group ${
-                      selectedTemplate?.id === tpl.id
-                        ? 'border-blue-600 ring-2 ring-blue-100 shadow-md'
-                        : 'border-slate-200 hover:border-slate-300'
-                    }`}
-                  >
-                    <div className="relative h-36 overflow-hidden">
-                      <img
-                        src={tpl.previewImage}
-                        alt={tpl.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
-                      />
-                      <div className="absolute top-2 right-2">
-                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-white/90 text-slate-800 shadow-xs">
-                          {tpl.category}
-                        </span>
+                {PRESET_TEMPLATES.map((tpl) => {
+                  const isLocked = tpl.isPro && user?.plan !== 'pro';
+                  return (
+                    <div
+                      key={tpl.id}
+                      onClick={() => {
+                        if (isLocked) {
+                          setErrorMsg(`Template "${tpl.name}" adalah fitur eksklusif LOKA PRO. Silakan upgrade paket akun Anda untuk menggunakan template ini.`);
+                          return;
+                        }
+                        setSelectedTemplate(tpl);
+                        setTemplateSiteName(tpl.name);
+                      }}
+                      className={`rounded-2xl border-2 overflow-hidden cursor-pointer transition flex flex-col justify-between group relative ${
+                        isLocked
+                          ? 'border-amber-200/90 bg-amber-50/20 hover:border-amber-400'
+                          : selectedTemplate?.id === tpl.id
+                          ? 'border-blue-600 ring-2 ring-blue-100 shadow-md'
+                          : 'border-slate-200 hover:border-slate-300'
+                      }`}
+                    >
+                      <div className="relative h-36 overflow-hidden">
+                        <img
+                          src={tpl.previewImage}
+                          alt={tpl.name}
+                          className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                        />
+                        <div className="absolute top-2 left-2 flex items-center gap-1.5 flex-wrap">
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-white/90 text-slate-800 shadow-xs">
+                            {tpl.category}
+                          </span>
+                          {tpl.isPro && (
+                            <span className="px-2 py-0.5 rounded-full text-[9px] font-black bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 shadow-xs flex items-center gap-1 border border-amber-300">
+                              <Crown className="w-3 h-3 fill-current" />
+                              <span>PRO</span>
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="p-4 space-y-1">
+                        <h5 className="text-xs font-bold text-slate-900 flex items-center justify-between">
+                          <span className="flex items-center gap-1">
+                            {tpl.name}
+                            {tpl.isPro && <Crown className="w-3.5 h-3.5 text-amber-500 fill-amber-400" />}
+                          </span>
+                          {selectedTemplate?.id === tpl.id && (
+                            <Check className="w-4 h-4 text-blue-600" />
+                          )}
+                        </h5>
+                        <p className="text-[11px] text-slate-500 line-clamp-2">
+                          {tpl.description}
+                        </p>
+                        {isLocked && (
+                          <div className="pt-1.5 flex items-center justify-between text-[10px]">
+                            <span className="text-amber-700 font-bold">Khusus Member PRO</span>
+                            {onOpenPricing && (
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleClose();
+                                  onOpenPricing();
+                                }}
+                                className="text-amber-800 font-bold hover:underline"
+                              >
+                                Upgrade Sekarang &rarr;
+                              </button>
+                            )}
+                          </div>
+                        )}
                       </div>
                     </div>
-
-                    <div className="p-4 space-y-1">
-                      <h5 className="text-xs font-bold text-slate-900 flex items-center justify-between">
-                        <span>{tpl.name}</span>
-                        {selectedTemplate?.id === tpl.id && (
-                          <Check className="w-4 h-4 text-blue-600" />
-                        )}
-                      </h5>
-                      <p className="text-[11px] text-slate-500 line-clamp-2">
-                        {tpl.description}
-                      </p>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
               {selectedTemplate && (

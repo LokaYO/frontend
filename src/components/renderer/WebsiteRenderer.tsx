@@ -12,6 +12,7 @@ import { FaqSection } from '../sections/FaqSection';
 import { ContactSection } from '../sections/ContactSection';
 import { FooterSection } from '../sections/FooterSection';
 import { FloatingWhatsAppButton } from '../common/FloatingWhatsAppButton';
+import { ViewportProvider, ViewportMode } from '../../context/ViewportContext';
 import {
   GripVertical,
   ChevronUp,
@@ -35,6 +36,7 @@ interface Props {
   onUpdateSectionContent?: (sectionId: string, content: any) => void;
   showGridLines?: boolean;
   ownerPlan?: 'free' | 'pro';
+  viewport?: ViewportMode;
 }
 
 export const getFontFamilyClass = (font?: string) => {
@@ -75,6 +77,7 @@ export const WebsiteRenderer: React.FC<Props> = ({
   onUpdateSectionContent,
   showGridLines = false,
   ownerPlan = 'free',
+  viewport = 'desktop',
 }) => {
   const sortedSections = [...sections].sort((a, b) => a.position - b.position);
 
@@ -102,7 +105,14 @@ export const WebsiteRenderer: React.FC<Props> = ({
   const renderSectionComponent = (section: Section) => {
     switch (section.type) {
       case 'navbar':
-        return <NavbarSection content={section.content as any} theme={theme} isEditor={isEditor} />;
+        return (
+          <NavbarSection
+            content={section.content as any}
+            theme={theme}
+            isEditor={isEditor}
+            businessInfo={businessInfo}
+          />
+        );
       case 'hero':
         return <HeroSection content={section.content as any} theme={theme} isEditor={isEditor} />;
       case 'about':
@@ -206,12 +216,13 @@ export const WebsiteRenderer: React.FC<Props> = ({
   };
 
   return (
-    <div
-      className={`min-h-screen bg-white transition-all relative ${getFontFamilyClass(theme.font)}`}
-      style={{
-        backgroundColor: theme.backgroundColor || '#ffffff',
-      }}
-    >
+    <ViewportProvider viewport={viewport}>
+      <div
+        className={`min-h-screen bg-white transition-all relative ${getFontFamilyClass(theme.font)}`}
+        style={{
+          backgroundColor: theme.backgroundColor || '#ffffff',
+        }}
+      >
       {/* ── Visual 12-Column Grid Blueprint Overlay (Tampilan Grid) ── */}
       {isEditor && showGridLines && (
         <div className="pointer-events-none absolute inset-0 z-30 overflow-hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -399,5 +410,6 @@ export const WebsiteRenderer: React.FC<Props> = ({
         </aside>
       )}
     </div>
-  );
+  </ViewportProvider>
+);
 };

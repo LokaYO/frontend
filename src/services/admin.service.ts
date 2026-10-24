@@ -86,6 +86,7 @@ export interface AdminModerationWebsite {
   userId: string;
   ownerName: string;
   ownerEmail: string;
+  ownerPlan?: 'free' | 'pro';
   name: string;
   slug: string;
   status: 'draft' | 'published' | 'suspended';

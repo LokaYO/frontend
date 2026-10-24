@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { ServicesContent, ThemeConfig } from '../../types/schema';
 import { Sparkles, Utensils, Scissors, Coffee, Award, Shield, Check, Flame, Clock, GripVertical } from 'lucide-react';
+import { useViewport } from '../../context/ViewportContext';
 import {
   DndContext,
   closestCorners,
@@ -138,12 +139,16 @@ export const ServicesSection: React.FC<Props> = ({ content, theme, isEditor, onU
       ? 'py-24 sm:py-32'
       : 'py-16 sm:py-24';
 
-  const gridColsClass =
-    columns === '2'
-      ? 'grid-cols-1 sm:grid-cols-2'
-      : columns === '3'
-      ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
-      : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4';
+  const { isMobile, isTablet } = useViewport();
+  const gridColsClass = isMobile
+    ? 'grid-cols-1'
+    : isTablet
+    ? 'grid-cols-1 sm:grid-cols-2'
+    : columns === '2'
+    ? 'grid-cols-1 sm:grid-cols-2'
+    : columns === '3'
+    ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
+    : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4';
 
   const sensors = useSensors(
     useSensor(PointerSensor, {

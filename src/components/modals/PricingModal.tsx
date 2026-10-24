@@ -169,37 +169,38 @@ export const PricingModal: React.FC<Props> = ({ isOpen, onClose, onUpgraded }) =
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-      <div className="bg-white rounded-3xl max-w-2xl w-full shadow-2xl border border-slate-200 overflow-hidden relative animate-in fade-in zoom-in-95 my-8">
-        {/* Header Banner */}
-        <div className="bg-gradient-to-r from-purple-700 via-indigo-600 to-blue-600 p-6 sm:p-8 text-white relative overflow-hidden">
+    <div className="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 md:p-6 overflow-hidden">
+      <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[92vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden relative animate-in fade-in zoom-in-95">
+        {/* Header Banner - Fixed at top */}
+        <div className="bg-gradient-to-r from-purple-700 via-indigo-600 to-blue-600 p-5 sm:p-6 text-white relative overflow-hidden shrink-0">
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-2xl pointer-events-none" />
 
           <button
             type="button"
             onClick={onClose}
-            className="absolute top-5 right-5 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition cursor-pointer"
+            className="absolute top-4 sm:top-5 right-4 sm:right-5 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition cursor-pointer"
+            aria-label="Tutup Modal"
           >
             <X className="w-5 h-5" />
           </button>
 
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400 text-slate-950 font-black text-[10px] uppercase tracking-wider mb-3 shadow-xs">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400 text-slate-950 font-black text-[10px] uppercase tracking-wider mb-2.5 shadow-xs">
             <Crown className="w-3.5 h-3.5 fill-current" />
             <span>{user?.plan === 'pro' ? 'Status Keanggotaan: PRO AKTIF' : 'LOKA Pro Membership'}</span>
           </div>
 
-          <h2 className="text-xl sm:text-2xl font-black tracking-tight">
+          <h2 className="text-lg sm:text-2xl font-black tracking-tight">
             {user?.plan === 'pro' ? 'Hak Istimewa & Benefit LOKA PRO' : 'Tingkatkan Bisnis ke Level Profesional'}
           </h2>
           <p className="text-xs sm:text-sm text-purple-100 mt-1 max-w-lg leading-relaxed">
             {user?.plan === 'pro'
-              ? 'Seluruh hak istimewa profesional, domain custom bersih, dan white-label tanpa watermark terbuka penuh di akun Anda.'
-              : 'Dapatkan nama domain bersih tanpa angka acak, hilangkan watermark LOKA, dan nikmati fitur eksklusif lainnya.'}
+              ? 'Seluruh hak istimewa profesional, domain custom bersih, akses template eksklusif PRO, dan white-label tanpa watermark terbuka penuh di akun Anda.'
+              : 'Dapatkan nama domain bersih tanpa angka acak, hilangkan watermark LOKA, akses template eksklusif PRO, dan nikmati fitur lainnya.'}
           </p>
         </div>
 
-        {/* Modal Body */}
-        <div className="p-6 sm:p-8 space-y-6">
+        {/* Modal Body - Scrollable */}
+        <div className="flex-1 min-h-0 overflow-y-auto p-4 sm:p-6 space-y-5">
           {/* Active Pro Member Banner */}
           {user?.plan === 'pro' && (
             <div className="p-4 bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-amber-500/10 border border-amber-300 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">

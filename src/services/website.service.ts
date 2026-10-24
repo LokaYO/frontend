@@ -56,6 +56,11 @@ export const websiteService = {
     return apiClient.post(`/api/websites/${id}/duplicate`);
   },
 
+  async getAllUserLeads(): Promise<any[]> {
+    const data = await apiClient.get<{ leads: any[] }>('/api/websites/user/all-leads');
+    return data.leads || [];
+  },
+
   async getWebsiteLeads(websiteId: string): Promise<any[]> {
     const data = await apiClient.get<{ leads: any[] }>(`/api/websites/${websiteId}/leads`);
     return data.leads || [];

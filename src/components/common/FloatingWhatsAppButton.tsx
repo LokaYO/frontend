@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { MessageCircle, Clock, X, Sparkles } from 'lucide-react';
 import { getOperatingStatus } from '../../utils/operatingHours';
+import { useViewport } from '../../context/ViewportContext';
 
 interface Props {
   phone: string;
@@ -23,6 +24,7 @@ export const FloatingWhatsAppButton: React.FC<Props> = ({
   closeTime,
   isEditor = false,
 }) => {
+  const { isMobile } = useViewport();
   const [showTooltip, setShowTooltip] = useState(false);
   const status = getOperatingStatus(operatingHours, openTime, closeTime);
 
@@ -104,21 +106,25 @@ export const FloatingWhatsAppButton: React.FC<Props> = ({
 
       {/* Main Floating Button */}
       <div className="flex items-center gap-2.5">
-        {/* Status Pill Badge */}
-        <div className="hidden sm:flex items-center gap-2 bg-white/95 backdrop-blur-xs px-3 py-1.5 rounded-full shadow-md border border-slate-200 text-xs font-semibold text-slate-700">
-          <span className={`w-2 h-2 rounded-full ${status.dotClass}`} />
-          <span>{status.statusLabel}</span>
-        </div>
+        {/* Status Pill Badge (Hidden on mobile) */}
+        {!isMobile && (
+          <div className="hidden sm:flex items-center gap-2 bg-white/95 backdrop-blur-xs px-3 py-1.5 rounded-full shadow-md border border-slate-200 text-xs font-semibold text-slate-700">
+            <span className={`w-2 h-2 rounded-full ${status.dotClass}`} />
+            <span>{status.statusLabel}</span>
+          </div>
+        )}
 
         <a
           href={isEditor ? '#!' : whatsappUrl}
           target={isEditor ? undefined : '_blank'}
           rel="noopener noreferrer"
           onClick={handleClick}
-          className="w-13 h-13 sm:w-14 sm:h-14 bg-emerald-500 hover:bg-emerald-600 hover:scale-105 active:scale-95 text-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 cursor-pointer"
+          className={`${
+            isMobile ? 'w-11 h-11' : 'w-13 h-13 sm:w-14 sm:h-14'
+          } bg-emerald-500 hover:bg-emerald-600 hover:scale-105 active:scale-95 text-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 cursor-pointer`}
           title={`Chat WhatsApp ke ${businessName || 'Admin'}`}
         >
-          <MessageCircle className="w-6 h-6 sm:w-7 sm:h-7" />
+          <MessageCircle className={`${isMobile ? 'w-5 h-5' : 'w-6 h-6 sm:w-7 sm:h-7'}`} />
         </a>
       </div>
     </div>

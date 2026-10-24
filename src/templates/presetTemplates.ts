@@ -6,6 +6,7 @@ export interface PresetTemplate {
   category: string;
   description: string;
   previewImage: string;
+  isPro?: boolean;
   businessInfo: BusinessInfo;
   theme: ThemeConfig;
   sections: Array<{
@@ -910,6 +911,466 @@ export const PRESET_TEMPLATES: PresetTemplate[] = [
           socialLinks: [
             { platform: 'whatsapp', url: 'https://wa.me/6281987654321' },
             { platform: 'instagram', url: 'https://instagram.com/autoprima.semarang' },
+          ],
+        },
+      },
+    ],
+  },
+  {
+    id: 'pet-care',
+    name: 'Paw & Tail Care',
+    category: 'Pet Grooming & Daycare',
+    description: 'Template ceria, higienis, dan ramah untuk salon hewan, pet hotel, spa anabul, dan klinik hewan lokal.',
+    previewImage: 'https://images.unsplash.com/photo-1548767797-d8c844163c4c?auto=format&fit=crop&w=800&q=80',
+    isPro: false,
+    businessInfo: {
+      name: 'Paw & Tail Pet Care & Grooming',
+      category: 'Pet Grooming & Daycare',
+      description: 'Layanan salon anabul profesional, penitipan hewan aman, dan perawatan higienis penuh kasih sayang.',
+      location: 'Jl. Flamboyan Indah No. 12, Kebayoran Baru, Jakarta Selatan',
+      whatsapp: '6281234567890',
+      instagram: '@pawandtail.care',
+      services: 'Grooming Kucing & Anjing, Spa Mandi Herbal, Pet Hotel AC, Jemput Antar Anabul',
+      targetCustomer: 'Pemilik anabul yang menginginkan perawatan bersih, higienis, dan bebas stres bagi hewan kesayangan',
+      preferredStyle: 'modern',
+    },
+    theme: {
+      primaryColor: '#0d9488',
+      secondaryColor: '#134e4a',
+      accentColor: '#f59e0b',
+      backgroundColor: '#f0fdfa',
+      font: 'sans',
+    },
+    sections: [
+      {
+        type: 'navbar',
+        content: {
+          brandName: 'Paw & Tail Care',
+          logoUrl: '',
+          links: [
+            { label: 'Tentang Kami', href: '#about' },
+            { label: 'Layanan & Paket', href: '#services' },
+            { label: 'Tarif Perawatan', href: '#features' },
+            { label: 'Fasilitas & Galeri', href: '#gallery' },
+            { label: 'Kontak & Lokasi', href: '#contact' },
+          ],
+          ctaText: 'Booking Grooming',
+          ctaUrl: 'https://wa.me/6281234567890?text=Halo%20Paw%20%26%20Tail,%20saya%20ingin%20booking%20jadwal%20grooming%20anabul',
+          phone: '0812-3456-7890',
+        },
+      },
+      {
+        type: 'hero',
+        content: {
+          badge: '🐾 Salon & Penitipan Anabul Terbaik',
+          title: 'Perawatan Higienis & Penuh Kasih Sayang untuk Hewan Kesayangan Anda',
+          description: 'Manjakan kucing dan anjing tercinta dengan layanan grooming bebas stres, mandi spa herbal anti-kutu, serta penitipan nyaman ber-AC dengan pantauan harian.',
+          buttonText: 'Jadwalkan Grooming via WhatsApp',
+          buttonUrl: 'https://wa.me/6281234567890?text=Halo%20Paw%20%26%20Tail,%20saya%20mau%20konsultasi%20grooming%20hewan',
+          secondaryButtonText: 'Lihat Daftar Tarif',
+          secondaryButtonUrl: '#features',
+          imageUrl: 'https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=1200&q=80',
+          alignment: 'left',
+        },
+      },
+      {
+        type: 'about',
+        content: {
+          badge: 'Tentang Paw & Tail Care',
+          title: 'Rumah Kedua yang Hangat, Bersih, dan Terpercaya untuk Sahabat Berbulu',
+          story: 'Berdiri sejak 2021, Paw & Tail Care berkomitmen memberikan pengalaman grooming yang menenangkan bagi hewan peliharaan. Setiap anabul diperlakukan layaknya keluarga dengan peralatan steril per sesi, sampo organik bebas iritasi mata, dan ruang tunggu ber-AC.',
+          imageUrl: 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=1000&q=80',
+          stats: [
+            { label: 'Anabul Terlayani / Bulan', value: '1.200+' },
+            { label: 'Groomer Bersertifikasi', value: '8 Orang' },
+            { label: 'Rating Google Maps', value: '4.9 ⭐' },
+          ],
+          highlights: [
+            'Sampo herbal alami bebas paraben dan aman untuk kulit sensitif',
+            'Peralatan disterilisasi UV setiap pergantian anabul',
+            'Ruang isolasi terpisah untuk kucing dan anjing agar bebas stres',
+          ],
+        },
+      },
+      {
+        type: 'services',
+        content: {
+          badge: 'Layanan Lengkap',
+          title: 'Semua Kebutuhan Anabul di Satu Tempat',
+          subtitle: 'Dikelola oleh tenaga berpengalaman dengan standar higienis tinggi.',
+          items: [
+            {
+              title: 'Full Grooming & Styling',
+              description: 'Mandi bersih, blow dry lembut, gunting kuku, pembersihan telinga, perapian bulu wajah dan telapak kaki.',
+              price: 'Rp 65.000',
+              icon: 'scissors',
+            },
+            {
+              title: 'Spa & Mandi Terapi Herbal',
+              description: 'Mandi busa aromaterapi untuk relaksasi otot, mengatasi kulit berketombe, jamur, dan kutu secara tuntas.',
+              price: 'Rp 120.000',
+              icon: 'sparkles',
+            },
+            {
+              title: 'Pet Hotel & Daycare AC',
+              description: 'Penitipan aman dengan kandang individual nyaman, makan tepat waktu, area bermain, dan update video WhatsApp.',
+              price: 'Rp 85.000 / malam',
+              icon: 'home',
+            },
+            {
+              title: 'Antar Jemput Anabul (Pet Taxi)',
+              description: 'Layanan penjemputan dan pengantaran pulang anabul dengan mobil ber-AC dan kandang transport aman.',
+              price: 'Mulai Rp 25.000',
+              icon: 'car',
+            },
+          ],
+        },
+      },
+      {
+        type: 'features',
+        content: {
+          badge: 'Paket Perawatan',
+          title: 'Tarif Transparan & Terjangkau',
+          subtitle: 'Pilih paket yang paling sesuai dengan kebutuhan hewan peliharaan Anda.',
+          items: [
+            {
+              title: 'Basic Bath & Clean (Rp 65.000)',
+              description: 'Mandi sampo herbal alami, potong kuku, pembersihan telinga mendalam, dan blow dry wangi segar.',
+              icon: 'check',
+            },
+            {
+              title: 'Complete Spa & Grooming (Rp 120.000)',
+              description: 'Semua benefit paket basic + scrub kutu/jamur, trimming bulu wajah & telapak, dan vitamin bulu berkilau.',
+              icon: 'star',
+            },
+            {
+              title: 'VIP Pet Hotel Stay (Rp 85.000 / malam)',
+              description: 'Kamar individual ber-AC bersih, makan 3x sehari, sesi playground bermain, dan laporan video harian via WA.',
+              icon: 'shield',
+            },
+          ],
+        },
+      },
+      {
+        type: 'gallery',
+        content: {
+          badge: 'Galeri Foto',
+          title: 'Momen Bahagia Sahabat Berbulu',
+          subtitle: 'Intip hasil potongan rapi dan keceriaan anabul setelah dimanjakan di Paw & Tail.',
+          images: [
+            {
+              imageUrl: 'https://images.unsplash.com/photo-1548767797-d8c844163c4c?auto=format&fit=crop&w=800&q=80',
+              caption: 'Potongan teddy bear cut yang menggemaskan',
+            },
+            {
+              imageUrl: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=800&q=80',
+              caption: 'Kucing santai setelah sesi spa aromaterapi',
+            },
+            {
+              imageUrl: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&w=800&q=80',
+              caption: 'Anjing sehat dengan bulu mengembang lembut',
+            },
+            {
+              imageUrl: 'https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?auto=format&fit=crop&w=800&q=80',
+              caption: 'Wajah ceria setelah mandi bersih bebas kutu',
+            },
+          ],
+        },
+      },
+      {
+        type: 'testimonials',
+        content: {
+          badge: 'Kata Sahabat Anabul',
+          title: 'Dipercaya oleh Ratusan Pawparents',
+          subtitle: 'Pengalaman nyata pelanggan setia Paw & Tail Care.',
+          items: [
+            {
+              name: 'Siti Rahmawati',
+              role: 'Pemilik Kucing Persia',
+              comment: 'Groomer-nya sabar banget! Kucingku biasanya gampang ngamuk kalau dimandiin, tapi di sini tenang banget dan wangi bulunya tahan sampai seminggu lebih.',
+              rating: 5,
+              avatarUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80',
+            },
+            {
+              name: 'Budi Darmawan',
+              role: 'Pemilik Golden Retriever',
+              comment: 'Pet hotelnya luar biasa bersih dan wangi, tiap sore selalu dikirimin video anjingku lagi main bola. Bener-bener bikin tenang waktu dinas luar kota!',
+              rating: 5,
+              avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80',
+            },
+            {
+              name: 'Dr. Clarissa Nathania',
+              role: 'Pemilik Poodle',
+              comment: 'Potongan bulu rapi banget sesuai request gaya Korea. Perlengkapan grooming-nya steril dan tempatnya bersih bebas bau.',
+              rating: 5,
+              avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
+            },
+          ],
+        },
+      },
+      {
+        type: 'cta',
+        content: {
+          badge: 'Promo New Pawrent',
+          title: 'Dapatkan Diskon 20% untuk Kunjungan Grooming Pertama!',
+          description: 'Cukup tunjukkan pesan WhatsApp booking Anda saat datang ke cabang kami. Kuota terbatas 15 anabul per hari.',
+          buttonText: 'Klaim Diskon via WhatsApp',
+          buttonUrl: 'https://wa.me/6281234567890?text=Halo%20Paw%20%26%20Tail,%20saya%20ingin%20klaim%20promo%20diskon%20grooming%20pertama',
+          note: 'Berlaku untuk semua jenis kucing dan anjing ras.',
+        },
+      },
+      {
+        type: 'contact',
+        content: {
+          badge: 'Kunjungi Cabang Kami',
+          title: 'Lokasi & Jam Buka Salon',
+          subtitle: 'Dilengkapi area tunggu ber-AC, kopi gratis, dan parkir luas.',
+          address: 'Jl. Flamboyan Indah No. 12, Kebayoran Baru, Jakarta Selatan 12140',
+          phone: '0812-3456-7890',
+          whatsapp: '6281234567890',
+          email: 'care@pawandtail.id',
+          operatingHours: 'Setiap Hari: 08.30 - 18.00 WIB',
+          instagram: '@pawandtail.care',
+        },
+      },
+      {
+        type: 'footer',
+        content: {
+          tagline: 'Paw & Tail Care — Kasih Sayang & Kebersihan Terbaik untuk Anabul Anda.',
+          copyrightText: '© 2026 Paw & Tail Pet Care. Seluruh hak cipta dilindungi.',
+          socialLinks: [
+            { platform: 'whatsapp', url: 'https://wa.me/6281234567890' },
+            { platform: 'instagram', url: 'https://instagram.com/pawandtail.care' },
+          ],
+        },
+      },
+    ],
+  },
+  {
+    id: 'beauty-clinic',
+    name: 'Aura Glow Clinic',
+    category: 'Klinik Kecantikan & Skincare',
+    description: 'Template premium elegan untuk klinik estetika medis, dermatologi, spa kecantikan, facial bar, dan perawatan kulit.',
+    previewImage: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=800&q=80',
+    isPro: true,
+    businessInfo: {
+      name: 'Aura Glow Aesthetics & Dermatology Clinic',
+      category: 'Klinik Kecantikan & Skincare Lounge',
+      description: 'Perawatan kulit berstandar medis dengan teknologi laser modern dan dokter spesialis dermatologi bersertifikasi.',
+      location: 'Ruko Grand Boulevard Blok B-18, Menteng, Jakarta Pusat',
+      whatsapp: '6281234567890',
+      instagram: '@auraglow.clinic',
+      services: 'Korean Glass Skin Facial, Pico Laser Rejuvenation, Medical Acne Solution, Skin Booster & Botox',
+      targetCustomer: 'Pria dan wanita yang menginginkan kulit wajah sehat, cerah merona, bebas flek & jerawat dengan penanganan medis aman',
+      preferredStyle: 'elegant',
+    },
+    theme: {
+      primaryColor: '#be185d',
+      secondaryColor: '#4c0519',
+      accentColor: '#fb7185',
+      backgroundColor: '#fff1f2',
+      font: 'sans',
+    },
+    sections: [
+      {
+        type: 'navbar',
+        content: {
+          brandName: 'Aura Glow Clinic',
+          logoUrl: '',
+          links: [
+            { label: 'Tentang Kami', href: '#about' },
+            { label: 'Treatment Pilihan', href: '#services' },
+            { label: 'Keunggulan Perawatan', href: '#features' },
+            { label: 'Hasil Klinis', href: '#gallery' },
+            { label: 'Lokasi & Reservasi', href: '#contact' },
+          ],
+          ctaText: 'Konsultasi Dokter',
+          ctaUrl: 'https://wa.me/6281234567890?text=Halo%20Aura%20Glow,%20saya%20ingin%20konsultasi%20masalah%20kulit%20dengan%20dokter',
+          phone: '0812-3456-7890',
+        },
+      },
+      {
+        type: 'hero',
+        content: {
+          badge: '✨ Medical Aesthetic & Dermatology Lounge',
+          title: 'Wujudkan Kulit Cerah, Sehat, dan Bercahaya Alami Bersama Dokter Spesialis',
+          description: 'Solusi perawatan kulit berstandar medis tinggi dengan teknologi Pico Laser generasi terbaru dan formulasi dermatologi teruji BPOM. Konsultasi personal tanpa rasa sakit.',
+          buttonText: 'Jadwalkan Konsultasi Dokter via WA',
+          buttonUrl: 'https://wa.me/6281234567890?text=Halo%20Aura%20Glow,%20saya%20ingin%20jadwalkan%20konsultasi%20kulit',
+          secondaryButtonText: 'Lihat Menu Treatment',
+          secondaryButtonUrl: '#services',
+          imageUrl: 'https://images.unsplash.com/photo-1512290900672-1f02e71df136?auto=format&fit=crop&w=1200&q=80',
+          alignment: 'left',
+        },
+      },
+      {
+        type: 'about',
+        content: {
+          badge: 'Keunggulan Aura Glow',
+          title: 'Kombinasi Sains Dermatologi Modern & Kenyamanan Spa Eksklusif',
+          story: 'Didirikan oleh tim dokter spesialis dermatologi dan venereologi, Aura Glow Clinic menghadirkan perawatan estetika yang aman, etis, dan transparan. Kami tidak menjanjikan perubahan instan yang merusak skin barrier, melainkan kesehatan kulit jangka panjang yang glowing natural.',
+          imageUrl: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=1000&q=80',
+          stats: [
+            { label: 'Treatment Berhasil', value: '15.000+' },
+            { label: 'Dokter Sp.DVE Berpengalaman', value: '6 Dokter' },
+            { label: 'Tingkat Kepuasan Pasien', value: '98,7%' },
+          ],
+          highlights: [
+            '100% Produk & Serum bersertifikasi BPOM & FDA Approved',
+            'Alat medis original bersertifikasi internasional dengan kalibrasi rutin',
+            'Ruang tindakan privat dengan suasana relaksasi aromaterapi premium',
+          ],
+        },
+      },
+      {
+        type: 'services',
+        content: {
+          badge: 'Signature Treatments',
+          title: 'Solusi Kulit Wajah Terpadu & Terukur',
+          subtitle: 'Setiap perawatan diawali dengan analisa kondisi kulit digital 3D.',
+          items: [
+            {
+              title: 'Korean Glass Skin Facial',
+              description: 'Kombinasi hydro-peeling lembut, infus serum hyaluronic acid mendalam, dan masker peptide untuk wajah lembap bersinar seketika.',
+              price: 'Rp 350.000',
+              icon: 'sparkles',
+            },
+            {
+              title: 'Pico Second Laser Toning',
+              description: 'Teknologi laser berkecepatan pikodetik untuk memecah pigmentasi flek hitam, bekas jerawat, dan meratakan tekstur pori-pori.',
+              price: 'Rp 850.000',
+              icon: 'zap',
+            },
+            {
+              title: 'Medical Acne Clear Care',
+              description: 'Protokol penyembuhan jerawat aktif dan peradangan dengan ekstraksi steril, chemical peeling medis, dan blue LED photo therapy.',
+              price: 'Rp 490.000',
+              icon: 'shield',
+            },
+            {
+              title: 'Skin Booster & Botox Allergan',
+              description: 'Injeksi nutrisi asam hialuronat murni untuk mengencangkan garis halus, meremajakan sel kulit, dan menyamarkan kerutan dahi.',
+              price: 'Mulai Rp 1.200.000',
+              icon: 'heart',
+            },
+          ],
+        },
+      },
+      {
+        type: 'features',
+        content: {
+          badge: 'Keunggulan Perawatan',
+          title: 'Investasi Terbaik untuk Kulit Glowing Anda',
+          subtitle: 'Harga transparan mencakup analisa dokter dan penanganan medis.',
+          items: [
+            {
+              title: 'Glow Radiance Facial (Rp 350.000)',
+              description: 'Deep cleansing gentle hydro peeling, infus serum vitamin C & hyaluronic, masker collagen rose calming, dan aplikasi sunscreen SPF 50+.',
+              icon: 'check',
+            },
+            {
+              title: 'Signature Pico Laser (Rp 850.000)',
+              description: 'Konsultasi dokter Sp.DVE, full face pico laser rejuvenation, krim anestesi nyaman, cryo cooling therapy, dan gratis krim anti-iritasi.',
+              icon: 'star',
+            },
+            {
+              title: 'Acne Solution Protocol (Rp 490.000)',
+              description: 'Pemeriksaan dokter, comedo extraction medis higienis, injeksi jerawat radang aktif, dan masker tea tree blue light therapy.',
+              icon: 'shield',
+            },
+          ],
+        },
+      },
+      {
+        type: 'gallery',
+        content: {
+          badge: 'Kenyamanan Fasilitas',
+          title: 'Ruang Klinik Higienis & Menenangkan',
+          subtitle: 'Suasana klinik dirancang dengan standar rumah sakit dan estetika relaksasi spa modern.',
+          images: [
+            {
+              imageUrl: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=800&q=80',
+              caption: 'Perawatan facial wajah santai dan higienis',
+            },
+            {
+              imageUrl: 'https://images.unsplash.com/photo-1512290900672-1f02e71df136?auto=format&fit=crop&w=800&q=80',
+              caption: 'Konsultasi kondisi kulit bersama dokter spesialis',
+            },
+            {
+              imageUrl: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=800&q=80',
+              caption: 'Ruang tunggu eksklusif bernuansa elegan',
+            },
+            {
+              imageUrl: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800&q=80',
+              caption: 'Peralatan laser modern terkalibrasi internasional',
+            },
+          ],
+        },
+      },
+      {
+        type: 'testimonials',
+        content: {
+          badge: 'Testimoni Pasien',
+          title: 'Transformasi Nyata Menuju Kulit Sehat',
+          subtitle: 'Pengalaman pasien setelah menjalani perawatan di Aura Glow Clinic.',
+          items: [
+            {
+              name: 'Dinda Maharani, S.E.',
+              role: 'Marketing Executive',
+              comment: 'Setelah 3 kali sesi Pico Laser di Aura Glow, bekas jerawat yang udah bertahun-tahun langsung pudar drastis! Mukaku jadi glowing tanpa perlu dempul foundation tebal lagi.',
+              rating: 5,
+              avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
+            },
+            {
+              name: 'Jessica Tanuwijaya',
+              role: 'Entrepreneur',
+              comment: 'Dokternya ramah banget dan ga maksa beli obat aneh-aneh. Korean Glass Skin Facialnya nagih, kulit berasa halus dan kenyal banget pas disentuh.',
+              rating: 5,
+              avatarUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=200&q=80',
+            },
+            {
+              name: 'drg. Kevin Pratama',
+              role: 'Dokter Gigi',
+              comment: 'Klinik sangat steril, alat-alatnya original, dan pelayanan stafnya ramah profesional. Sangat merekomendasikan Aura Glow untuk siapapun yang peduli kesehatan kulit.',
+              rating: 5,
+              avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80',
+            },
+          ],
+        },
+      },
+      {
+        type: 'cta',
+        content: {
+          badge: 'Konsultasi Gratis',
+          title: 'Siap Memiliki Kulit Wajah Sehat & Glowing Impian?',
+          description: 'Dapatkan Free Digital 3D Skin Analysis senilai Rp 200.000 khusus bagi reservasi jadwal treatment pertama Anda hari ini.',
+          buttonText: 'Reservasi Jadwal Dokter Sekarang',
+          buttonUrl: 'https://wa.me/6281234567890?text=Halo%20Aura%20Glow,%20saya%20mau%20klaim%20free%20skin%20analysis%20dan%20booking%20jadwal',
+          note: 'Hanya tersedia 10 slot konsultasi dokter per hari demi kenyamanan pasien.',
+        },
+      },
+      {
+        type: 'contact',
+        content: {
+          badge: 'Kunjungi Klinik Kami',
+          title: 'Lokasi & Reservasi Kedatangan',
+          subtitle: 'Akses mudah di pusat kota dengan valet parking gratis.',
+          address: 'Ruko Grand Boulevard Blok B-18, Menteng, Jakarta Pusat 10310',
+          phone: '0812-3456-7890',
+          whatsapp: '6281234567890',
+          email: 'care@auraglow.clinic',
+          operatingHours: 'Senin - Sabtu: 09.00 - 19.30 WIB (Minggu dengan Perjanjian)',
+          instagram: '@auraglow.clinic',
+        },
+      },
+      {
+        type: 'footer',
+        content: {
+          tagline: 'Aura Glow Clinic — Solusi Estetika Medis Terpercaya untuk Kecantikan Alami Anda.',
+          copyrightText: '© 2026 Aura Glow Aesthetics Clinic. Seluruh hak cipta dilindungi.',
+          socialLinks: [
+            { platform: 'whatsapp', url: 'https://wa.me/6281234567890' },
+            { platform: 'instagram', url: 'https://instagram.com/auraglow.clinic' },
           ],
         },
       },

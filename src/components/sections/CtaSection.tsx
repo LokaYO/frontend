@@ -1,6 +1,7 @@
 import React from 'react';
 import { CtaContent, ThemeConfig } from '../../types/schema';
 import { MessageCircle, ArrowRight } from 'lucide-react';
+import { useViewport } from '../../context/ViewportContext';
 
 interface Props {
   content: CtaContent;
@@ -10,9 +11,10 @@ interface Props {
 
 export const CtaSection: React.FC<Props> = ({ content, theme, isEditor }) => {
   const primaryColor = theme.primaryColor || '#2563eb';
+  const { isMobile } = useViewport();
 
   return (
-    <section className="py-16 sm:py-20 bg-slate-900 text-white relative overflow-hidden">
+    <section className={`${isMobile ? 'py-12' : 'py-16 sm:py-20'} bg-slate-900 text-white relative overflow-hidden`}>
       {/* Decorative gradient overlay */}
       <div
         className="absolute inset-0 opacity-20 pointer-events-none"
@@ -28,11 +30,11 @@ export const CtaSection: React.FC<Props> = ({ content, theme, isEditor }) => {
           </span>
         )}
 
-        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight">
+        <h2 className={`${isMobile ? 'text-2xl font-bold' : 'text-3xl sm:text-4xl lg:text-5xl font-extrabold'} tracking-tight leading-tight`}>
           {content.title}
         </h2>
 
-        <p className="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto font-normal leading-relaxed">
+        <p className={`${isMobile ? 'text-sm' : 'text-base sm:text-lg'} text-slate-300 max-w-2xl mx-auto font-normal leading-relaxed`}>
           {content.description}
         </p>
 

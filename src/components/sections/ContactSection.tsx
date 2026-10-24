@@ -3,6 +3,7 @@ import { ContactContent, ThemeConfig } from '../../types/schema';
 import { MapPin, Phone, MessageCircle, Mail, Clock, Instagram, Send, CheckCircle2, AlertCircle } from 'lucide-react';
 import { OperatingStatusBadge } from '../common/OperatingStatusBadge';
 import { websiteService } from '../../services/website.service';
+import { useViewport } from '../../context/ViewportContext';
 
 interface Props {
   content: ContactContent;
@@ -15,6 +16,13 @@ export const ContactSection: React.FC<Props> = ({ content, theme, isEditor, slug
   const primaryColor = theme.primaryColor || '#2563eb';
   const cleanPhone = content.whatsapp ? content.whatsapp.replace(/\D/g, '') : '';
   const waUrl = `https://wa.me/${cleanPhone}?text=Halo,%20saya%20ingin%20menghubungi%20Anda`;
+  const { isMobile, isTablet } = useViewport();
+
+  const gridColsClass = isMobile
+    ? 'grid-cols-1'
+    : isTablet
+    ? 'grid-cols-1 sm:grid-cols-2'
+    : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3';
 
   // Lead Form State
   const [formData, setFormData] = useState({
@@ -81,7 +89,7 @@ export const ContactSection: React.FC<Props> = ({ content, theme, isEditor, slug
         </div>
 
         {/* Contact Info Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto mb-14">
+        <div className={`grid ${gridColsClass} gap-6 max-w-5xl mx-auto mb-14`}>
           {/* Address */}
           <div className="p-6 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-start gap-4">
             <div

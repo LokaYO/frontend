@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { TestimonialsContent, ThemeConfig } from '../../types/schema';
 import { Star, Quote, GripVertical } from 'lucide-react';
+import { useViewport } from '../../context/ViewportContext';
 import {
   DndContext,
   closestCorners,
@@ -119,17 +120,22 @@ export const TestimonialsSection: React.FC<Props> = ({ content, theme, isEditor,
   const columns = (content as any).columns || '2';
   const padding = (content as any).padding || 'normal';
 
+  const { isMobile, isTablet } = useViewport();
+
   const paddingClass =
     padding === 'compact'
-      ? 'py-10 sm:py-14'
+      ? 'py-8 sm:py-14'
       : padding === 'spacious'
-      ? 'py-24 sm:py-32'
-      : 'py-16 sm:py-24';
+      ? 'py-16 sm:py-32'
+      : 'py-12 sm:py-24';
 
-  const gridClass =
-    columns === '3'
-      ? 'grid-cols-1 md:grid-cols-3 max-w-7xl'
-      : 'grid-cols-1 md:grid-cols-2 max-w-4xl';
+  const gridClass = isMobile
+    ? 'grid-cols-1 max-w-xl'
+    : isTablet
+    ? 'grid-cols-1 sm:grid-cols-2 max-w-4xl'
+    : columns === '3'
+    ? 'grid-cols-1 md:grid-cols-3 max-w-7xl'
+    : 'grid-cols-1 md:grid-cols-2 max-w-4xl';
 
   const sensors = useSensors(
     useSensor(PointerSensor, {

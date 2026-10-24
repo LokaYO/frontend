@@ -3,7 +3,7 @@ import { Website } from '../types/schema';
 import { useAuth } from '../context/AuthContext';
 import { websiteService } from '../services/website.service';
 import { CreateWebsiteModal } from '../components/modals/CreateWebsiteModal';
-import { PRESET_TEMPLATES } from '../templates/presetTemplates';
+import { PRESET_TEMPLATES, PresetTemplate } from '../templates/presetTemplates';
 import {
   Plus,
   Globe,
@@ -31,18 +31,26 @@ import {
   X,
   ShieldAlert,
   Crown,
+  Users,
+  FileSpreadsheet,
+  History,
 } from 'lucide-react';
-import { AdminMonitoringPanel } from '../components/admin/AdminMonitoringPanel';
+import { AdminMonitoringPanel, AdminTab } from '../components/admin/AdminMonitoringPanel';
+import { MerchantLeadsView } from '../components/merchant/MerchantLeadsView';
+import { MerchantAnalyticsView } from '../components/merchant/MerchantAnalyticsView';
+import { MerchantMarketingView } from '../components/merchant/MerchantMarketingView';
 import { QrCodeModal } from '../components/common/QrCodeModal';
 import { LeadsModal } from '../components/common/LeadsModal';
 import { PricingModal } from '../components/modals/PricingModal';
 import { adminService, AdminAnnouncement } from '../services/admin.service';
 import { useToast } from '../context/ToastContext';
 
+export type MerchantNavTab = 'websites' | 'leads' | 'analytics' | 'marketing' | 'templates' | 'settings' | 'admin';
+
 interface Props {
   onOpenEditor: (websiteId: string) => void;
   onOpenPublicSite: (slug: string) => void;
-  initialNav?: 'websites' | 'templates' | 'settings' | 'admin';
+  initialNav?: MerchantNavTab;
 }
 
 export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite, initialNav }) => {
@@ -52,10 +60,13 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
   const [websites, setWebsites] = useState<Website[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeNav, setActiveNav] = useState<'websites' | 'templates' | 'settings' | 'admin'>(
+  const [activeNav, setActiveNav] = useState<MerchantNavTab>(
     isAdmin ? 'admin' : (initialNav || 'websites')
   );
+  const [adminTab, setAdminTab] = useState<AdminTab>('users');
+  const [unreadLeadsCount, setUnreadLeadsCount] = useState<number>(0);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [selectedPresetTemplate, setSelectedPresetTemplate] = useState<PresetTemplate | null>(null);
   const [isPricingModalOpen, setIsPricingModalOpen] = useState(false);
   const [copiedSlug, setCopiedSlug] = useState<string | null>(null);
   const [selectedQrSite, setSelectedQrSite] = useState<Website | null>(null);
@@ -83,6 +94,12 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
     if (!isAdmin) {
       adminService.getActiveAnnouncements()
         .then((data) => setAnnouncements(data))
+        .catch(() => {});
+
+      websiteService.getAllUserLeads()
+        .then((data) => {
+          setUnreadLeadsCount(data.filter((l) => l.status === 'unread').length);
+        })
         .catch(() => {});
     }
   }, [isAdmin]);
@@ -218,30 +235,102 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
         {/* Navigation */}
         <nav className="p-4 space-y-1.5 flex-1 min-h-0 overflow-y-auto">
           {isAdmin ? (
-            /* ADMIN ONLY NAVIGATION - PURELY MONITORING */
+            /* ADMIN ONLY NAVIGATION - PURELY MONITORING & MANAGEMENT */
             <>
+              <div className="px-3 pt-1 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                Menu Administrator
+              </div>
+
               <button
                 type="button"
-                onClick={() => setActiveNav('admin')}
+                onClick={() => {
+                  setActiveNav('admin');
+                  setAdminTab('users');
+                }}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition cursor-pointer ${
-                  activeNav === 'admin'
-                    ? 'bg-purple-50 text-purple-700 font-bold'
+                  activeNav === 'admin' && adminTab === 'users'
+                    ? 'bg-purple-100 text-purple-800 font-bold shadow-2xs'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                 }`}
               >
-                <ShieldCheck className="w-4 h-4 text-purple-600" />
-                <span>Monitoring Client</span>
-                <span className="ml-auto text-[9px] bg-purple-100 text-purple-800 px-1.5 py-0.5 rounded-md uppercase font-bold">
-                  {user.role}
-                </span>
+                <Users className="w-4 h-4 text-purple-600" />
+                <span>Pengguna & Sesi</span>
               </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveNav('admin');
+                  setAdminTab('moderation');
+                }}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition cursor-pointer ${
+                  activeNav === 'admin' && adminTab === 'moderation'
+                    ? 'bg-purple-100 text-purple-800 font-bold shadow-2xs'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                }`}
+              >
+                <ShieldAlert className="w-4 h-4 text-amber-600" />
+                <span>Moderasi Website</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveNav('admin');
+                  setAdminTab('announcements');
+                }}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition cursor-pointer ${
+                  activeNav === 'admin' && adminTab === 'announcements'
+                    ? 'bg-purple-100 text-purple-800 font-bold shadow-2xs'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                }`}
+              >
+                <Megaphone className="w-4 h-4 text-blue-600" />
+                <span>Broadcast Pengumuman</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveNav('admin');
+                  setAdminTab('export');
+                }}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition cursor-pointer ${
+                  activeNav === 'admin' && adminTab === 'export'
+                    ? 'bg-purple-100 text-purple-800 font-bold shadow-2xs'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                }`}
+              >
+                <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
+                <span>Ekspor Laporan (Excel)</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveNav('admin');
+                  setAdminTab('audit');
+                }}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition cursor-pointer ${
+                  activeNav === 'admin' && adminTab === 'audit'
+                    ? 'bg-purple-100 text-purple-800 font-bold shadow-2xs'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                }`}
+              >
+                <History className="w-4 h-4 text-indigo-600" />
+                <span>Log Aktivitas (Audit)</span>
+              </button>
+
+              <div className="pt-4 pb-1.5 px-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                Pengaturan
+              </div>
 
               <button
                 type="button"
                 onClick={() => setActiveNav('settings')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition cursor-pointer ${
                   activeNav === 'settings'
-                    ? 'bg-purple-50 text-purple-700 font-bold'
+                    ? 'bg-purple-100 text-purple-800 font-bold shadow-2xs'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                 }`}
               >
@@ -252,6 +341,10 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
           ) : (
             /* REGULAR CLIENT NAVIGATION */
             <>
+              <div className="px-3 pt-1 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                Menu Utama
+              </div>
+
               <button
                 type="button"
                 onClick={() => setActiveNav('websites')}
@@ -270,6 +363,50 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
 
               <button
                 type="button"
+                onClick={() => setActiveNav('leads')}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition cursor-pointer ${
+                  activeNav === 'leads'
+                    ? 'bg-blue-50 text-blue-700 font-bold'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                }`}
+              >
+                <Inbox className="w-4 h-4 text-emerald-600" />
+                <span>Kotak Masuk Leads</span>
+                {unreadLeadsCount > 0 && (
+                  <span className="ml-auto text-[10px] bg-blue-600 text-white px-2 py-0.5 rounded-full font-bold">
+                    {unreadLeadsCount}
+                  </span>
+                )}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveNav('analytics')}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition cursor-pointer ${
+                  activeNav === 'analytics'
+                    ? 'bg-blue-50 text-blue-700 font-bold'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                }`}
+              >
+                <TrendingUp className="w-4 h-4 text-indigo-600" />
+                <span>Analitik & Trafik</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveNav('marketing')}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition cursor-pointer ${
+                  activeNav === 'marketing'
+                    ? 'bg-blue-50 text-blue-700 font-bold'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                }`}
+              >
+                <QrCode className="w-4 h-4 text-purple-600" />
+                <span>Promosi & QR Meja</span>
+              </button>
+
+              <button
+                type="button"
                 onClick={() => setActiveNav('templates')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition cursor-pointer ${
                   activeNav === 'templates'
@@ -277,10 +414,26 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                 }`}
               >
-                <LayoutTemplate className="w-4 h-4 text-indigo-500" />
+                <LayoutTemplate className="w-4 h-4 text-amber-500" />
                 <span>Galeri Template</span>
-                <span className="ml-auto text-[10px] bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full font-bold">
-                  5
+                <span className="ml-auto text-[10px] bg-amber-50 text-amber-700 px-2 py-0.5 rounded-full font-bold">
+                  {PRESET_TEMPLATES.length}
+                </span>
+              </button>
+
+              <div className="pt-4 pb-1.5 px-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                Akun & Bisnis
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setIsPricingModalOpen(true)}
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition cursor-pointer text-slate-600 hover:text-amber-800 hover:bg-amber-50/70"
+              >
+                <Crown className="w-4 h-4 text-amber-500 fill-amber-400" />
+                <span>Paket Langganan PRO</span>
+                <span className="ml-auto text-[9px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded-md font-bold uppercase">
+                  {user?.plan === 'pro' ? 'Aktif' : 'Upgrade'}
                 </span>
               </button>
 
@@ -339,9 +492,23 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
                 {isAdmin
                   ? activeNav === 'settings'
                     ? 'Pengaturan Akun'
-                    : 'Monitoring Pengguna & Client'
+                    : adminTab === 'users'
+                    ? 'Monitoring Pengguna & Sesi Client'
+                    : adminTab === 'moderation'
+                    ? 'Moderasi Website Pengguna'
+                    : adminTab === 'announcements'
+                    ? 'Broadcast Pengumuman Sistem'
+                    : adminTab === 'export'
+                    ? 'Ekspor Laporan Data Platform'
+                    : 'Log Aktivitas (Audit Trail)'
                   : activeNav === 'websites'
                   ? 'Kelola Website'
+                  : activeNav === 'leads'
+                  ? 'Kotak Masuk & Leads Pelanggan'
+                  : activeNav === 'analytics'
+                  ? 'Analitik & Performa Bisnis'
+                  : activeNav === 'marketing'
+                  ? 'Kit Promosi & QR Stand Meja Kasir'
                   : activeNav === 'templates'
                   ? 'Galeri Template Siap Pakai'
                   : 'Pengaturan Akun'}
@@ -708,6 +875,28 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
             </div>
           )}
 
+          {/* TAB: KOTAK MASUK LEADS (CLIENT ONLY) */}
+          {!isAdmin && activeNav === 'leads' && (
+            <MerchantLeadsView websites={websites} />
+          )}
+
+          {/* TAB: ANALITIK & PERFORMA (CLIENT ONLY) */}
+          {!isAdmin && activeNav === 'analytics' && (
+            <MerchantAnalyticsView
+              websites={websites}
+              onOpenEditor={onOpenEditor}
+              onOpenPublicSite={onOpenPublicSite}
+            />
+          )}
+
+          {/* TAB: PROMOSI & QR STAND MEJA KASIR (CLIENT ONLY) */}
+          {!isAdmin && activeNav === 'marketing' && (
+            <MerchantMarketingView
+              websites={websites}
+              onOpenPublicSite={onOpenPublicSite}
+            />
+          )}
+
           {/* TAB 2: TEMPLATES GALLERY (CLIENT ONLY) */}
           {!isAdmin && activeNav === 'templates' && (
             <div className="space-y-6">
@@ -721,53 +910,85 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {PRESET_TEMPLATES.map((tpl) => (
-                  <div
-                    key={tpl.id}
-                    className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs hover:shadow-md transition flex flex-col justify-between group"
-                  >
-                    <div className="relative h-44 overflow-hidden">
-                      <img
-                        src={tpl.previewImage}
-                        alt={tpl.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
-                      />
-                      <div className="absolute top-3 left-3">
-                        <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-white/95 text-slate-900 shadow-sm">
-                          {tpl.category}
-                        </span>
+                {PRESET_TEMPLATES.map((tpl) => {
+                  const isLocked = tpl.isPro && user?.plan !== 'pro' && !isAdmin;
+                  return (
+                    <div
+                      key={tpl.id}
+                      className={`bg-white rounded-2xl border overflow-hidden shadow-xs hover:shadow-md transition flex flex-col justify-between group ${
+                        tpl.isPro ? 'border-amber-300/80 ring-1 ring-amber-200/50' : 'border-slate-200'
+                      }`}
+                    >
+                      <div className="relative h-44 overflow-hidden">
+                        <img
+                          src={tpl.previewImage}
+                          alt={tpl.name}
+                          className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                        />
+                        <div className="absolute top-3 left-3 flex items-center gap-1.5 flex-wrap">
+                          <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-white/95 text-slate-900 shadow-sm">
+                            {tpl.category}
+                          </span>
+                          {tpl.isPro && (
+                            <span className="px-2.5 py-1 rounded-full text-[10px] font-black bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 shadow-md flex items-center gap-1 border border-amber-300">
+                              <Crown className="w-3 h-3 fill-current" />
+                              <span>PRO EXCLUSIVE</span>
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="p-5 space-y-2 flex-1">
+                        <h3 className="font-bold text-base text-slate-900 flex items-center gap-1.5">
+                          <span>{tpl.name}</span>
+                          {tpl.isPro && <Crown className="w-4 h-4 text-amber-500 fill-amber-400 shrink-0" />}
+                        </h3>
+                        <p className="text-xs text-slate-500 leading-relaxed font-normal">{tpl.description}</p>
+                        <div className="pt-2 flex flex-wrap gap-1.5">
+                          <span className="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md font-medium">
+                            WhatsApp Order
+                          </span>
+                          <span className="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md font-medium">
+                            Mobile Responsive
+                          </span>
+                          <span className="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md font-medium">
+                            9 Sections
+                          </span>
+                          {tpl.isPro && (
+                            <span className="text-[10px] bg-amber-50 text-amber-800 border border-amber-200 px-2 py-0.5 rounded-md font-bold">
+                              Clean Domain & No Watermark
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="p-4 bg-slate-50 border-t border-slate-100">
+                        {isLocked ? (
+                          <button
+                            type="button"
+                            onClick={() => setIsPricingModalOpen(true)}
+                            className="w-full py-2.5 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:to-orange-600 text-white rounded-xl text-xs font-bold shadow-xs transition active:scale-95 cursor-pointer flex items-center justify-center gap-1.5"
+                          >
+                            <Crown className="w-3.5 h-3.5 fill-current" />
+                            <span>Upgrade PRO untuk Gunakan</span>
+                          </button>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setSelectedPresetTemplate(tpl);
+                              setIsCreateModalOpen(true);
+                            }}
+                            className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-xs transition active:scale-95 cursor-pointer flex items-center justify-center gap-1.5"
+                          >
+                            {tpl.isPro && <Crown className="w-3.5 h-3.5 text-amber-300 fill-current" />}
+                            <span>Gunakan Template Ini</span>
+                          </button>
+                        )}
                       </div>
                     </div>
-
-                    <div className="p-5 space-y-2 flex-1">
-                      <h3 className="font-bold text-base text-slate-900">{tpl.name}</h3>
-                      <p className="text-xs text-slate-500 leading-relaxed font-normal">{tpl.description}</p>
-                      <div className="pt-2 flex flex-wrap gap-1.5">
-                        <span className="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md font-medium">
-                          WhatsApp Order
-                        </span>
-                        <span className="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md font-medium">
-                          Mobile Responsive
-                        </span>
-                        <span className="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md font-medium">
-                          9 Sections
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="p-4 bg-slate-50 border-t border-slate-100">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIsCreateModalOpen(true);
-                        }}
-                        className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-xs transition active:scale-95 cursor-pointer"
-                      >
-                        Gunakan Template Ini
-                      </button>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           )}
@@ -819,85 +1040,177 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
 
           {/* TAB 4: ADMIN MONITORING (KHUSUS ROLE ADMIN/SUPPORT) */}
           {(isAdmin || activeNav === 'admin') && activeNav !== 'settings' && (
-            <AdminMonitoringPanel />
+            <AdminMonitoringPanel
+              activeTab={adminTab}
+              onTabChange={setAdminTab}
+              hideNav={true}
+            />
           )}
         </main>
       </div>
 
       {/* Mobile Fixed Bottom Navigation Bar (Always Pinned) */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 px-3 py-2 flex items-center justify-around z-40 shadow-lg">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 px-2 py-1.5 z-40 shadow-lg">
         {isAdmin ? (
-          <>
+          <div className="flex items-center gap-1 overflow-x-auto w-full py-0.5 no-scrollbar">
             <button
               type="button"
-              onClick={() => setActiveNav('admin')}
-              className={`flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-[10px] font-bold transition cursor-pointer ${
-                activeNav === 'admin' ? 'text-purple-600' : 'text-slate-400 hover:text-slate-700'
+              onClick={() => {
+                setActiveNav('admin');
+                setAdminTab('users');
+              }}
+              className={`flex flex-col items-center gap-1 py-1 px-2 rounded-xl text-[10px] font-bold transition shrink-0 cursor-pointer ${
+                activeNav === 'admin' && adminTab === 'users' ? 'text-purple-600 bg-purple-50' : 'text-slate-400 hover:text-slate-700'
               }`}
             >
-              <ShieldCheck className="w-5 h-5" />
-              <span>Monitoring</span>
+              <Users className="w-4 h-4" />
+              <span>Pengguna</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setActiveNav('admin');
+                setAdminTab('moderation');
+              }}
+              className={`flex flex-col items-center gap-1 py-1 px-2 rounded-xl text-[10px] font-bold transition shrink-0 cursor-pointer ${
+                activeNav === 'admin' && adminTab === 'moderation' ? 'text-purple-600 bg-purple-50' : 'text-slate-400 hover:text-slate-700'
+              }`}
+            >
+              <ShieldAlert className="w-4 h-4" />
+              <span>Moderasi</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setActiveNav('admin');
+                setAdminTab('announcements');
+              }}
+              className={`flex flex-col items-center gap-1 py-1 px-2 rounded-xl text-[10px] font-bold transition shrink-0 cursor-pointer ${
+                activeNav === 'admin' && adminTab === 'announcements' ? 'text-purple-600 bg-purple-50' : 'text-slate-400 hover:text-slate-700'
+              }`}
+            >
+              <Megaphone className="w-4 h-4" />
+              <span>Broadcast</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setActiveNav('admin');
+                setAdminTab('export');
+              }}
+              className={`flex flex-col items-center gap-1 py-1 px-2 rounded-xl text-[10px] font-bold transition shrink-0 cursor-pointer ${
+                activeNav === 'admin' && adminTab === 'export' ? 'text-purple-600 bg-purple-50' : 'text-slate-400 hover:text-slate-700'
+              }`}
+            >
+              <FileSpreadsheet className="w-4 h-4" />
+              <span>Ekspor</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setActiveNav('admin');
+                setAdminTab('audit');
+              }}
+              className={`flex flex-col items-center gap-1 py-1 px-2 rounded-xl text-[10px] font-bold transition shrink-0 cursor-pointer ${
+                activeNav === 'admin' && adminTab === 'audit' ? 'text-purple-600 bg-purple-50' : 'text-slate-400 hover:text-slate-700'
+              }`}
+            >
+              <History className="w-4 h-4" />
+              <span>Audit</span>
             </button>
             <button
               type="button"
               onClick={() => setActiveNav('settings')}
-              className={`flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-[10px] font-bold transition cursor-pointer ${
-                activeNav === 'settings' ? 'text-purple-600' : 'text-slate-400 hover:text-slate-700'
+              className={`flex flex-col items-center gap-1 py-1 px-2 rounded-xl text-[10px] font-bold transition shrink-0 cursor-pointer ${
+                activeNav === 'settings' ? 'text-purple-600 bg-purple-50' : 'text-slate-400 hover:text-slate-700'
               }`}
             >
-              <Settings className="w-5 h-5" />
-              <span>Pengaturan</span>
+              <Settings className="w-4 h-4" />
+              <span>Akun</span>
             </button>
             <button
               type="button"
               onClick={logout}
-              className="flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-[10px] font-bold text-slate-400 hover:text-red-600 transition cursor-pointer"
+              className="flex flex-col items-center gap-1 py-1 px-2 rounded-xl text-[10px] font-bold text-slate-400 hover:text-red-600 transition shrink-0 cursor-pointer"
             >
-              <LogOut className="w-5 h-5" />
+              <LogOut className="w-4 h-4" />
               <span>Keluar</span>
             </button>
-          </>
+          </div>
         ) : (
-          <>
+          <div className="flex items-center gap-1 overflow-x-auto w-full py-0.5 no-scrollbar">
             <button
               type="button"
               onClick={() => setActiveNav('websites')}
-              className={`flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-[10px] font-bold transition cursor-pointer ${
-                activeNav === 'websites' ? 'text-blue-600' : 'text-slate-400 hover:text-slate-700'
+              className={`flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl text-[10px] font-bold transition shrink-0 cursor-pointer ${
+                activeNav === 'websites' ? 'text-blue-600 bg-blue-50' : 'text-slate-400 hover:text-slate-700'
               }`}
             >
-              <Layers className="w-5 h-5" />
+              <Layers className="w-4 h-4" />
               <span>Website</span>
             </button>
             <button
               type="button"
-              onClick={() => setActiveNav('templates')}
-              className={`flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-[10px] font-bold transition cursor-pointer ${
-                activeNav === 'templates' ? 'text-blue-600' : 'text-slate-400 hover:text-slate-700'
+              onClick={() => setActiveNav('leads')}
+              className={`flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl text-[10px] font-bold transition shrink-0 cursor-pointer relative ${
+                activeNav === 'leads' ? 'text-blue-600 bg-blue-50' : 'text-slate-400 hover:text-slate-700'
               }`}
             >
-              <LayoutTemplate className="w-5 h-5" />
+              <Inbox className="w-4 h-4" />
+              <span>Leads</span>
+              {unreadLeadsCount > 0 && (
+                <span className="absolute top-0.5 right-1 w-2 h-2 rounded-full bg-blue-600 ring-2 ring-white" />
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveNav('analytics')}
+              className={`flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl text-[10px] font-bold transition shrink-0 cursor-pointer ${
+                activeNav === 'analytics' ? 'text-blue-600 bg-blue-50' : 'text-slate-400 hover:text-slate-700'
+              }`}
+            >
+              <TrendingUp className="w-4 h-4" />
+              <span>Analitik</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveNav('marketing')}
+              className={`flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl text-[10px] font-bold transition shrink-0 cursor-pointer ${
+                activeNav === 'marketing' ? 'text-blue-600 bg-blue-50' : 'text-slate-400 hover:text-slate-700'
+              }`}
+            >
+              <QrCode className="w-4 h-4" />
+              <span>QR Meja</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveNav('templates')}
+              className={`flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl text-[10px] font-bold transition shrink-0 cursor-pointer ${
+                activeNav === 'templates' ? 'text-blue-600 bg-blue-50' : 'text-slate-400 hover:text-slate-700'
+              }`}
+            >
+              <LayoutTemplate className="w-4 h-4" />
               <span>Template</span>
             </button>
             <button
               type="button"
               onClick={() => setActiveNav('settings')}
-              className={`flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-[10px] font-bold transition cursor-pointer ${
-                activeNav === 'settings' ? 'text-blue-600' : 'text-slate-400 hover:text-slate-700'
+              className={`flex flex-col items-center gap-1 py-1 px-2 rounded-xl text-[10px] font-bold transition shrink-0 cursor-pointer ${
+                activeNav === 'settings' ? 'text-blue-600 bg-blue-50' : 'text-slate-400 hover:text-slate-700'
               }`}
             >
-              <Settings className="w-5 h-5" />
-              <span>Pengaturan</span>
+              <Settings className="w-4 h-4" />
+              <span>Akun</span>
             </button>
             <button
               type="button"
               onClick={logout}
-              className="flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-[10px] font-bold text-slate-400 hover:text-red-600 transition cursor-pointer"
+              className="flex flex-col items-center gap-1 py-1 px-2 rounded-xl text-[10px] font-bold text-slate-400 hover:text-red-600 transition shrink-0 cursor-pointer"
             >
-              <LogOut className="w-5 h-5" />
+              <LogOut className="w-4 h-4" />
               <span>Keluar</span>
             </button>
-          </>
+          </div>
         )}
       </nav>
 
@@ -906,9 +1219,15 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
         <>
           <CreateWebsiteModal
             isOpen={isCreateModalOpen}
-            onClose={() => setIsCreateModalOpen(false)}
+            initialTemplate={selectedPresetTemplate}
+            onOpenPricing={() => setIsPricingModalOpen(true)}
+            onClose={() => {
+              setIsCreateModalOpen(false);
+              setSelectedPresetTemplate(null);
+            }}
             onWebsiteCreated={(newWebsiteId) => {
               setIsCreateModalOpen(false);
+              setSelectedPresetTemplate(null);
               onOpenEditor(newWebsiteId);
             }}
           />

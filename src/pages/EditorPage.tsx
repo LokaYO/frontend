@@ -245,9 +245,9 @@ export const EditorPage: React.FC<Props> = ({ websiteId, onBackToDashboard }) =>
   const getViewportWidthClass = () => {
     switch (viewport) {
       case 'mobile':
-        return 'w-[375px] my-6 shadow-2xl rounded-2xl overflow-clip border-4 border-slate-800';
+        return 'w-[375px] h-[calc(100vh-100px)] min-h-[520px] max-h-[860px] my-auto mx-auto shadow-2xl rounded-3xl border-4 border-slate-800 bg-white overflow-y-auto overflow-x-hidden scroll-smooth overscroll-contain touch-pan-y shrink-0 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-slate-400';
       case 'tablet':
-        return 'w-[768px] my-6 shadow-2xl rounded-2xl overflow-clip border-4 border-slate-800';
+        return 'w-[768px] h-[calc(100vh-100px)] min-h-[520px] max-h-[880px] my-auto mx-auto shadow-2xl rounded-2xl border-4 border-slate-800 bg-white overflow-y-auto overflow-x-hidden scroll-smooth overscroll-contain touch-pan-y shrink-0 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-slate-400';
       case 'desktop':
       default:
         return 'w-full min-h-full';
@@ -294,7 +294,11 @@ export const EditorPage: React.FC<Props> = ({ websiteId, onBackToDashboard }) =>
         )}
 
         {/* Center Canvas / Live Preview (Only this scrolls smoothly) */}
-        <main className="flex-1 min-h-0 h-full overflow-y-auto bg-slate-200/70 flex justify-center p-0 relative scroll-smooth">
+        <main
+          className={`flex-1 min-h-0 h-full overflow-y-auto bg-slate-200/70 flex justify-center p-0 relative scroll-smooth ${
+            viewport !== 'desktop' ? 'py-4 px-2' : ''
+          }`}
+        >
           {saveStatusText && (
             <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 bg-slate-900 text-white text-xs font-semibold px-4 py-2 rounded-full shadow-lg flex items-center gap-2 animate-in fade-in slide-in-from-bottom-2">
               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
@@ -317,6 +321,7 @@ export const EditorPage: React.FC<Props> = ({ websiteId, onBackToDashboard }) =>
               onReorderSections={(reordered) => setWebsite({ ...website, sections: reordered })}
               onUpdateSectionContent={handleUpdateSectionContentById}
               showGridLines={showGrid}
+              viewport={viewport}
             />
           </div>
         </main>

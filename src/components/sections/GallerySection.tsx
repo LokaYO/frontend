@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { GalleryContent, ThemeConfig } from '../../types/schema';
 import { GripVertical } from 'lucide-react';
+import { useViewport } from '../../context/ViewportContext';
 import {
   DndContext,
   closestCorners,
@@ -103,12 +104,16 @@ export const GallerySection: React.FC<Props> = ({ content, theme, isEditor, onUp
       ? 'py-24 sm:py-32'
       : 'py-16 sm:py-24';
 
-  const gridClass =
-    columns === '2'
-      ? 'grid-cols-1 sm:grid-cols-2'
-      : columns === '3'
-      ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
-      : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4';
+  const { isMobile, isTablet } = useViewport();
+  const gridClass = isMobile
+    ? 'grid-cols-1'
+    : isTablet
+    ? 'grid-cols-1 sm:grid-cols-2'
+    : columns === '2'
+    ? 'grid-cols-1 sm:grid-cols-2'
+    : columns === '3'
+    ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
+    : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4';
 
   const aspectClass =
     aspectRatio === 'landscape'

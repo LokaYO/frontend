@@ -1,6 +1,7 @@
 import React from 'react';
 import { AboutContent, ThemeConfig } from '../../types/schema';
 import { CheckCircle2 } from 'lucide-react';
+import { useViewport } from '../../context/ViewportContext';
 
 interface Props {
   content: AboutContent;
@@ -13,25 +14,27 @@ export const AboutSection: React.FC<Props> = ({ content, theme }) => {
   const rawPosition = (content as any).imagePosition || 'left';
   const imagePosition = rawPosition as 'left' | 'right' | 'bottom';
 
+  const { isMobile, isTablet } = useViewport();
+  const isStacked = isMobile || isTablet || imagePosition === 'bottom';
   const isBottom = imagePosition === 'bottom';
-  const isRight = imagePosition === 'right';
+  const isRight = imagePosition === 'right' && !isMobile && !isTablet;
 
   const secondaryImage = (content as any).secondaryImageUrl;
 
   return (
-    <section id="about" className="py-16 sm:py-24 bg-white">
+    <section id="about" className={`${isMobile ? 'py-12' : 'py-16 sm:py-24'} bg-white`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div
           className={`grid grid-cols-1 ${
-            isBottom ? 'lg:grid-cols-1 max-w-4xl mx-auto' : 'lg:grid-cols-12'
-          } gap-12 items-center`}
+            isStacked ? 'max-w-4xl mx-auto' : 'lg:grid-cols-12'
+          } gap-8 sm:gap-12 items-center`}
         >
           {/* Main Story Image Container */}
           {content.imageUrl && (
             <div
               className={`${
-                isBottom
-                  ? 'w-full order-2 mt-4'
+                isStacked
+                  ? 'w-full order-2 mt-2'
                   : isRight
                   ? 'lg:col-span-5 order-2'
                   : 'lg:col-span-5 order-2 lg:order-1'
@@ -42,12 +45,16 @@ export const AboutSection: React.FC<Props> = ({ content, theme }) => {
                   src={content.imageUrl}
                   alt={content.title}
                   className={`rounded-2xl sm:rounded-3xl shadow-lg w-full object-cover border border-slate-100 ${
-                    isBottom ? 'h-[360px] sm:h-[480px]' : 'h-[340px] sm:h-[420px]'
+                    isMobile
+                      ? 'h-[240px]'
+                      : isBottom
+                      ? 'h-[360px] sm:h-[480px]'
+                      : 'h-[320px] sm:h-[420px]'
                   }`}
                 />
 
                 {/* Optional Secondary Image Overlay (Collage Look) */}
-                {secondaryImage && !isBottom && (
+                {secondaryImage && !isStacked && (
                   <div className="absolute -bottom-6 -right-6 w-1/2 rounded-2xl overflow-hidden shadow-2xl border-4 border-white hidden sm:block">
                     <img
                       src={secondaryImage}
@@ -63,8 +70,8 @@ export const AboutSection: React.FC<Props> = ({ content, theme }) => {
           {/* Text and stats */}
           <div
             className={`${
-              isBottom
-                ? 'w-full order-1 text-center'
+              isStacked
+                ? `w-full order-1 ${isBottom ? 'text-center' : 'text-left'}`
                 : content.imageUrl
                 ? isRight
                   ? 'lg:col-span-7 order-1'
@@ -83,11 +90,11 @@ export const AboutSection: React.FC<Props> = ({ content, theme }) => {
               </span>
             )}
 
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-900 tracking-tight leading-snug">
+            <h2 className={`${isMobile ? 'text-2xl' : 'text-2xl sm:text-3xl lg:text-4xl'} font-bold text-slate-900 tracking-tight leading-snug`}>
               {content.title}
             </h2>
 
-            <p className="text-base sm:text-lg text-slate-600 leading-relaxed font-normal">
+            <p className={`${isMobile ? 'text-sm' : 'text-base sm:text-lg'} text-slate-600 leading-relaxed font-normal`}>
               {content.story}
             </p>
 
