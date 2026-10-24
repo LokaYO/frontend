@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { authService } from '../services/auth.service';
-import { Sparkles, ArrowRight, Lock, Mail, User, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { Sparkles, ArrowRight, Lock, Mail, User, CheckCircle2, ShieldCheck, ArrowLeft } from 'lucide-react';
+import logoOfficialWithTagline from '../assets/Logo Loka (2).png';
 
 interface Props {
   onNavigateAdmin?: () => void;
+  onNavigateHome?: () => void;
+  initialMode?: 'login' | 'register';
 }
 
-export const AuthPage: React.FC<Props> = ({ onNavigateAdmin }) => {
+export const AuthPage: React.FC<Props> = ({ onNavigateAdmin, onNavigateHome, initialMode = 'login' }) => {
   const { login } = useAuth();
-  const [isRegister, setIsRegister] = useState(false);
+  const [isRegister, setIsRegister] = useState(initialMode === 'register');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -55,34 +58,53 @@ export const AuthPage: React.FC<Props> = ({ onNavigateAdmin }) => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white rounded-3xl shadow-xl border border-slate-200/80 p-8 space-y-6">
-        {/* Logo & Headline */}
-        <div className="text-center space-y-2">
-          <div className="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center font-extrabold text-xl mx-auto shadow-md shadow-blue-500/20">
-            L
+    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4 animate-fade-in">
+      <div className="max-w-md w-full bg-white rounded-3xl shadow-xl border border-slate-200/80 p-8 space-y-6 animate-scale-up">
+        {/* Top Back Nav */}
+        {onNavigateHome && (
+          <div className="flex items-center justify-between">
+            <button
+              type="button"
+              onClick={onNavigateHome}
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-800 transition cursor-pointer"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>Kembali ke Beranda</span>
+            </button>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+              Login Merchant
+            </span>
           </div>
-          <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">
-            LokalSite Builder
-          </h2>
+        )}
+
+        {/* Logo & Headline */}
+        <div className="text-center space-y-3">
+          <div className="flex justify-center">
+            <img
+              src={logoOfficialWithTagline}
+              alt="Loka - Your Bussines, Online"
+              className="h-16 w-auto object-contain drop-shadow-xs"
+            />
+          </div>
           <p className="text-xs text-slate-500 max-w-xs mx-auto">
             Platform B2B SaaS pembuatan landing page profesional untuk UMKM & bisnis lokal secara mandiri.
           </p>
         </div>
 
         {/* 1-Click Demo Login Banner */}
-        <div className="p-3.5 rounded-2xl bg-blue-50/70 border border-blue-200/80 flex items-center justify-between gap-3">
+        <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/90 flex items-center justify-between gap-3">
           <div className="space-y-0.5">
-            <span className="text-[11px] font-bold text-blue-900 block">Ingin langsung mencoba?</span>
-            <span className="text-[10px] text-blue-700 block">Akses instan sebagai Blackiee (Akun Demo)</span>
+            <span className="text-[11px] font-bold text-slate-900 block">Ingin langsung mencoba?</span>
+            <span className="text-[10px] text-slate-500 block">Akses instan sebagai Blackiee (Akun Demo)</span>
           </div>
           <button
             type="button"
             onClick={handleDemoLogin}
             disabled={loading}
-            className="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-xs flex items-center gap-1 active:scale-95 transition shrink-0 disabled:opacity-50 cursor-pointer"
+            style={{ backgroundColor: '#425B9A' }}
+            className="px-3.5 py-1.5 rounded-xl text-white text-xs font-bold shadow-xs flex items-center gap-1 active:scale-95 transition shrink-0 disabled:opacity-50 cursor-pointer hover:opacity-95"
           >
-            <Sparkles className="w-3.5 h-3.5" />
+            <Sparkles className="w-3.5 h-3.5 text-[#76C0EC]" />
             <span>Login Demo</span>
           </button>
         </div>
@@ -180,10 +202,11 @@ export const AuthPage: React.FC<Props> = ({ onNavigateAdmin }) => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-md hover:shadow-lg transition active:scale-95 flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
+            style={{ backgroundColor: '#425B9A' }}
+            className="w-full py-3 text-white rounded-xl text-xs font-bold shadow-md hover:opacity-95 transition active:scale-95 flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
           >
             <span>{loading ? 'Memproses...' : isRegister ? 'Daftar Sekarang' : 'Masuk ke Dashboard'}</span>
-            <ArrowRight className="w-4 h-4" />
+            <ArrowRight className="w-4 h-4 text-[#76C0EC]" />
           </button>
         </form>
 
@@ -198,19 +221,6 @@ export const AuthPage: React.FC<Props> = ({ onNavigateAdmin }) => {
           <span className="flex items-center gap-1">
             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" /> WhatsApp Direct
           </span>
-        </div>
-
-        {/* Admin Portal Gateway Link */}
-        <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
-          <span>Staf atau Administrator?</span>
-          <button
-            type="button"
-            onClick={onNavigateAdmin}
-            className="font-bold text-purple-600 hover:text-purple-700 flex items-center gap-1 transition cursor-pointer"
-          >
-            <ShieldCheck className="w-3.5 h-3.5" />
-            <span>Portal Admin (/admin) &rarr;</span>
-          </button>
         </div>
       </div>
     </div>

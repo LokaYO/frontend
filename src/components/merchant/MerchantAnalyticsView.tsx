@@ -64,7 +64,7 @@ export const MerchantAnalyticsView: React.FC<Props> = ({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-slate-200/90 shadow-xs">
         <div>
           <div className="flex items-center gap-2">
-            <span className="p-2 rounded-xl bg-indigo-50 text-indigo-600">
+            <span className="p-2 rounded-xl bg-[#425B9A]/10 text-[#425B9A]">
               <TrendingUp className="w-5 h-5" />
             </span>
             <h1 className="text-xl font-extrabold text-slate-900 tracking-tight">
@@ -91,7 +91,7 @@ export const MerchantAnalyticsView: React.FC<Props> = ({
           <div>
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Total Pengunjung</span>
-              <span className="p-2 rounded-xl bg-blue-50 text-blue-600">
+              <span className="p-2 rounded-xl bg-[#425B9A]/10 text-[#425B9A]">
                 <Eye className="w-4 h-4" />
               </span>
             </div>
@@ -162,7 +162,7 @@ export const MerchantAnalyticsView: React.FC<Props> = ({
           </div>
           <div className="flex items-center gap-4 text-xs font-semibold">
             <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-md bg-blue-500" />
+              <span className="w-3 h-3 rounded-md bg-[#425B9A]" />
               <span className="text-slate-600">Pengunjung</span>
             </div>
             <div className="flex items-center gap-2">
@@ -184,7 +184,7 @@ export const MerchantAnalyticsView: React.FC<Props> = ({
                   {/* View Bar */}
                   <div
                     style={{ height: `${viewHeightPct}%` }}
-                    className="w-3 sm:w-6 bg-blue-500 group-hover:bg-blue-600 rounded-t-lg transition-all relative flex justify-center"
+                    className="w-3 sm:w-6 bg-[#425B9A] group-hover:bg-[#354a7d] rounded-t-lg transition-all relative flex justify-center"
                     title={`${t.views} Pengunjung`}
                   >
                     <span className="opacity-0 group-hover:opacity-100 absolute -top-6 text-[10px] font-bold bg-slate-900 text-white px-1.5 py-0.5 rounded shadow-xs transition pointer-events-none">
@@ -271,7 +271,7 @@ export const MerchantAnalyticsView: React.FC<Props> = ({
                         <span className="font-extrabold text-slate-900 text-sm">{views.toLocaleString()}</span>
                         <div className="w-24 bg-slate-100 h-1.5 rounded-full overflow-hidden mt-1">
                           <div
-                            className="bg-blue-600 h-full rounded-full"
+                            className="bg-[#425B9A] h-full rounded-full"
                             style={{
                               width: `${totalViews > 0 ? (views / totalViews) * 100 : 0}%`,
                             }}
@@ -285,7 +285,7 @@ export const MerchantAnalyticsView: React.FC<Props> = ({
 
                       <td className="py-4 px-4">
                         <div className="flex items-center gap-2">
-                          <span className="font-black text-purple-700 font-mono">{ctr}%</span>
+                          <span className="font-black text-slate-800 font-mono">{ctr}%</span>
                           {parseFloat(ctr) > 10 ? (
                             <span className="px-2 py-0.5 rounded-md text-[9px] font-black bg-emerald-100 text-emerald-800">
                               HIGH INTENT
@@ -310,7 +310,7 @@ export const MerchantAnalyticsView: React.FC<Props> = ({
                           <button
                             type="button"
                             onClick={() => onOpenPublicSite(site.slug)}
-                            className="p-1.5 rounded-xl text-blue-600 hover:bg-blue-50 transition cursor-pointer"
+                            className="p-1.5 rounded-xl text-[#425B9A] hover:bg-[#425B9A]/10 transition cursor-pointer"
                             title="Buka Website Publik"
                           >
                             <ExternalLink className="w-4 h-4" />

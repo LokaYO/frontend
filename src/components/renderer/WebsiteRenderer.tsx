@@ -21,6 +21,7 @@ import {
   LayoutGrid,
   Layers,
 } from 'lucide-react';
+import logoClean from '../../assets/Logo Loka (1) (1).png';
 
 interface Props {
   sections: Section[];
@@ -54,12 +55,12 @@ export const getFontFamilyClass = (font?: string) => {
       return 'font-montserrat';
     case 'cinzel':
       return 'font-cinzel';
-    case 'inter':
-      return 'font-inter';
-    case 'sans':
     case 'jakarta':
-    default:
       return 'font-jakarta';
+    case 'sans':
+    case 'inter':
+    default:
+      return 'font-inter';
   }
 };
 
@@ -389,15 +390,15 @@ export const WebsiteRenderer: React.FC<Props> = ({
           aria-label="Branding Platform"
           className="py-5 px-4 bg-slate-900 text-center flex flex-col sm:flex-row items-center justify-center gap-2 border-t border-slate-800 text-slate-400 select-none"
         >
-          <div className="flex items-center gap-1.5 text-xs">
+          <div className="flex items-center gap-2 text-xs">
             <span>Dibuat dengan</span>
             <a
               href="/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-white font-bold hover:text-blue-400 transition underline underline-offset-2 flex items-center gap-1"
+              className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-white hover:opacity-95 transition shadow-2xs"
             >
-              <span>⚡ LOKA Site</span>
+              <img src={logoClean} alt="Loka" className="h-3.5 w-auto object-contain" />
             </a>
           </div>
           <span className="hidden sm:inline text-slate-600">•</span>

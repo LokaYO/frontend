@@ -85,16 +85,16 @@ export const EditorTopBar: React.FC<Props> = ({
               onBlur={handleTitleSubmit}
               onKeyDown={(e) => e.key === 'Enter' && handleTitleSubmit()}
               autoFocus
-              className="text-sm font-bold text-slate-900 px-2 py-1 border border-blue-400 rounded-lg outline-none ring-2 ring-blue-100"
+              className="text-sm font-bold text-slate-900 px-2 py-1 border border-[#425B9A] rounded-lg outline-none ring-2 ring-[#425B9A]/20"
             />
           ) : (
             <button
               onClick={() => setIsEditingTitle(true)}
-              className="group flex items-center gap-1.5 text-sm font-bold text-slate-900 truncate hover:text-blue-600 transition"
+              className="group flex items-center gap-1.5 text-sm font-bold text-slate-900 truncate hover:text-[#425B9A] transition"
               title="Klik untuk ubah nama website"
             >
               <span className="truncate">{website.name}</span>
-              <Edit3 className="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-500 shrink-0" />
+              <Edit3 className="w-3.5 h-3.5 text-slate-400 group-hover:text-[#425B9A] shrink-0" />
             </button>
           )}
 
@@ -162,14 +162,14 @@ export const EditorTopBar: React.FC<Props> = ({
             onClick={() => setShowGrid(!showGrid)}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold border transition cursor-pointer ${
               showGrid
-                ? 'bg-blue-50 border-blue-300 text-blue-700 shadow-xs'
+                ? 'bg-[#425B9A]/10 border-[#425B9A]/40 text-[#425B9A] shadow-xs'
                 : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
             }`}
             title="Tampilkan Panduan Garis Grid 12-Kolom"
           >
-            <LayoutGrid className="w-3.5 h-3.5 text-blue-600" />
+            <LayoutGrid className="w-3.5 h-3.5 text-[#425B9A]" />
             <span className="hidden lg:inline">Grid 12-Kolom</span>
-            {showGrid && <span className="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse" />}
+            {showGrid && <span className="w-1.5 h-1.5 rounded-full bg-[#425B9A] animate-pulse" />}
           </button>
         )}
 
@@ -179,7 +179,7 @@ export const EditorTopBar: React.FC<Props> = ({
           onClick={() => setPreviewMode(!previewMode)}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold border transition ${
             previewMode
-              ? 'bg-indigo-50 border-indigo-200 text-indigo-700'
+              ? 'bg-[#425B9A]/10 border-[#425B9A]/30 text-[#425B9A]'
               : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
           }`}
         >
@@ -240,9 +240,9 @@ export const EditorTopBar: React.FC<Props> = ({
           <button
             type="button"
             onClick={onPublishToggle}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-sm active:scale-95 transition"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white bg-[#425B9A] hover:bg-[#354a7d] shadow-sm active:scale-95 transition"
           >
-            <Globe className="w-3.5 h-3.5" />
+            <Globe className="w-3.5 h-3.5 text-[#76C0EC]" />
             <span>Publish Website</span>
           </button>
         )}

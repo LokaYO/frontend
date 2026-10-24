@@ -164,14 +164,14 @@ export const MerchantLeadsView: React.FC<Props> = ({ websites }) => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-slate-200/90 shadow-xs">
         <div>
           <div className="flex items-center gap-2">
-            <span className="p-2 rounded-xl bg-blue-50 text-blue-600">
+            <span className="p-2 rounded-xl bg-[#425B9A]/10 text-[#425B9A]">
               <Inbox className="w-5 h-5" />
             </span>
             <h1 className="text-xl font-extrabold text-slate-900 tracking-tight">
               Kotak Masuk & Leads Pelanggan
             </h1>
             {unreadCount > 0 && (
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-blue-600 text-white animate-pulse">
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-[#425B9A] text-white animate-pulse">
                 {unreadCount} Baru
               </span>
             )}
@@ -196,7 +196,7 @@ export const MerchantLeadsView: React.FC<Props> = ({ websites }) => {
           <button
             type="button"
             onClick={handleExportCSV}
-            className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition shadow-xs cursor-pointer active:scale-95"
+            className="flex items-center gap-2 px-4 py-2 bg-[#425B9A] hover:bg-[#354a7d] text-white rounded-xl text-xs font-bold transition shadow-xs cursor-pointer active:scale-95"
             title="Unduh data kontak pelanggan ke format Excel/CSV"
           >
             <Download className="w-3.5 h-3.5" />
@@ -215,8 +215,8 @@ export const MerchantLeadsView: React.FC<Props> = ({ websites }) => {
 
         <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
           <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Belum Ditindaklanjuti</span>
-          <p className="text-2xl font-black text-blue-600 mt-1">{unreadCount}</p>
-          <span className="text-[10px] text-blue-500 font-semibold mt-1 block">Prioritas follow-up WA</span>
+          <p className="text-2xl font-black text-[#425B9A] mt-1">{unreadCount}</p>
+          <span className="text-[10px] text-[#425B9A] font-semibold mt-1 block">Prioritas follow-up WA</span>
         </div>
 
         <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
@@ -227,7 +227,7 @@ export const MerchantLeadsView: React.FC<Props> = ({ websites }) => {
 
         <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
           <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Website Sumber</span>
-          <p className="text-2xl font-black text-indigo-600 mt-1">{websites.length}</p>
+          <p className="text-2xl font-black text-[#76C0EC] mt-1">{websites.length}</p>
           <span className="text-[10px] text-slate-400 mt-1 block">Landing page aktif</span>
         </div>
       </div>
@@ -255,7 +255,7 @@ export const MerchantLeadsView: React.FC<Props> = ({ websites }) => {
                 onClick={() => setStatusFilter('unread')}
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
                   statusFilter === 'unread'
-                    ? 'bg-white text-blue-700 shadow-xs'
+                    ? 'bg-white text-[#425B9A] shadow-xs'
                     : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
@@ -279,7 +279,7 @@ export const MerchantLeadsView: React.FC<Props> = ({ websites }) => {
               <select
                 value={selectedSiteFilter}
                 onChange={(e) => setSelectedSiteFilter(e.target.value)}
-                className="text-xs font-bold px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-1 focus:ring-blue-500 text-slate-700 cursor-pointer"
+                className="text-xs font-bold px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-1 focus:ring-[#425B9A] text-slate-700 cursor-pointer"
               >
                 <option value="all">Semua Website</option>
                 {websites.map((w) => (
@@ -299,7 +299,7 @@ export const MerchantLeadsView: React.FC<Props> = ({ websites }) => {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Cari nama, nomor WA, atau pesan..."
-              className="w-full pl-9 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white"
+              className="w-full pl-9 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-1 focus:ring-[#425B9A] focus:bg-white"
             />
           </div>
         </div>
@@ -307,12 +307,12 @@ export const MerchantLeadsView: React.FC<Props> = ({ websites }) => {
         {/* Leads Content List */}
         {loading ? (
           <div className="py-20 text-center space-y-3">
-            <div className="w-8 h-8 border-3 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto" />
+            <div className="w-8 h-8 border-3 border-[#425B9A] border-t-transparent rounded-full animate-spin mx-auto" />
             <p className="text-xs text-slate-400">Memuat pesan pelanggan...</p>
           </div>
         ) : filteredLeads.length === 0 ? (
           <div className="py-16 px-6 text-center max-w-md mx-auto space-y-4">
-            <div className="w-16 h-16 rounded-3xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto shadow-inner">
+            <div className="w-16 h-16 rounded-3xl bg-[#425B9A]/10 text-[#425B9A] flex items-center justify-center mx-auto shadow-inner">
               <Inbox className="w-8 h-8" />
             </div>
             <div className="space-y-1">
@@ -331,7 +331,7 @@ export const MerchantLeadsView: React.FC<Props> = ({ websites }) => {
                 <div
                   key={lead.id}
                   className={`p-5 sm:p-6 transition-all flex flex-col md:flex-row md:items-start justify-between gap-5 ${
-                    isUnread ? 'bg-blue-50/25 hover:bg-blue-50/40' : 'hover:bg-slate-50/60'
+                    isUnread ? 'bg-[#425B9A]/5 hover:bg-[#425B9A]/10' : 'hover:bg-slate-50/60'
                   }`}
                 >
                   {/* Lead Info & Message */}
@@ -339,7 +339,7 @@ export const MerchantLeadsView: React.FC<Props> = ({ websites }) => {
                     <div
                       className={`w-11 h-11 rounded-2xl flex items-center justify-center font-bold text-sm shrink-0 shadow-xs ${
                         isUnread
-                          ? 'bg-blue-600 text-white'
+                          ? 'bg-[#425B9A] text-white'
                           : 'bg-slate-200 text-slate-700'
                       }`}
                     >
@@ -353,7 +353,7 @@ export const MerchantLeadsView: React.FC<Props> = ({ websites }) => {
                         </span>
 
                         {isUnread ? (
-                          <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-blue-100 text-blue-700">
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-[#425B9A]/15 text-[#425B9A]">
                             Baru
                           </span>
                         ) : (
@@ -363,7 +363,7 @@ export const MerchantLeadsView: React.FC<Props> = ({ websites }) => {
                         )}
 
                         {lead.serviceInterest && (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-purple-50 text-purple-700 border border-purple-200/60">
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#76C0EC]/15 text-[#425B9A] border border-[#76C0EC]/30">
                             <Tag className="w-2.5 h-2.5" />
                             {lead.serviceInterest}
                           </span>
@@ -421,7 +421,7 @@ export const MerchantLeadsView: React.FC<Props> = ({ websites }) => {
                           type="button"
                           onClick={() => handleMarkRead(lead.websiteId, lead.id)}
                           disabled={actionLoading === lead.id}
-                          className="p-2 rounded-xl text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition cursor-pointer"
+                          className="p-2 rounded-xl text-slate-400 hover:text-[#425B9A] hover:bg-[#425B9A]/10 transition cursor-pointer"
                           title="Tandai sudah dibaca"
                         >
                           <CheckCircle2 className="w-4 h-4" />

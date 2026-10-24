@@ -3,6 +3,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { ToastProvider } from './context/ToastContext';
 import { AuthPage } from './pages/AuthPage';
 import { AdminLoginPage } from './pages/AdminLoginPage';
+import { LandingPage } from './pages/LandingPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { EditorPage } from './pages/EditorPage';
 import { PublicSitePage } from './pages/PublicSitePage';
@@ -12,6 +13,7 @@ function MainApp() {
   const { user, loading, logout } = useAuth();
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
   const [editingWebsiteId, setEditingWebsiteId] = useState<string | null>(null);
+  const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
 
   // Sync with browser navigation
   useEffect(() => {
@@ -64,7 +66,7 @@ function MainApp() {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
         <div className="text-center space-y-3">
-          <div className="w-10 h-10 border-3 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto" />
+          <div className="w-10 h-10 border-3 border-[#425B9A] border-t-transparent rounded-full animate-spin mx-auto" />
           <p className="text-xs font-semibold text-slate-500">Memeriksa sesi pengguna...</p>
         </div>
       </div>
@@ -72,15 +74,41 @@ function MainApp() {
   }
 
   const isAdminRoute = currentPath === '/admin';
+  const isLoginRoute = currentPath === '/login';
 
   // 1. JIKA BELUM LOGIN:
   if (!user) {
-    // Jika user mengakses /admin -> Tampilkan Halaman Login Khusus Admin (Dark/Security theme)
+    // Jika user mengakses /admin -> Tampilkan Halaman Login Khusus Admin
     if (isAdminRoute) {
-      return <AdminLoginPage onNavigateHome={() => navigate('/')} />;
+      return (
+        <AdminLoginPage
+          onNavigateHome={() => navigate('/')}
+          onNavigateUserLogin={() => navigate('/login')}
+        />
+      );
     }
-    // Jika di / -> Tampilkan Halaman Login Pengguna Biasa / Client
-    return <AuthPage onNavigateAdmin={() => navigate('/admin')} />;
+    // Jika user mengakses /login -> Tampilkan Halaman Login Merchant / UMKM
+    if (isLoginRoute) {
+      return (
+        <AuthPage
+          initialMode={authMode}
+          onNavigateHome={() => navigate('/')}
+        />
+      );
+    }
+    // Default di / -> Tampilkan Landing Page Utama Profesional LOKA
+    return (
+      <LandingPage
+        onTryNow={() => {
+          setAuthMode('register');
+          navigate('/login');
+        }}
+        onLogin={() => {
+          setAuthMode('login');
+          navigate('/login');
+        }}
+      />
+    );
   }
 
   // 2. JIKA SUDAH LOGIN TAPI DIA USER BIASA MENCOBA MASUK KE /admin:
@@ -105,7 +133,7 @@ function MainApp() {
             <button
               type="button"
               onClick={() => navigate('/')}
-              className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full py-2.5 bg-[#425B9A] hover:bg-[#354a7d] text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 cursor-pointer"
             >
               <ArrowLeft className="w-4 h-4" />
               <span>Kembali ke Dashboard Website Saya</span>

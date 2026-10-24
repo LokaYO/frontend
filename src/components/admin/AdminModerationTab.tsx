@@ -237,7 +237,7 @@ export const AdminModerationTab: React.FC<Props> = ({ currentAdminRole }) => {
         <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Total Merchant</span>
-            <span className="p-2 rounded-xl bg-purple-50 text-purple-700">
+            <span className="p-2 rounded-xl bg-[#425B9A]/10 text-[#425B9A]">
               <Store className="w-4 h-4" />
             </span>
           </div>
@@ -248,7 +248,7 @@ export const AdminModerationTab: React.FC<Props> = ({ currentAdminRole }) => {
         <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Total Website</span>
-            <span className="p-2 rounded-xl bg-slate-100 text-slate-700">
+            <span className="p-2 rounded-xl bg-[#76C0EC]/20 text-[#425B9A]">
               <Globe className="w-4 h-4" />
             </span>
           </div>
@@ -350,7 +350,7 @@ export const AdminModerationTab: React.FC<Props> = ({ currentAdminRole }) => {
                   value={merchantSearch}
                   onChange={(e) => setMerchantSearch(e.target.value)}
                   placeholder="Cari merchant, email, atau nama website..."
-                  className="w-full pl-9 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-1 focus:ring-purple-500 focus:bg-white"
+                  className="w-full pl-9 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-1 focus:ring-[#425B9A] focus:bg-white"
                 />
               </div>
               <button
@@ -381,7 +381,7 @@ export const AdminModerationTab: React.FC<Props> = ({ currentAdminRole }) => {
                 {loading ? (
                   <tr>
                     <td colSpan={5} className="py-12 text-center text-slate-400">
-                      <div className="w-8 h-8 border-3 border-purple-600 border-t-transparent rounded-full animate-spin mx-auto mb-2" />
+                      <div className="w-8 h-8 border-3 border-[#425B9A] border-t-transparent rounded-full animate-spin mx-auto mb-2" />
                       Memuat daftar merchant...
                     </td>
                   </tr>
@@ -399,14 +399,14 @@ export const AdminModerationTab: React.FC<Props> = ({ currentAdminRole }) => {
                       <tr
                         key={merchant.userId}
                         onClick={() => setSelectedMerchantId(merchant.userId)}
-                        className={`hover:bg-purple-50/40 transition cursor-pointer ${
+                        className={`hover:bg-[#425B9A]/5 transition cursor-pointer ${
                           hasSuspended ? 'bg-red-50/20' : ''
                         }`}
                       >
                         {/* Merchant Profile */}
                         <td className="py-4 px-6">
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-purple-600 to-indigo-600 text-white flex items-center justify-center font-bold text-sm shadow-xs shrink-0">
+                            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#425B9A] to-[#76C0EC] text-white flex items-center justify-center font-bold text-sm shadow-xs shrink-0">
                               {merchant.ownerName?.charAt(0)?.toUpperCase() || 'M'}
                             </div>
                             <div className="min-w-0">
@@ -432,7 +432,7 @@ export const AdminModerationTab: React.FC<Props> = ({ currentAdminRole }) => {
                         <td className="py-4 px-4">
                           <div className="space-y-1">
                             <div className="flex items-center gap-1.5 font-bold text-slate-900">
-                              <Layers className="w-3.5 h-3.5 text-purple-600" />
+                              <Layers className="w-3.5 h-3.5 text-[#425B9A]" />
                               <span>{merchant.totalWebsites} Website</span>
                             </div>
                             <div className="flex items-center gap-1 text-[10px] font-semibold flex-wrap">
@@ -479,7 +479,7 @@ export const AdminModerationTab: React.FC<Props> = ({ currentAdminRole }) => {
                         <td className="py-4 px-4">
                           <div className="space-y-0.5 text-[11px]">
                             <span className="flex items-center gap-1.5 text-slate-600 font-mono">
-                              <Eye className="w-3.5 h-3.5 text-blue-500" />
+                              <Eye className="w-3.5 h-3.5 text-[#425B9A]" />
                               <strong>{merchant.totalViews.toLocaleString()}</strong> views
                             </span>
                             <span className="flex items-center gap-1.5 text-emerald-700 font-mono">
@@ -497,7 +497,7 @@ export const AdminModerationTab: React.FC<Props> = ({ currentAdminRole }) => {
                               e.stopPropagation();
                               setSelectedMerchantId(merchant.userId);
                             }}
-                            className="inline-flex items-center gap-1 px-3.5 py-2 rounded-xl text-xs font-bold bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 transition cursor-pointer shadow-2xs"
+                            className="inline-flex items-center gap-1 px-3.5 py-2 rounded-xl text-xs font-bold bg-[#425B9A]/10 hover:bg-[#425B9A]/20 text-[#425B9A] border border-[#425B9A]/20 transition cursor-pointer shadow-2xs"
                           >
                             <span>Kelola Website ({merchant.totalWebsites})</span>
                             <ChevronRight className="w-3.5 h-3.5" />
@@ -540,20 +540,20 @@ export const AdminModerationTab: React.FC<Props> = ({ currentAdminRole }) => {
               <div className="hidden sm:flex items-center gap-2 text-xs text-slate-400 font-semibold">
                 <span>Moderasi Website</span>
                 <span>/</span>
-                <span className="text-purple-700 font-bold">{selectedMerchant.ownerName}</span>
+                <span className="text-[#425B9A] font-bold">{selectedMerchant.ownerName}</span>
               </div>
             </div>
 
             <div className="flex items-center gap-2">
               <span className="text-xs text-slate-500">Total Website Merchant:</span>
-              <span className="px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-800 text-xs font-bold">
+              <span className="px-2.5 py-0.5 rounded-full bg-[#425B9A]/15 text-[#425B9A] text-xs font-bold">
                 {selectedMerchant.totalWebsites} Website
               </span>
             </div>
           </div>
 
           {/* Selected Merchant Detail Card */}
-          <div className="bg-gradient-to-r from-purple-900 to-indigo-900 text-white rounded-3xl p-6 sm:p-7 shadow-lg relative overflow-hidden">
+          <div className="bg-gradient-to-r from-[#2c3d69] via-[#425B9A] to-[#3a639b] text-white rounded-3xl p-6 sm:p-7 shadow-lg relative overflow-hidden">
             <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
               <div className="flex items-center gap-4">
                 <div className="w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white font-black text-2xl shadow-inner">
@@ -575,7 +575,7 @@ export const AdminModerationTab: React.FC<Props> = ({ currentAdminRole }) => {
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-purple-200 font-mono">
+                  <p className="text-xs text-slate-200 font-mono">
                     {selectedMerchant.ownerEmail}
                   </p>
                 </div>
@@ -584,21 +584,21 @@ export const AdminModerationTab: React.FC<Props> = ({ currentAdminRole }) => {
               {/* Status Breakdown Counters */}
               <div className="flex items-center gap-3 flex-wrap">
                 <div className="bg-white/10 backdrop-blur-xs px-4 py-2.5 rounded-2xl border border-white/10 text-center">
-                  <span className="text-[10px] uppercase font-bold text-purple-200 block">Live Publik</span>
+                  <span className="text-[10px] uppercase font-bold text-slate-200 block">Live Publik</span>
                   <span className="text-lg font-black text-emerald-300">{selectedMerchant.publishedCount}</span>
                 </div>
                 <div className="bg-white/10 backdrop-blur-xs px-4 py-2.5 rounded-2xl border border-white/10 text-center">
-                  <span className="text-[10px] uppercase font-bold text-purple-200 block">Draft</span>
+                  <span className="text-[10px] uppercase font-bold text-slate-200 block">Draft</span>
                   <span className="text-lg font-black text-amber-300">{selectedMerchant.draftCount}</span>
                 </div>
                 <div className="bg-white/10 backdrop-blur-xs px-4 py-2.5 rounded-2xl border border-white/10 text-center">
-                  <span className="text-[10px] uppercase font-bold text-purple-200 block">Ditangguhkan</span>
+                  <span className="text-[10px] uppercase font-bold text-slate-200 block">Ditangguhkan</span>
                   <span className={`text-lg font-black ${selectedMerchant.suspendedCount > 0 ? 'text-red-300' : 'text-slate-300'}`}>
                     {selectedMerchant.suspendedCount}
                   </span>
                 </div>
                 <div className="bg-white/10 backdrop-blur-xs px-4 py-2.5 rounded-2xl border border-white/10 text-center">
-                  <span className="text-[10px] uppercase font-bold text-purple-200 block">Total Trafik</span>
+                  <span className="text-[10px] uppercase font-bold text-slate-200 block">Total Trafik</span>
                   <span className="text-lg font-black text-white">{selectedMerchant.totalViews} views</span>
                 </div>
               </div>
@@ -615,7 +615,7 @@ export const AdminModerationTab: React.FC<Props> = ({ currentAdminRole }) => {
                   onClick={() => setSiteStatusFilter('all')}
                   className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
                     siteStatusFilter === 'all'
-                      ? 'bg-purple-600 text-white shadow-xs'
+                      ? 'bg-[#425B9A] text-white shadow-xs'
                       : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                   }`}
                 >
@@ -664,7 +664,7 @@ export const AdminModerationTab: React.FC<Props> = ({ currentAdminRole }) => {
                     value={siteSearch}
                     onChange={(e) => setSiteSearch(e.target.value)}
                     placeholder="Cari website merchant ini..."
-                    className="w-full pl-9 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-1 focus:ring-purple-500 focus:bg-white"
+                    className="w-full pl-9 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-1 focus:ring-[#425B9A] focus:bg-white"
                   />
                 </div>
               </div>
@@ -706,7 +706,7 @@ export const AdminModerationTab: React.FC<Props> = ({ currentAdminRole }) => {
                                 href={`/sites/${site.slug}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-[11px] text-blue-600 hover:underline inline-flex items-center gap-1 font-mono mt-0.5"
+                                className="text-[11px] text-[#425B9A] hover:underline inline-flex items-center gap-1 font-mono mt-0.5"
                               >
                                 <span>/sites/{site.slug}</span>
                                 <ExternalLink className="w-3 h-3" />

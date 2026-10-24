@@ -101,9 +101,9 @@ const SortableSectionRow: React.FC<SortableSectionRowProps> = ({
       onClick={onSelect}
       className={`flex items-center justify-between p-2.5 rounded-xl border transition cursor-pointer select-none group ${
         isDragging
-          ? 'bg-blue-100/90 border-blue-500 shadow-xl ring-2 ring-blue-400 scale-[1.02] z-50'
+          ? 'bg-[#425B9A]/20 border-[#425B9A] shadow-xl ring-2 ring-[#425B9A]/40 scale-[1.02] z-50'
           : isActive
-          ? 'bg-blue-50/80 border-blue-400 ring-2 ring-blue-100'
+          ? 'bg-[#425B9A]/10 border-[#425B9A] ring-2 ring-[#425B9A]/20'
           : 'bg-white border-slate-200/90 hover:border-slate-300'
       }`}
     >
@@ -111,7 +111,7 @@ const SortableSectionRow: React.FC<SortableSectionRowProps> = ({
         <div
           {...attributes}
           {...listeners}
-          className="text-slate-400 hover:text-blue-600 p-0.5 cursor-grab active:cursor-grabbing rounded transition"
+          className="text-slate-400 hover:text-[#425B9A] p-0.5 cursor-grab active:cursor-grabbing rounded transition"
           title="Tarik (drag) untuk geser urutan section"
           onClick={(e) => e.stopPropagation()}
         >
@@ -121,7 +121,7 @@ const SortableSectionRow: React.FC<SortableSectionRowProps> = ({
           {idx + 1}
         </span>
         <div className="truncate">
-          <p className={`text-xs font-semibold truncate ${isActive ? 'text-blue-700' : 'text-slate-800'}`}>
+          <p className={`text-xs font-semibold truncate ${isActive ? 'text-[#425B9A]' : 'text-slate-800'}`}>
             {getSectionLabel(section.type)}
           </p>
           <p className="text-[10px] text-slate-400 uppercase tracking-wider">
@@ -166,6 +166,7 @@ const SortableSectionRow: React.FC<SortableSectionRowProps> = ({
 };
 
 const COLOR_PRESETS = [
+  { name: 'Loka Signature', primary: '#425B9A', secondary: '#76C0EC', bg: '#ffffff' },
   { name: 'Kopi / Amber', primary: '#78350f', secondary: '#1c1917', bg: '#fef3c7' },
   { name: 'Royal Blue', primary: '#2563eb', secondary: '#0f172a', bg: '#f8fafc' },
   { name: 'Emerald Green', primary: '#059669', secondary: '#064e3b', bg: '#f0fdf4' },
@@ -175,6 +176,13 @@ const COLOR_PRESETS = [
 ];
 
 const GOOGLE_FONT_PRESETS = [
+  {
+    id: 'inter',
+    name: 'Inter (Rekomendasi)',
+    niche: 'Minimalis & Serba Guna',
+    fontClass: 'font-inter',
+    sample: 'Minimalis Rapi',
+  },
   {
     id: 'sans',
     name: 'Plus Jakarta Sans',
@@ -223,13 +231,6 @@ const GOOGLE_FONT_PRESETS = [
     niche: 'Perhiasan & Salon Premium',
     fontClass: 'font-cinzel uppercase',
     sample: 'Klasik Mulia',
-  },
-  {
-    id: 'inter',
-    name: 'Inter',
-    niche: 'Minimalis & Serba Guna',
-    fontClass: 'font-inter',
-    sample: 'Minimalis Rapi',
   },
 ];
 
@@ -315,7 +316,7 @@ export const EditorLeftSidebar: React.FC<Props> = ({
           onClick={() => setActiveTab('sections')}
           className={`flex-1 py-1.5 px-1 text-[11px] font-bold rounded-lg flex items-center justify-center gap-1 transition ${
             activeTab === 'sections'
-              ? 'bg-white text-blue-600 shadow-xs'
+              ? 'bg-white text-[#425B9A] shadow-xs'
               : 'text-slate-600 hover:text-slate-900'
           }`}
           title="Urutan Section"
@@ -328,7 +329,7 @@ export const EditorLeftSidebar: React.FC<Props> = ({
           onClick={() => setActiveTab('theme')}
           className={`flex-1 py-1.5 px-1 text-[11px] font-bold rounded-lg flex items-center justify-center gap-1 transition ${
             activeTab === 'theme'
-              ? 'bg-white text-blue-600 shadow-xs'
+              ? 'bg-white text-[#425B9A] shadow-xs'
               : 'text-slate-600 hover:text-slate-900'
           }`}
           title="Warna & Font"
@@ -341,7 +342,7 @@ export const EditorLeftSidebar: React.FC<Props> = ({
           onClick={() => setActiveTab('business')}
           className={`flex-1 py-1.5 px-1 text-[11px] font-bold rounded-lg flex items-center justify-center gap-1 transition ${
             activeTab === 'business'
-              ? 'bg-white text-blue-600 shadow-xs'
+              ? 'bg-white text-[#425B9A] shadow-xs'
               : 'text-slate-600 hover:text-slate-900'
           }`}
           title="Profil & WhatsApp"
@@ -354,7 +355,7 @@ export const EditorLeftSidebar: React.FC<Props> = ({
           onClick={() => setActiveTab('seo')}
           className={`flex-1 py-1.5 px-1 text-[11px] font-bold rounded-lg flex items-center justify-center gap-1 transition ${
             activeTab === 'seo'
-              ? 'bg-white text-blue-600 shadow-xs'
+              ? 'bg-white text-[#425B9A] shadow-xs'
               : 'text-slate-600 hover:text-slate-900'
           }`}
           title="SEO & Pratinjau Share Medsos/WhatsApp"
@@ -374,7 +375,7 @@ export const EditorLeftSidebar: React.FC<Props> = ({
             <button
               type="button"
               onClick={onOpenAddSection}
-              className="flex items-center gap-1 px-2.5 py-1 text-xs font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition"
+              className="flex items-center gap-1 px-2.5 py-1 text-xs font-bold text-[#425B9A] bg-[#425B9A]/10 hover:bg-[#425B9A]/20 rounded-lg transition"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Tambah</span>
@@ -503,7 +504,7 @@ export const EditorLeftSidebar: React.FC<Props> = ({
                       onClick={() => onUpdateTheme({ ...theme, font: f.id })}
                       className={`w-full text-left p-2.5 rounded-lg border transition flex items-center justify-between ${
                         isSelected
-                          ? 'border-blue-600 bg-blue-50/80 ring-1 ring-blue-500 text-blue-900 shadow-xs'
+                          ? 'border-[#425B9A] bg-[#425B9A]/5 ring-1 ring-[#425B9A] text-slate-900 shadow-xs'
                           : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50 text-slate-800'
                       }`}
                     >
@@ -511,7 +512,7 @@ export const EditorLeftSidebar: React.FC<Props> = ({
                         <div className="flex items-center gap-1.5">
                           <span className="text-xs font-semibold">{f.name}</span>
                           {isSelected && (
-                            <span className="w-1.5 h-1.5 rounded-full bg-blue-600 inline-block" />
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#425B9A] inline-block" />
                           )}
                         </div>
                         <p className="text-[10px] text-slate-500 truncate">{f.niche}</p>

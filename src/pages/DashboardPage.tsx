@@ -43,6 +43,7 @@ import { QrCodeModal } from '../components/common/QrCodeModal';
 import { LeadsModal } from '../components/common/LeadsModal';
 import { PricingModal } from '../components/modals/PricingModal';
 import { adminService, AdminAnnouncement } from '../services/admin.service';
+import logoClean from '../assets/Logo Loka (1) (1).png';
 import { useToast } from '../context/ToastContext';
 
 export type MerchantNavTab = 'websites' | 'leads' | 'analytics' | 'marketing' | 'templates' | 'settings' | 'admin';
@@ -72,6 +73,7 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
   const [selectedQrSite, setSelectedQrSite] = useState<Website | null>(null);
   const [selectedLeadsSite, setSelectedLeadsSite] = useState<Website | null>(null);
   const [duplicatingId, setDuplicatingId] = useState<string | null>(null);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [announcements, setAnnouncements] = useState<AdminAnnouncement[]>([]);
   const [dismissedAnnouncements, setDismissedAnnouncements] = useState<string[]>(() => {
     try {
@@ -210,25 +212,14 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
       {/* SaaS Sidebar (Fixed & Pinned for Both Admin and Client) */}
       <aside className="w-64 h-full bg-white border-r border-slate-200 hidden md:flex flex-col shrink-0 z-30 select-none">
         {/* Brand */}
-        <div className="h-16 px-6 border-b border-slate-100 flex items-center gap-3 shrink-0">
-          <div
-            className={`w-8 h-8 rounded-xl ${
-              isAdmin ? 'bg-purple-600' : 'bg-blue-600'
-            } flex items-center justify-center text-white font-bold shadow-xs`}
-          >
-            {isAdmin ? <ShieldCheck className="w-5 h-5" /> : 'L'}
-          </div>
-          <div>
-            <span className="font-extrabold text-base tracking-tight text-slate-900">
-              {isAdmin ? 'LokalSite Admin' : 'LokalSite'}
-            </span>
-            <span
-              className={`text-[10px] ${
-                isAdmin ? 'text-purple-600' : 'text-blue-600'
-              } font-semibold block leading-none`}
-            >
-              {isAdmin ? 'Monitoring Portal' : 'SaaS Builder'}
-            </span>
+        <div className="h-16 px-6 border-b border-slate-100 flex items-center justify-between shrink-0">
+          <div className="flex items-center gap-2.5">
+            <img src={logoClean} alt="Loka" className="h-8 w-auto object-contain" />
+            {isAdmin && (
+              <span className="text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md bg-[#425B9A]/10 text-[#425B9A] border border-[#425B9A]/20">
+                Admin
+              </span>
+            )}
           </div>
         </div>
 
@@ -249,11 +240,11 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
                 }}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition cursor-pointer ${
                   activeNav === 'admin' && adminTab === 'users'
-                    ? 'bg-purple-100 text-purple-800 font-bold shadow-2xs'
+                    ? 'bg-[#425B9A]/10 text-[#425B9A] font-bold border-r-2 border-[#425B9A]'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                 }`}
               >
-                <Users className="w-4 h-4 text-purple-600" />
+                <Users className={`w-4 h-4 ${activeNav === 'admin' && adminTab === 'users' ? 'text-[#425B9A]' : 'text-slate-500'}`} />
                 <span>Pengguna & Sesi</span>
               </button>
 
@@ -265,11 +256,11 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
                 }}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition cursor-pointer ${
                   activeNav === 'admin' && adminTab === 'moderation'
-                    ? 'bg-purple-100 text-purple-800 font-bold shadow-2xs'
+                    ? 'bg-[#425B9A]/10 text-[#425B9A] font-bold border-r-2 border-[#425B9A]'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                 }`}
               >
-                <ShieldAlert className="w-4 h-4 text-amber-600" />
+                <ShieldAlert className={`w-4 h-4 ${activeNav === 'admin' && adminTab === 'moderation' ? 'text-[#425B9A]' : 'text-slate-500'}`} />
                 <span>Moderasi Website</span>
               </button>
 
@@ -281,11 +272,11 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
                 }}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition cursor-pointer ${
                   activeNav === 'admin' && adminTab === 'announcements'
-                    ? 'bg-purple-100 text-purple-800 font-bold shadow-2xs'
+                    ? 'bg-[#425B9A]/10 text-[#425B9A] font-bold border-r-2 border-[#425B9A]'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                 }`}
               >
-                <Megaphone className="w-4 h-4 text-blue-600" />
+                <Megaphone className={`w-4 h-4 ${activeNav === 'admin' && adminTab === 'announcements' ? 'text-[#425B9A]' : 'text-slate-500'}`} />
                 <span>Broadcast Pengumuman</span>
               </button>
 
@@ -297,11 +288,11 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
                 }}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition cursor-pointer ${
                   activeNav === 'admin' && adminTab === 'export'
-                    ? 'bg-purple-100 text-purple-800 font-bold shadow-2xs'
+                    ? 'bg-[#425B9A]/10 text-[#425B9A] font-bold border-r-2 border-[#425B9A]'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                 }`}
               >
-                <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
+                <FileSpreadsheet className={`w-4 h-4 ${activeNav === 'admin' && adminTab === 'export' ? 'text-[#425B9A]' : 'text-slate-500'}`} />
                 <span>Ekspor Laporan (Excel)</span>
               </button>
 
@@ -313,11 +304,11 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
                 }}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition cursor-pointer ${
                   activeNav === 'admin' && adminTab === 'audit'
-                    ? 'bg-purple-100 text-purple-800 font-bold shadow-2xs'
+                    ? 'bg-[#425B9A]/10 text-[#425B9A] font-bold border-r-2 border-[#425B9A]'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                 }`}
               >
-                <History className="w-4 h-4 text-indigo-600" />
+                <History className={`w-4 h-4 ${activeNav === 'admin' && adminTab === 'audit' ? 'text-[#425B9A]' : 'text-slate-500'}`} />
                 <span>Log Aktivitas (Audit)</span>
               </button>
 
@@ -330,11 +321,11 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
                 onClick={() => setActiveNav('settings')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition cursor-pointer ${
                   activeNav === 'settings'
-                    ? 'bg-purple-100 text-purple-800 font-bold shadow-2xs'
+                    ? 'bg-[#425B9A]/10 text-[#425B9A] font-bold border-r-2 border-[#425B9A]'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                 }`}
               >
-                <Settings className="w-4 h-4 text-slate-500" />
+                <Settings className={`w-4 h-4 ${activeNav === 'settings' ? 'text-[#425B9A]' : 'text-slate-500'}`} />
                 <span>Pengaturan Akun</span>
               </button>
             </>
@@ -350,11 +341,11 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
                 onClick={() => setActiveNav('websites')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition cursor-pointer ${
                   activeNav === 'websites'
-                    ? 'bg-blue-50 text-blue-700 font-bold'
+                    ? 'bg-[#425B9A]/10 text-[#425B9A] font-bold border-r-2 border-[#425B9A]'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                 }`}
               >
-                <Layers className="w-4 h-4 text-blue-600" />
+                <Layers className={`w-4 h-4 ${activeNav === 'websites' ? 'text-[#425B9A]' : 'text-slate-500'}`} />
                 <span>Website Saya</span>
                 <span className="ml-auto text-[10px] bg-slate-100 px-2 py-0.5 rounded-full text-slate-600 font-bold">
                   {websites.length}
@@ -366,14 +357,17 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
                 onClick={() => setActiveNav('leads')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition cursor-pointer ${
                   activeNav === 'leads'
-                    ? 'bg-blue-50 text-blue-700 font-bold'
+                    ? 'bg-[#425B9A]/10 text-[#425B9A] font-bold border-r-2 border-[#425B9A]'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                 }`}
               >
-                <Inbox className="w-4 h-4 text-emerald-600" />
+                <Inbox className={`w-4 h-4 ${activeNav === 'leads' ? 'text-[#425B9A]' : 'text-slate-500'}`} />
                 <span>Kotak Masuk Leads</span>
                 {unreadLeadsCount > 0 && (
-                  <span className="ml-auto text-[10px] bg-blue-600 text-white px-2 py-0.5 rounded-full font-bold">
+                  <span
+                    className="ml-auto text-[10px] text-white px-2 py-0.5 rounded-full font-bold"
+                    style={{ backgroundColor: '#425B9A' }}
+                  >
                     {unreadLeadsCount}
                   </span>
                 )}
@@ -384,11 +378,11 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
                 onClick={() => setActiveNav('analytics')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition cursor-pointer ${
                   activeNav === 'analytics'
-                    ? 'bg-blue-50 text-blue-700 font-bold'
+                    ? 'bg-[#425B9A]/10 text-[#425B9A] font-bold border-r-2 border-[#425B9A]'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                 }`}
               >
-                <TrendingUp className="w-4 h-4 text-indigo-600" />
+                <TrendingUp className={`w-4 h-4 ${activeNav === 'analytics' ? 'text-[#425B9A]' : 'text-slate-500'}`} />
                 <span>Analitik & Trafik</span>
               </button>
 
@@ -397,11 +391,11 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
                 onClick={() => setActiveNav('marketing')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition cursor-pointer ${
                   activeNav === 'marketing'
-                    ? 'bg-blue-50 text-blue-700 font-bold'
+                    ? 'bg-[#425B9A]/10 text-[#425B9A] font-bold border-r-2 border-[#425B9A]'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                 }`}
               >
-                <QrCode className="w-4 h-4 text-purple-600" />
+                <QrCode className={`w-4 h-4 ${activeNav === 'marketing' ? 'text-[#425B9A]' : 'text-slate-500'}`} />
                 <span>Promosi & QR Meja</span>
               </button>
 
@@ -410,13 +404,13 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
                 onClick={() => setActiveNav('templates')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition cursor-pointer ${
                   activeNav === 'templates'
-                    ? 'bg-blue-50 text-blue-700 font-bold'
+                    ? 'bg-[#425B9A]/10 text-[#425B9A] font-bold border-r-2 border-[#425B9A]'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                 }`}
               >
-                <LayoutTemplate className="w-4 h-4 text-amber-500" />
+                <LayoutTemplate className={`w-4 h-4 ${activeNav === 'templates' ? 'text-[#425B9A]' : 'text-slate-500'}`} />
                 <span>Galeri Template</span>
-                <span className="ml-auto text-[10px] bg-amber-50 text-amber-700 px-2 py-0.5 rounded-full font-bold">
+                <span className="ml-auto text-[10px] bg-[#76C0EC]/20 text-[#425B9A] px-2 py-0.5 rounded-full font-bold">
                   {PRESET_TEMPLATES.length}
                 </span>
               </button>
@@ -428,11 +422,11 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
               <button
                 type="button"
                 onClick={() => setIsPricingModalOpen(true)}
-                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition cursor-pointer text-slate-600 hover:text-amber-800 hover:bg-amber-50/70"
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition cursor-pointer text-slate-600 hover:bg-slate-50"
               >
-                <Crown className="w-4 h-4 text-amber-500 fill-amber-400" />
+                <Crown className="w-4 h-4 text-[#76C0EC] fill-[#76C0EC]/30" />
                 <span>Paket Langganan PRO</span>
-                <span className="ml-auto text-[9px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded-md font-bold uppercase">
+                <span className="ml-auto text-[9px] bg-[#76C0EC]/20 text-[#425B9A] px-1.5 py-0.5 rounded-md font-bold uppercase">
                   {user?.plan === 'pro' ? 'Aktif' : 'Upgrade'}
                 </span>
               </button>
@@ -442,11 +436,11 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
                 onClick={() => setActiveNav('settings')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition cursor-pointer ${
                   activeNav === 'settings'
-                    ? 'bg-blue-50 text-blue-700 font-bold'
+                    ? 'bg-[#425B9A]/10 text-[#425B9A] font-bold border-r-2 border-[#425B9A]'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                 }`}
               >
-                <Settings className="w-4 h-4 text-slate-500" />
+                <Settings className={`w-4 h-4 ${activeNav === 'settings' ? 'text-[#425B9A]' : 'text-slate-500'}`} />
                 <span>Pengaturan Akun</span>
               </button>
             </>
@@ -461,7 +455,7 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
           </div>
           <button
             type="button"
-            onClick={logout}
+            onClick={() => setIsLogoutModalOpen(true)}
             className="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition cursor-pointer"
             title="Logout"
           >
@@ -476,16 +470,12 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
         <header className="h-16 bg-white border-b border-slate-200 px-6 sm:px-8 flex items-center justify-between shrink-0 z-20">
           <div className="flex items-center gap-3">
             <div className="md:hidden flex items-center gap-2">
-              <div
-                className={`w-7 h-7 rounded-lg ${
-                  isAdmin ? 'bg-purple-600' : 'bg-blue-600'
-                } flex items-center justify-center text-white font-bold text-xs`}
-              >
-                {isAdmin ? <ShieldCheck className="w-4 h-4" /> : 'L'}
-              </div>
-              <span className="font-bold text-sm text-slate-900">
-                {isAdmin ? 'LokalSite Admin' : 'LokalSite'}
-              </span>
+              <img src={logoClean} alt="Loka" className="h-6 w-auto object-contain" />
+              {isAdmin && (
+                <span className="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded bg-[#425B9A]/10 text-[#425B9A] border border-[#425B9A]/20">
+                  Admin
+                </span>
+              )}
             </div>
             <div className="hidden md:block">
               <h2 className="text-sm font-bold text-slate-900">
@@ -546,9 +536,10 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
               <button
                 type="button"
                 onClick={() => setIsCreateModalOpen(true)}
-                className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-sm active:scale-95 transition cursor-pointer"
+                style={{ backgroundColor: '#425B9A' }}
+                className="flex items-center gap-2 px-4 py-2 hover:opacity-95 text-white rounded-xl text-xs font-bold shadow-sm active:scale-95 transition cursor-pointer"
               >
-                <Plus className="w-4 h-4" />
+                <Plus className="w-4 h-4 text-[#76C0EC]" />
                 <span>+ Buat Website</span>
               </button>
             )}
@@ -995,43 +986,98 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
 
           {/* TAB 3: SETTINGS */}
           {activeNav === 'settings' && (
-            <div className="max-w-xl bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 space-y-6">
-              <h2 className="text-lg font-bold text-slate-900">
-                {isAdmin ? 'Pengaturan Akun Administrator' : 'Profil & Pengaturan Akun'}
-              </h2>
+            <div className="w-full max-w-2xl bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-8 space-y-6 shadow-xs">
+              <div className="flex items-center gap-3 pb-4 border-b border-slate-100">
+                <div className="w-12 h-12 rounded-2xl bg-[#425B9A]/10 text-[#425B9A] flex items-center justify-center font-bold text-lg shrink-0">
+                  {user?.name?.charAt(0)?.toUpperCase() || 'U'}
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold text-slate-900">
+                    {isAdmin ? 'Pengaturan Akun Administrator' : 'Profil & Pengaturan Akun'}
+                  </h2>
+                  <p className="text-xs text-slate-500">
+                    {isAdmin
+                      ? 'Kelola profil administrator sistem LOKA'
+                      : 'Informasi akun merchant dan status langganan Anda'}
+                  </p>
+                </div>
+              </div>
+
               <div className="space-y-4 text-xs">
                 <div>
-                  <label className="block font-semibold text-slate-600 mb-1">Nama Lengkap</label>
+                  <label className="block font-semibold text-slate-700 mb-1.5">Nama Lengkap</label>
                   <input
                     type="text"
                     disabled
                     value={user?.name || ''}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-700"
+                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-medium"
                   />
                 </div>
                 <div>
-                  <label className="block font-semibold text-slate-600 mb-1">Alamat Email</label>
+                  <label className="block font-semibold text-slate-700 mb-1.5">Alamat Email</label>
                   <input
                     type="text"
                     disabled
                     value={user?.email || ''}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-700"
+                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-medium"
                   />
                 </div>
-                <div>
-                  <label className="block font-semibold text-slate-600 mb-1">Tingkatan Akses (Role)</label>
-                  <div className="px-3 py-2 bg-purple-50 border border-purple-200 rounded-xl text-purple-800 font-bold uppercase text-[11px] inline-block">
-                    {user?.role}
+
+                {/* Tingkatan Akses (Role) - HANYA DITAMPILKAN UNTUK ADMIN */}
+                {isAdmin && (
+                  <div>
+                    <label className="block font-semibold text-slate-700 mb-1.5">Tingkatan Akses (Role)</label>
+                    <div className="px-3.5 py-2 bg-[#425B9A]/10 border border-[#425B9A]/20 rounded-xl text-[#425B9A] font-bold uppercase text-[11px] inline-block">
+                      {user?.role}
+                    </div>
                   </div>
-                </div>
+                )}
+
+                {/* Status Paket Khusus Merchant */}
+                {!isAdmin && (
+                  <div>
+                    <label className="block font-semibold text-slate-700 mb-1.5">Status Paket Langganan</label>
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-slate-50 rounded-2xl border border-slate-200/80">
+                      <div className="flex items-center gap-2.5">
+                        {user?.plan === 'pro' ? (
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-black bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-2xs">
+                            <Crown className="w-3.5 h-3.5 fill-current" />
+                            PRO PLAN AKTIF
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-bold bg-slate-200 text-slate-700">
+                            FREE PLAN (Standar)
+                          </span>
+                        )}
+                        <span className="text-[11px] text-slate-500">
+                          {user?.plan === 'pro' ? 'Akses penuh tanpa watermark' : 'Batas maksimal 1 website'}
+                        </span>
+                      </div>
+                      {user?.plan !== 'pro' && (
+                        <button
+                          type="button"
+                          onClick={() => setIsPricingModalOpen(true)}
+                          className="px-3.5 py-1.5 bg-[#425B9A] hover:bg-[#354a7d] text-white rounded-xl text-xs font-bold transition shadow-xs cursor-pointer active:scale-95 self-start sm:self-auto"
+                        >
+                          Upgrade Pro
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                )}
+
                 <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
-                  <span className="text-slate-500">Keluar dari sesi saat ini</span>
+                  <div className="space-y-0.5">
+                    <span className="text-slate-700 font-bold block">Keluar dari Akun</span>
+                    <span className="text-slate-400 text-[11px] block">Akhiri sesi login perangkat ini</span>
+                  </div>
                   <button
                     type="button"
-                    onClick={logout}
-                    className="px-4 py-2 bg-red-50 text-red-600 hover:bg-red-100 rounded-xl font-bold transition cursor-pointer"
+                    onClick={() => setIsLogoutModalOpen(true)}
+                    className="px-4 py-2 bg-red-50 text-red-600 hover:bg-red-100 rounded-xl font-bold transition cursor-pointer active:scale-95 flex items-center gap-1.5"
                   >
-                    Logout
+                    <LogOut className="w-3.5 h-3.5" />
+                    <span>Logout</span>
                   </button>
                 </div>
               </div>
@@ -1060,7 +1106,7 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
                 setAdminTab('users');
               }}
               className={`flex flex-col items-center gap-1 py-1 px-2 rounded-xl text-[10px] font-bold transition shrink-0 cursor-pointer ${
-                activeNav === 'admin' && adminTab === 'users' ? 'text-purple-600 bg-purple-50' : 'text-slate-400 hover:text-slate-700'
+                activeNav === 'admin' && adminTab === 'users' ? 'text-[#425B9A] bg-[#425B9A]/10' : 'text-slate-400 hover:text-slate-700'
               }`}
             >
               <Users className="w-4 h-4" />
@@ -1073,7 +1119,7 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
                 setAdminTab('moderation');
               }}
               className={`flex flex-col items-center gap-1 py-1 px-2 rounded-xl text-[10px] font-bold transition shrink-0 cursor-pointer ${
-                activeNav === 'admin' && adminTab === 'moderation' ? 'text-purple-600 bg-purple-50' : 'text-slate-400 hover:text-slate-700'
+                activeNav === 'admin' && adminTab === 'moderation' ? 'text-[#425B9A] bg-[#425B9A]/10' : 'text-slate-400 hover:text-slate-700'
               }`}
             >
               <ShieldAlert className="w-4 h-4" />
@@ -1086,7 +1132,7 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
                 setAdminTab('announcements');
               }}
               className={`flex flex-col items-center gap-1 py-1 px-2 rounded-xl text-[10px] font-bold transition shrink-0 cursor-pointer ${
-                activeNav === 'admin' && adminTab === 'announcements' ? 'text-purple-600 bg-purple-50' : 'text-slate-400 hover:text-slate-700'
+                activeNav === 'admin' && adminTab === 'announcements' ? 'text-[#425B9A] bg-[#425B9A]/10' : 'text-slate-400 hover:text-slate-700'
               }`}
             >
               <Megaphone className="w-4 h-4" />
@@ -1099,7 +1145,7 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
                 setAdminTab('export');
               }}
               className={`flex flex-col items-center gap-1 py-1 px-2 rounded-xl text-[10px] font-bold transition shrink-0 cursor-pointer ${
-                activeNav === 'admin' && adminTab === 'export' ? 'text-purple-600 bg-purple-50' : 'text-slate-400 hover:text-slate-700'
+                activeNav === 'admin' && adminTab === 'export' ? 'text-[#425B9A] bg-[#425B9A]/10' : 'text-slate-400 hover:text-slate-700'
               }`}
             >
               <FileSpreadsheet className="w-4 h-4" />
@@ -1112,7 +1158,7 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
                 setAdminTab('audit');
               }}
               className={`flex flex-col items-center gap-1 py-1 px-2 rounded-xl text-[10px] font-bold transition shrink-0 cursor-pointer ${
-                activeNav === 'admin' && adminTab === 'audit' ? 'text-purple-600 bg-purple-50' : 'text-slate-400 hover:text-slate-700'
+                activeNav === 'admin' && adminTab === 'audit' ? 'text-[#425B9A] bg-[#425B9A]/10' : 'text-slate-400 hover:text-slate-700'
               }`}
             >
               <History className="w-4 h-4" />
@@ -1122,7 +1168,7 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
               type="button"
               onClick={() => setActiveNav('settings')}
               className={`flex flex-col items-center gap-1 py-1 px-2 rounded-xl text-[10px] font-bold transition shrink-0 cursor-pointer ${
-                activeNav === 'settings' ? 'text-purple-600 bg-purple-50' : 'text-slate-400 hover:text-slate-700'
+                activeNav === 'settings' ? 'text-[#425B9A] bg-[#425B9A]/10' : 'text-slate-400 hover:text-slate-700'
               }`}
             >
               <Settings className="w-4 h-4" />
@@ -1130,7 +1176,7 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
             </button>
             <button
               type="button"
-              onClick={logout}
+              onClick={() => setIsLogoutModalOpen(true)}
               className="flex flex-col items-center gap-1 py-1 px-2 rounded-xl text-[10px] font-bold text-slate-400 hover:text-red-600 transition shrink-0 cursor-pointer"
             >
               <LogOut className="w-4 h-4" />
@@ -1143,7 +1189,7 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
               type="button"
               onClick={() => setActiveNav('websites')}
               className={`flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl text-[10px] font-bold transition shrink-0 cursor-pointer ${
-                activeNav === 'websites' ? 'text-blue-600 bg-blue-50' : 'text-slate-400 hover:text-slate-700'
+                activeNav === 'websites' ? 'text-[#425B9A] bg-[#425B9A]/10' : 'text-slate-400 hover:text-slate-700'
               }`}
             >
               <Layers className="w-4 h-4" />
@@ -1153,20 +1199,20 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
               type="button"
               onClick={() => setActiveNav('leads')}
               className={`flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl text-[10px] font-bold transition shrink-0 cursor-pointer relative ${
-                activeNav === 'leads' ? 'text-blue-600 bg-blue-50' : 'text-slate-400 hover:text-slate-700'
+                activeNav === 'leads' ? 'text-[#425B9A] bg-[#425B9A]/10' : 'text-slate-400 hover:text-slate-700'
               }`}
             >
               <Inbox className="w-4 h-4" />
               <span>Leads</span>
               {unreadLeadsCount > 0 && (
-                <span className="absolute top-0.5 right-1 w-2 h-2 rounded-full bg-blue-600 ring-2 ring-white" />
+                <span className="absolute top-0.5 right-1 w-2 h-2 rounded-full bg-[#425B9A] ring-2 ring-white" />
               )}
             </button>
             <button
               type="button"
               onClick={() => setActiveNav('analytics')}
               className={`flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl text-[10px] font-bold transition shrink-0 cursor-pointer ${
-                activeNav === 'analytics' ? 'text-blue-600 bg-blue-50' : 'text-slate-400 hover:text-slate-700'
+                activeNav === 'analytics' ? 'text-[#425B9A] bg-[#425B9A]/10' : 'text-slate-400 hover:text-slate-700'
               }`}
             >
               <TrendingUp className="w-4 h-4" />
@@ -1176,7 +1222,7 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
               type="button"
               onClick={() => setActiveNav('marketing')}
               className={`flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl text-[10px] font-bold transition shrink-0 cursor-pointer ${
-                activeNav === 'marketing' ? 'text-blue-600 bg-blue-50' : 'text-slate-400 hover:text-slate-700'
+                activeNav === 'marketing' ? 'text-[#425B9A] bg-[#425B9A]/10' : 'text-slate-400 hover:text-slate-700'
               }`}
             >
               <QrCode className="w-4 h-4" />
@@ -1186,7 +1232,7 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
               type="button"
               onClick={() => setActiveNav('templates')}
               className={`flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl text-[10px] font-bold transition shrink-0 cursor-pointer ${
-                activeNav === 'templates' ? 'text-blue-600 bg-blue-50' : 'text-slate-400 hover:text-slate-700'
+                activeNav === 'templates' ? 'text-[#425B9A] bg-[#425B9A]/10' : 'text-slate-400 hover:text-slate-700'
               }`}
             >
               <LayoutTemplate className="w-4 h-4" />
@@ -1196,7 +1242,7 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
               type="button"
               onClick={() => setActiveNav('settings')}
               className={`flex flex-col items-center gap-1 py-1 px-2 rounded-xl text-[10px] font-bold transition shrink-0 cursor-pointer ${
-                activeNav === 'settings' ? 'text-blue-600 bg-blue-50' : 'text-slate-400 hover:text-slate-700'
+                activeNav === 'settings' ? 'text-[#425B9A] bg-[#425B9A]/10' : 'text-slate-400 hover:text-slate-700'
               }`}
             >
               <Settings className="w-4 h-4" />
@@ -1204,7 +1250,7 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
             </button>
             <button
               type="button"
-              onClick={logout}
+              onClick={() => setIsLogoutModalOpen(true)}
               className="flex flex-col items-center gap-1 py-1 px-2 rounded-xl text-[10px] font-bold text-slate-400 hover:text-red-600 transition shrink-0 cursor-pointer"
             >
               <LogOut className="w-4 h-4" />
@@ -1256,6 +1302,46 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
             }}
           />
         </>
+      )}
+
+      {/* Logout Confirmation Modal */}
+      {isLogoutModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs animate-in fade-in duration-150">
+          <div className="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-100 space-y-5 text-center">
+            <div className="w-14 h-14 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center mx-auto shadow-inner">
+              <LogOut className="w-7 h-7" />
+            </div>
+
+            <div className="space-y-1.5">
+              <h3 className="text-lg font-black text-slate-900 tracking-tight">
+                Konfirmasi Keluar
+              </h3>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                Apakah Anda yakin ingin keluar dari akun <strong className="text-slate-800">{user?.name || 'ini'}</strong>? Anda harus login kembali untuk mengakses dashboard Anda.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2.5 pt-1">
+              <button
+                type="button"
+                onClick={() => setIsLogoutModalOpen(false)}
+                className="flex-1 py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition cursor-pointer"
+              >
+                Batal
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsLogoutModalOpen(false);
+                  logout();
+                }}
+                className="flex-1 py-2.5 px-4 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl transition shadow-xs cursor-pointer active:scale-95"
+              >
+                Ya, Keluar
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

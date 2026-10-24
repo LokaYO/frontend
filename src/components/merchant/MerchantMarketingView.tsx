@@ -17,6 +17,7 @@ import {
   Sliders,
   CheckCircle2,
 } from 'lucide-react';
+import logoClean from '../../assets/Logo Loka (1) (1).png';
 
 interface Props {
   websites: Website[];
@@ -99,7 +100,7 @@ export const MerchantMarketingView: React.FC<Props> = ({ websites, onOpenPublicS
   if (websites.length === 0) {
     return (
       <div className="bg-white rounded-3xl border border-slate-200/90 p-12 text-center max-w-md mx-auto space-y-4 shadow-xs">
-        <div className="w-16 h-16 rounded-3xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto shadow-inner">
+        <div className="w-16 h-16 rounded-3xl bg-[#425B9A]/10 text-[#425B9A] flex items-center justify-center mx-auto shadow-inner">
           <QrCode className="w-8 h-8" />
         </div>
         <div className="space-y-1">
@@ -118,7 +119,7 @@ export const MerchantMarketingView: React.FC<Props> = ({ websites, onOpenPublicS
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-slate-200/90 shadow-xs">
         <div>
           <div className="flex items-center gap-2">
-            <span className="p-2 rounded-xl bg-purple-50 text-purple-700">
+            <span className="p-2 rounded-xl bg-[#425B9A]/10 text-[#425B9A]">
               <QrCode className="w-5 h-5" />
             </span>
             <h1 className="text-xl font-extrabold text-slate-900 tracking-tight">
@@ -137,7 +138,7 @@ export const MerchantMarketingView: React.FC<Props> = ({ websites, onOpenPublicS
             <select
               value={selectedWebsiteId}
               onChange={(e) => setSelectedWebsiteId(e.target.value)}
-              className="text-xs font-bold px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-1 focus:ring-purple-500 text-slate-800 cursor-pointer"
+              className="text-xs font-bold px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-1 focus:ring-[#425B9A] text-slate-800 cursor-pointer"
             >
               {websites.map((w) => (
                 <option key={w.id} value={w.id}>
@@ -156,7 +157,7 @@ export const MerchantMarketingView: React.FC<Props> = ({ websites, onOpenPublicS
           {/* Card: Customizer Stand Meja */}
           <div className="bg-white rounded-3xl border border-slate-200/90 p-6 shadow-xs space-y-5">
             <div className="flex items-center gap-2 pb-2 border-b border-slate-100">
-              <Sliders className="w-4 h-4 text-purple-600" />
+              <Sliders className="w-4 h-4 text-[#425B9A]" />
               <h2 className="text-sm font-bold text-slate-900">Kustomisasi Kartu Meja</h2>
             </div>
 
@@ -168,7 +169,7 @@ export const MerchantMarketingView: React.FC<Props> = ({ websites, onOpenPublicS
                 value={standTitle}
                 onChange={(e) => setStandTitle(e.target.value)}
                 placeholder="Contoh: Kopi Senja - Meja 05"
-                className="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-1 focus:ring-purple-500 focus:bg-white font-semibold"
+                className="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-1 focus:ring-[#425B9A] focus:bg-white font-semibold"
               />
             </div>
 
@@ -180,7 +181,7 @@ export const MerchantMarketingView: React.FC<Props> = ({ websites, onOpenPublicS
                 value={standSubtitle}
                 onChange={(e) => setStandSubtitle(e.target.value)}
                 placeholder="Contoh: Scan untuk Lihat Menu & Layanan"
-                className="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-1 focus:ring-purple-500 focus:bg-white"
+                className="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-1 focus:ring-[#425B9A] focus:bg-white"
               />
             </div>
 
@@ -190,9 +191,9 @@ export const MerchantMarketingView: React.FC<Props> = ({ websites, onOpenPublicS
               <div className="flex items-center gap-2.5">
                 {[
                   { color: '#0f172a', label: 'Classic Slate' },
-                  { color: '#2563eb', label: 'Royal Blue' },
+                  { color: '#425B9A', label: 'Loka Navy' },
+                  { color: '#76C0EC', label: 'Loka Sky' },
                   { color: '#059669', label: 'Emerald' },
-                  { color: '#7c3aed', label: 'Purple' },
                   { color: '#ea580c', label: 'Warm Orange' },
                 ].map((c) => (
                   <button
@@ -201,7 +202,7 @@ export const MerchantMarketingView: React.FC<Props> = ({ websites, onOpenPublicS
                     onClick={() => setQrColor(c.color)}
                     style={{ backgroundColor: c.color }}
                     className={`w-7 h-7 rounded-full transition-transform cursor-pointer shadow-xs ${
-                      qrColor === c.color ? 'ring-3 ring-purple-300 scale-110' : 'hover:scale-105'
+                      qrColor === c.color ? 'ring-3 ring-[#425B9A]/40 scale-110' : 'hover:scale-105'
                     }`}
                     title={c.label}
                   />
@@ -214,7 +215,7 @@ export const MerchantMarketingView: React.FC<Props> = ({ websites, onOpenPublicS
               <button
                 type="button"
                 onClick={handlePrint}
-                className="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-sm transition active:scale-95 cursor-pointer"
+                className="w-full py-3 bg-[#425B9A] hover:bg-[#354a7d] text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-sm transition active:scale-95 cursor-pointer"
               >
                 <Printer className="w-4 h-4" />
                 <span>Cetak Stand Meja (Print / PDF)</span>
@@ -249,7 +250,7 @@ export const MerchantMarketingView: React.FC<Props> = ({ websites, onOpenPublicS
               <button
                 type="button"
                 onClick={handleCopyLink}
-                className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold flex items-center gap-1.5 transition shrink-0 cursor-pointer shadow-2xs"
+                className="px-3 py-1.5 rounded-lg bg-[#425B9A] hover:bg-[#354a7d] text-white text-xs font-bold flex items-center gap-1.5 transition shrink-0 cursor-pointer shadow-2xs"
               >
                 {copiedLink ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                 <span>{copiedLink ? 'Tersalin' : 'Salin'}</span>
@@ -337,7 +338,7 @@ export const MerchantMarketingView: React.FC<Props> = ({ websites, onOpenPublicS
             {/* Card Footer Watermark */}
             <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-400 font-mono">
               <span className="truncate max-w-[160px]">/sites/{selectedWebsite?.slug}</span>
-              <span className="font-bold text-slate-600">⚡ LOKA</span>
+              <img src={logoClean} alt="Loka" className="h-3.5 w-auto object-contain" />
             </div>
           </div>
 

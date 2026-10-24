@@ -12,38 +12,36 @@ import {
   KeyRound,
   CheckCircle2,
 } from 'lucide-react';
+import logoWithTagline from '../assets/Logo Loka (2).png';
 
 interface Props {
   onNavigateHome: () => void;
+  onNavigateUserLogin?: () => void;
 }
 
-export const AdminLoginPage: React.FC<Props> = ({ onNavigateHome }) => {
+export const AdminLoginPage: React.FC<Props> = ({ onNavigateHome, onNavigateUserLogin }) => {
   const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  const handleAdminSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg(null);
     setLoading(true);
 
     try {
       const data = await authService.login(email, password);
-
-      // Guard: Pastikan role adalah admin atau support
+      // Validasi role harus staf internal (admin / support)
       if (data.user.role !== 'admin' && data.user.role !== 'support') {
-        setErrorMsg(
-          `Akses Ditolak: Akun (${data.user.email}) memiliki role '${data.user.role}'. Portal ini khusus Administrator & Tim Support. Silakan login di portal pengguna utama.`
+        throw new Error(
+          'Akun Anda terdaftar sebagai Merchant biasa, bukan Administrator. Silakan login melalui halaman login merchant.'
         );
-        return;
       }
-
       login(data.token, data.user);
     } catch (err: any) {
-      console.error('Admin Auth Error:', err);
-      setErrorMsg(err.message || 'Kredensial administrator tidak valid');
+      setErrorMsg(err.message || 'Login administrator gagal. Periksa email & password.');
     } finally {
       setLoading(false);
     }
@@ -63,112 +61,123 @@ export const AdminLoginPage: React.FC<Props> = ({ onNavigateHome }) => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col justify-center items-center p-4 relative overflow-hidden select-none">
-      {/* Background Cyber Ambient Glows */}
-      <div className="absolute top-1/4 -left-32 w-96 h-96 bg-purple-600/15 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-indigo-600/15 rounded-full blur-3xl pointer-events-none" />
+    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4 animate-fade-in">
+      <div className="max-w-md w-full bg-white rounded-3xl shadow-xl border border-slate-200/80 p-8 space-y-6 animate-scale-up">
+        {/* Top Navigation & Back */}
+        <div className="flex items-center justify-between">
+          <button
+            type="button"
+            onClick={onNavigateHome}
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-800 transition cursor-pointer"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>Kembali ke Beranda</span>
+          </button>
 
-      {/* Main Admin Container */}
-      <div className="max-w-md w-full bg-slate-900/90 border border-slate-800 rounded-3xl p-8 space-y-6 shadow-2xl backdrop-blur-xl relative z-10">
-        {/* Top Header Badge */}
+          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-[#425B9A]/10 text-[#425B9A] border border-[#425B9A]/20">
+            Akses Internal (Admin)
+          </span>
+        </div>
+
+        {/* Logo & Headline */}
         <div className="text-center space-y-3">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-400 text-[10px] font-black tracking-widest uppercase">
-            <Server className="w-3 h-3" />
-            <span>Internal Staff & Administrator Portal</span>
+          <div className="flex justify-center">
+            <img
+              src={logoWithTagline}
+              alt="Loka - Your Bussines, Online"
+              className="h-14 w-auto object-contain drop-shadow-xs"
+            />
           </div>
 
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-purple-700 to-indigo-600 text-white flex items-center justify-center mx-auto shadow-lg shadow-purple-600/30 border border-purple-400/20">
-            <ShieldCheck className="w-7 h-7" />
-          </div>
-
-          <div>
-            <h1 className="text-xl font-extrabold text-white tracking-tight">
-              LOKA Admin Monitoring
+          <div className="space-y-1">
+            <h1 className="text-xl font-extrabold text-slate-900 tracking-tight flex items-center justify-center gap-1.5">
+              <span>Portal Administrator</span>
+              <span className="text-[#425B9A]">(Admin)</span>
             </h1>
-            <p className="text-xs text-slate-400 mt-1 max-w-xs mx-auto">
-              Pusat kendali dan monitoring aktivitas client, sesi login, serta website yang dibuat pengguna.
+            <p className="text-xs text-slate-500 max-w-xs mx-auto">
+              Pusat kendali dan pengawasan seluruh client UMKM, moderasi konten landing page, serta log audit sistem.
             </p>
           </div>
         </div>
 
-        {/* Security Alert Notice */}
-        <div className="p-3.5 rounded-2xl bg-slate-800/60 border border-slate-700/60 flex items-start gap-3 text-slate-300">
-          <ShieldAlert className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-          <p className="text-[11px] leading-relaxed text-slate-300">
-            <strong className="text-amber-300 font-bold">Akses Terbatas:</strong> Halaman ini dilindungi autentikasi JWT dan pencatatan sesi IP. Hanya untuk role <span className="text-purple-300 font-bold">admin</span> & <span className="text-purple-300 font-bold">support</span>.
-          </p>
-        </div>
-
-        {/* Quick Credentials Buttons */}
+        {/* 1-Click Quick Credentials for Admin/Support */}
         <div className="space-y-2">
-          <span className="text-[10px] uppercase tracking-wider font-extrabold text-slate-500 block">
-            Akses Cepat (Pre-Seeded Accounts):
+          <span className="text-[10px] uppercase tracking-wider font-extrabold text-slate-400 block text-center">
+            Akses Cepat Pengujian (Admin & Support):
           </span>
           <div className="grid grid-cols-2 gap-2">
             <button
               type="button"
               disabled={loading}
               onClick={() => handleQuickLogin('admin@lokalsite.id')}
-              className="p-2.5 rounded-xl bg-purple-950/60 hover:bg-purple-900/60 border border-purple-800/60 text-purple-200 text-left transition disabled:opacity-50 group"
+              className="p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-left transition active:scale-95 cursor-pointer disabled:opacity-50"
             >
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] font-bold">Admin Master</span>
-                <KeyRound className="w-3 h-3 text-purple-400 group-hover:scale-110 transition" />
+              <div className="flex items-center gap-1.5 text-xs font-extrabold text-[#425B9A]">
+                <ShieldCheck className="w-3.5 h-3.5 text-[#76C0EC]" />
+                <span>Super Admin</span>
               </div>
-              <span className="text-[9px] text-purple-400/70 block truncate">admin@lokalsite.id</span>
+              <span className="text-[10px] text-slate-400 block truncate mt-0.5 font-mono">
+                admin@lokalsite.id
+              </span>
             </button>
 
             <button
               type="button"
               disabled={loading}
               onClick={() => handleQuickLogin('support@lokalsite.id')}
-              className="p-2.5 rounded-xl bg-indigo-950/60 hover:bg-indigo-900/60 border border-indigo-800/60 text-indigo-200 text-left transition disabled:opacity-50 group"
+              className="p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-left transition active:scale-95 cursor-pointer disabled:opacity-50"
             >
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] font-bold">Support Team</span>
-                <KeyRound className="w-3 h-3 text-indigo-400 group-hover:scale-110 transition" />
+              <div className="flex items-center gap-1.5 text-xs font-extrabold text-indigo-700">
+                <Server className="w-3.5 h-3.5 text-indigo-500" />
+                <span>Staf Support</span>
               </div>
-              <span className="text-[9px] text-indigo-400/70 block truncate">support@lokalsite.id</span>
+              <span className="text-[10px] text-slate-400 block truncate mt-0.5 font-mono">
+                support@lokalsite.id
+              </span>
             </button>
           </div>
         </div>
 
         {/* Error Notification */}
         {errorMsg && (
-          <div className="p-3 bg-red-950/80 border border-red-800/80 rounded-xl text-red-200 text-xs flex items-start gap-2">
-            <span className="font-bold text-red-400">Error:</span>
-            <span className="flex-1 leading-relaxed">{errorMsg}</span>
+          <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-red-600 text-xs flex items-start gap-2">
+            <ShieldAlert className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
+            <span>{errorMsg}</span>
           </div>
         )}
 
-        {/* Admin Login Form */}
-        <form onSubmit={handleAdminSubmit} className="space-y-4">
-          <div className="space-y-1">
-            <label className="text-[11px] font-bold text-slate-300">Email Administrator</label>
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">
+              Email Administrator
+            </label>
             <div className="relative">
-              <Mail className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="admin@lokalsite.id"
-                className="w-full pl-9 pr-3 py-2.5 text-xs bg-slate-950 border border-slate-700 rounded-xl text-white outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition"
+                className="w-full pl-9 pr-3 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:ring-2 focus:ring-[#425B9A]"
               />
             </div>
           </div>
 
-          <div className="space-y-1">
-            <label className="text-[11px] font-bold text-slate-300">Password</label>
+          <div>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">
+              Password Administrator
+            </label>
             <div className="relative">
-              <Lock className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full pl-9 pr-3 py-2.5 text-xs bg-slate-950 border border-slate-700 rounded-xl text-white outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition"
+                className="w-full pl-9 pr-3 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:ring-2 focus:ring-[#425B9A]"
               />
             </div>
           </div>
@@ -176,32 +185,26 @@ export const AdminLoginPage: React.FC<Props> = ({ onNavigateHome }) => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-xl text-xs font-bold shadow-lg shadow-purple-600/30 flex items-center justify-center gap-2 active:scale-98 transition disabled:opacity-50 cursor-pointer"
+            style={{ backgroundColor: '#425B9A' }}
+            className="w-full py-3 text-white rounded-xl text-xs font-bold shadow-md hover:opacity-95 transition active:scale-95 flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
           >
-            {loading ? (
-              <span>Memverifikasi Otoritas...</span>
-            ) : (
-              <>
-                <span>Masuk ke Panel Monitoring</span>
-                <ArrowRight className="w-4 h-4" />
-              </>
-            )}
+            <ShieldCheck className="w-4 h-4 text-[#76C0EC]" />
+            <span>{loading ? 'Memverifikasi Akses...' : 'Masuk sebagai Administrator (Admin)'}</span>
           </button>
         </form>
 
-        {/* Back to User Portal */}
-        <div className="pt-2 border-t border-slate-800/80 text-center">
+        {/* Switch to Regular Merchant Login */}
+        <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
+          <span>Bukan Administrator?</span>
           <button
             type="button"
-            onClick={onNavigateHome}
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-slate-200 transition"
+            onClick={onNavigateUserLogin || onNavigateHome}
+            className="font-bold text-[#425B9A] hover:underline flex items-center gap-1 transition cursor-pointer"
           >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Kembali ke Portal Pengguna UMKM (/)</span>
+            <span>Login Merchant / UMKM &rarr;</span>
           </button>
         </div>
       </div>
     </div>
   );
 };
-

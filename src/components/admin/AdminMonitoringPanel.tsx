@@ -825,7 +825,7 @@ export const AdminMonitoringPanel: React.FC<AdminMonitoringPanelProps> = ({
             onClick={() => setMainTab('users')}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-extrabold transition shrink-0 cursor-pointer ${
               mainTab === 'users'
-                ? 'bg-purple-600 text-white shadow-xs'
+                ? 'bg-[#425B9A] text-white shadow-xs'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
             }`}
           >
@@ -838,7 +838,7 @@ export const AdminMonitoringPanel: React.FC<AdminMonitoringPanelProps> = ({
             onClick={() => setMainTab('moderation')}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-extrabold transition shrink-0 cursor-pointer ${
               mainTab === 'moderation'
-                ? 'bg-purple-600 text-white shadow-xs'
+                ? 'bg-[#425B9A] text-white shadow-xs'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
             }`}
           >
@@ -851,7 +851,7 @@ export const AdminMonitoringPanel: React.FC<AdminMonitoringPanelProps> = ({
             onClick={() => setMainTab('announcements')}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-extrabold transition shrink-0 cursor-pointer ${
               mainTab === 'announcements'
-                ? 'bg-purple-600 text-white shadow-xs'
+                ? 'bg-[#425B9A] text-white shadow-xs'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
             }`}
           >
@@ -864,7 +864,7 @@ export const AdminMonitoringPanel: React.FC<AdminMonitoringPanelProps> = ({
             onClick={() => setMainTab('export')}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-extrabold transition shrink-0 cursor-pointer ${
               mainTab === 'export'
-                ? 'bg-purple-600 text-white shadow-xs'
+                ? 'bg-[#425B9A] text-white shadow-xs'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
             }`}
           >
@@ -877,7 +877,7 @@ export const AdminMonitoringPanel: React.FC<AdminMonitoringPanelProps> = ({
             onClick={() => setMainTab('audit')}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-extrabold transition shrink-0 cursor-pointer ${
               mainTab === 'audit'
-                ? 'bg-purple-600 text-white shadow-xs'
+                ? 'bg-[#425B9A] text-white shadow-xs'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
             }`}
           >
@@ -914,7 +914,7 @@ export const AdminMonitoringPanel: React.FC<AdminMonitoringPanelProps> = ({
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-slate-200 shadow-xs">
         <div>
           <div className="flex items-center gap-2">
-            <span className="p-2 rounded-xl bg-purple-50 text-purple-700">
+            <span className="p-2 rounded-xl bg-[#425B9A]/10 text-[#425B9A]">
               <ShieldCheck className="w-5 h-5" />
             </span>
             <h1 className="text-xl font-extrabold text-slate-900 tracking-tight">
@@ -941,7 +941,7 @@ export const AdminMonitoringPanel: React.FC<AdminMonitoringPanelProps> = ({
         <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
           <div className="flex items-center justify-between mb-3">
             <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Client UMKM</span>
-            <div className="p-2 rounded-xl bg-blue-50 text-blue-600"><Users className="w-4 h-4" /></div>
+            <div className="p-2 rounded-xl bg-[#425B9A]/10 text-[#425B9A]"><Users className="w-4 h-4" /></div>
           </div>
           <p className="text-2xl font-black text-slate-900">{clientUsers.length}</p>
           <span className="text-[10px] text-slate-400 mt-1 block">Pemilik usaha lokal</span>
@@ -950,7 +950,7 @@ export const AdminMonitoringPanel: React.FC<AdminMonitoringPanelProps> = ({
         <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
           <div className="flex items-center justify-between mb-3">
             <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Tim Internal</span>
-            <div className="p-2 rounded-xl bg-purple-50 text-purple-600"><ShieldCheck className="w-4 h-4" /></div>
+            <div className="p-2 rounded-xl bg-[#76C0EC]/15 text-[#425B9A]"><ShieldCheck className="w-4 h-4" /></div>
           </div>
           <p className="text-2xl font-black text-slate-900">{internalUsers.length}</p>
           <span className="text-[10px] text-slate-400 mt-1 block">
@@ -973,7 +973,7 @@ export const AdminMonitoringPanel: React.FC<AdminMonitoringPanelProps> = ({
         <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
           <div className="flex items-center justify-between mb-3">
             <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Total Website</span>
-            <div className="p-2 rounded-xl bg-indigo-50 text-indigo-600"><Globe className="w-4 h-4" /></div>
+            <div className="p-2 rounded-xl bg-slate-100 text-[#425B9A]"><Globe className="w-4 h-4" /></div>
           </div>
           <p className="text-2xl font-black text-slate-900">{stats?.totalWebsites ?? 0}</p>
           <span className="text-[10px] text-slate-400 mt-1 block">
@@ -992,13 +992,13 @@ export const AdminMonitoringPanel: React.FC<AdminMonitoringPanelProps> = ({
               onClick={() => setActiveCategory('clients')}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${
                 activeCategory === 'clients'
-                  ? 'bg-white text-blue-700 shadow-xs'
+                  ? 'bg-white text-[#425B9A] shadow-xs'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <Building2 className="w-4 h-4" />
               <span>Client Pengguna (UMKM)</span>
-              <span className="px-1.5 py-0.5 rounded-full text-[10px] bg-blue-100 text-blue-800 font-black">
+              <span className="px-1.5 py-0.5 rounded-full text-[10px] bg-[#425B9A]/15 text-[#425B9A] font-black">
                 {clientUsers.length}
               </span>
             </button>
@@ -1008,13 +1008,13 @@ export const AdminMonitoringPanel: React.FC<AdminMonitoringPanelProps> = ({
               onClick={() => setActiveCategory('internal')}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${
                 activeCategory === 'internal'
-                  ? 'bg-white text-purple-700 shadow-xs'
+                  ? 'bg-white text-[#425B9A] shadow-xs'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <ShieldCheck className="w-4 h-4" />
               <span>Tim Internal & Admin</span>
-              <span className="px-1.5 py-0.5 rounded-full text-[10px] bg-purple-100 text-purple-800 font-black">
+              <span className="px-1.5 py-0.5 rounded-full text-[10px] bg-[#76C0EC]/20 text-[#425B9A] font-black">
                 {internalUsers.length}
               </span>
             </button>
@@ -1049,7 +1049,7 @@ export const AdminMonitoringPanel: React.FC<AdminMonitoringPanelProps> = ({
                   ? 'Cari admin / support...'
                   : 'Cari pengguna...'
               }
-              className="w-full pl-9 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:ring-2 focus:ring-purple-400"
+              className="w-full pl-9 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:ring-2 focus:ring-[#425B9A]"
             />
           </div>
         </div>
@@ -1075,7 +1075,7 @@ export const AdminMonitoringPanel: React.FC<AdminMonitoringPanelProps> = ({
               {loading && users.length === 0 ? (
                 <tr>
                   <td colSpan={8} className="py-16 text-center text-slate-400 text-xs">
-                    <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-purple-600" />
+                    <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-[#425B9A]" />
                     Memuat data pengguna dari PostgreSQL...
                   </td>
                 </tr>
@@ -1208,7 +1208,7 @@ export const AdminMonitoringPanel: React.FC<AdminMonitoringPanelProps> = ({
                         <button
                           type="button"
                           onClick={() => setSelectedUserId(u.id)}
-                          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-purple-50 hover:bg-purple-100 text-purple-700 transition active:scale-95 cursor-pointer shadow-2xs"
+                          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-[#425B9A]/10 hover:bg-[#425B9A]/20 text-[#425B9A] transition active:scale-95 cursor-pointer shadow-2xs"
                         >
                           <Eye className="w-3.5 h-3.5" />
                           <span>Buka Detail &rarr;</span>
