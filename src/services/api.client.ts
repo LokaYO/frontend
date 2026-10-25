@@ -3,6 +3,16 @@
  * Handles authorization headers, error handling, and JSON serialization.
  */
 
+export const API_BASE_URL = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
+
+export function getApiUrl(path: string): string {
+  if (path.startsWith('http://') || path.startsWith('https://')) {
+    return path;
+  }
+  const cleanPath = path.startsWith('/') ? path : `/${path}`;
+  return `${API_BASE_URL}${cleanPath}`;
+}
+
 export class ApiError extends Error {
   status: number;
   details?: any;
@@ -22,7 +32,7 @@ interface RequestOptions extends RequestInit {
 async function request<T = any>(endpoint: string, options: RequestOptions = {}): Promise<T> {
   const { token, headers = {}, ...rest } = options;
 
-  const resolvedToken = token ?? localStorage.getItem('lokalsite_token');
+  const resolvedToken = token ?? (localStorage.getItem('loka_token') || localStorage.getItem('lokalsite_token'));
 
   const defaultHeaders: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -32,7 +42,7 @@ async function request<T = any>(endpoint: string, options: RequestOptions = {}):
     defaultHeaders['Authorization'] = `Bearer ${resolvedToken}`;
   }
 
-  const res = await fetch(endpoint, {
+  const res = await fetch(getApiUrl(endpoint), {
     headers: {
       ...defaultHeaders,
       ...(headers as Record<string, string>),

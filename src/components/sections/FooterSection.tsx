@@ -49,7 +49,7 @@ export const FooterSection: React.FC<Props> = ({ content, isEditor }) => {
           <p>{content.copyrightText || '© 2026 Seluruh hak cipta dilindungi.'}</p>
           <div className="flex items-center gap-1.5 text-slate-400">
             <span>Dibuat dengan</span>
-            <span className="font-semibold text-slate-300">LokalSite</span>
+            <span className="font-semibold text-slate-300">Loka</span>
           </div>
         </div>
       </div>

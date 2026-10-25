@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Upload, Image as ImageIcon, Loader2, Check, X } from 'lucide-react';
+import { getApiUrl } from '../../services/api.client';
 
 interface Props {
   value: string;
@@ -37,8 +38,8 @@ export const ImageUploadInput: React.FC<Props> = ({
       const formData = new FormData();
       formData.append('image', file);
 
-      // Gunakan /api/upload (Vite proxy otomatis redirect ke http://localhost:5000)
-      const res = await fetch('/api/upload', {
+      // Gunakan getApiUrl('/api/upload') (otomatis menyesuaikan VITE_API_URL di production)
+      const res = await fetch(getApiUrl('/api/upload'), {
         method: 'POST',
         body: formData,
       });

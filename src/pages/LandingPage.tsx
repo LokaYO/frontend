@@ -1,5 +1,29 @@
 import React, { useState } from "react";
-import { ArrowRight, Sparkles, Smartphone, CheckCircle2, Store, QrCode, Inbox, TrendingUp, Globe, Sliders, ShieldCheck, ChevronRight, ExternalLink, MessageCircle, Zap, Layers, Award, Eye, Crown } from "lucide-react";
+import {
+  ArrowRight,
+  Sparkles,
+  Smartphone,
+  CheckCircle2,
+  Store,
+  QrCode,
+  Inbox,
+  TrendingUp,
+  Globe,
+  Sliders,
+  ShieldCheck,
+  ChevronRight,
+  ExternalLink,
+  MessageCircle,
+  Zap,
+  Layers,
+  Award,
+  Eye,
+  Crown,
+  Mail,
+  MapPin,
+  Lock,
+  Heart,
+} from "lucide-react";
 import logoClean from "../assets/Logo Loka (1) (1).png";
 import logoWithTagline from "../assets/Logo Loka (2).png";
 
@@ -9,7 +33,7 @@ interface Props {
   onAdminLogin?: () => void;
 }
 
-export const LandingPage: React.FC<Props> = ({ onTryNow, onLogin }) => {
+export const LandingPage: React.FC<Props> = ({ onTryNow, onLogin, onAdminLogin }) => {
   const [isNavigating, setIsNavigating] = useState(false);
 
   const handleTryNow = () => {
@@ -49,7 +73,7 @@ export const LandingPage: React.FC<Props> = ({ onTryNow, onLogin }) => {
       </div>
 
       {/* ── Sticky Navigation Bar ── */}
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80">
+      <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200/70">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center gap-3">
@@ -90,13 +114,19 @@ export const LandingPage: React.FC<Props> = ({ onTryNow, onLogin }) => {
       </header>
 
       {/* ── Hero Section ── */}
-      <section className="relative pt-20 pb-24 sm:pt-28 md:pt-36 md:pb-36 overflow-hidden bg-gradient-to-b from-slate-50/70 via-white to-white">
-        {/* Soft Ambient Background Elements */}
-        <div className="absolute top-16 left-1/2 -translate-x-1/2 w-[650px] h-[340px] bg-gradient-to-tr from-[#425B9A]/10 to-[#76C0EC]/15 rounded-full blur-3xl pointer-events-none -z-10" />
+      <section className="relative pt-16 pb-24 sm:pt-24 md:pt-32 md:pb-36 overflow-hidden bg-gradient-to-b from-slate-50 via-slate-100/60 to-white">
+        {/* Decorative Grid Mesh with Radial Fade Mask */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800c_1px,transparent_1px),linear-gradient(to_bottom,#8080800c_1px,transparent_1px)] bg-[size:32px_32px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_35%,#000_70%,transparent_100%)] pointer-events-none" />
 
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8">
+        {/* Ambient Glowing Blobs & Aurora */}
+        <div className="absolute -top-24 -left-32 w-[34rem] h-[34rem] rounded-full bg-[#425B9A]/20 blur-[130px] pointer-events-none animate-pulse" style={{ animationDuration: "7s" }} />
+        <div className="absolute top-12 -right-32 w-[36rem] h-[36rem] rounded-full bg-[#76C0EC]/25 blur-[140px] pointer-events-none" />
+        <div className="absolute top-28 left-1/2 -translate-x-1/2 w-[720px] h-[400px] bg-gradient-to-tr from-[#425B9A]/15 via-[#76C0EC]/20 to-transparent rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute top-[480px] left-1/2 -translate-x-1/2 w-[550px] h-[300px] bg-[#76C0EC]/15 rounded-full blur-[100px] pointer-events-none" />
+
+        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8">
           {/* Main Headline */}
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.15] max-w-4xl mx-auto">Hadirkan Website Bisnis & Katalog Online Tanpa Ribet</h1>
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.15] max-w-4xl mx-auto drop-shadow-2xs">Hadirkan Website Bisnis &amp; Katalog Online Tanpa Ribet</h1>
 
           {/* Subtitle */}
           <p className="text-sm sm:text-base lg:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
@@ -146,14 +176,14 @@ export const LandingPage: React.FC<Props> = ({ onTryNow, onLogin }) => {
 
           {/* ── Interactive Preview Mockup Card ── */}
           <div className="pt-16 sm:pt-20 max-w-4xl mx-auto">
-            <div className="bg-white rounded-3xl p-3 sm:p-5 border border-slate-200/90 shadow-2xl relative overflow-hidden">
+            <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-3 sm:p-5 border border-white/80 ring-1 ring-slate-900/5 shadow-2xl shadow-indigo-950/10 relative overflow-hidden">
               <div className="bg-slate-100 rounded-2xl border border-slate-200 p-2 sm:p-3 flex items-center gap-2 mb-3">
                 <div className="flex items-center gap-1.5 px-2">
                   <span className="w-2.5 h-2.5 rounded-full bg-red-400" />
                   <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
                   <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
                 </div>
-                <div className="bg-white px-3 py-1 rounded-lg text-[11px] font-mono text-slate-600 border border-slate-200/70 flex-1 truncate text-left">https://lokalsite.id/sites/paw-and-tail-care</div>
+                <div className="bg-white px-3 py-1 rounded-lg text-[11px] font-mono text-slate-600 border border-slate-200/70 flex-1 truncate text-left">https://loka.id/sites/paw-and-tail-care</div>
                 <div className="flex items-center gap-1 text-[11px] font-bold text-[#425B9A] px-2">
                   <Zap className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Live Mode</span>
@@ -401,21 +431,151 @@ export const LandingPage: React.FC<Props> = ({ onTryNow, onLogin }) => {
         </div>
       </section>
 
-      {/* ── Footer ── */}
-      <footer className="bg-slate-50 border-t border-slate-200 py-12 text-xs text-slate-500">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-3">
-            <img src={logoClean} alt="Loka" className="h-6 w-auto object-contain" />
-            <span>&copy; {new Date().getFullYear()} LOKA Platform. Hak Cipta Dilindungi.</span>
+      {/* ── Real SaaS Mega Footer ── */}
+      <footer className="bg-slate-950 text-slate-400 border-t border-slate-800/80 pt-16 pb-12 text-xs">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          {/* Main Footer Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-12 gap-8 lg:gap-12">
+            {/* Col 1: Brand & Mission (4 cols on desktop) */}
+            <div className="col-span-2 md:col-span-4 space-y-4">
+              <div className="flex items-center gap-2">
+                <img src={logoWithTagline} alt="Loka - Your Bussines, Online" className="h-12 w-auto object-contain brightness-0 invert opacity-95" />
+              </div>
+
+              <p className="text-slate-400 text-xs leading-relaxed max-w-sm">
+                Platform B2B SaaS pembuatan website &amp; katalog online instan khusus UMKM lokal Indonesia. Terhubung otomatis ke WhatsApp &amp; cetak QR stand meja kasir tanpa butuh keahlian coding.
+              </p>
+
+              {/* Status Badge */}
+
+              {/* Country & Support */}
+              <div className="pt-1 flex items-center gap-2 text-slate-500 text-[11px]">
+                <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                <span>Jakarta &amp; Seluruh Wilayah Indonesia 🇮🇩</span>
+              </div>
+            </div>
+
+            {/* Col 2: Fitur & Produk (2 cols) */}
+            <div className="col-span-1 md:col-span-2 space-y-3">
+              <h4 className="text-xs font-black uppercase tracking-wider text-white">Fitur Produk</h4>
+              <ul className="space-y-2.5">
+                <li>
+                  <a href="#fitur" onClick={(e) => scrollToSection(e, "fitur")} className="hover:text-white transition">
+                    Drag &amp; Drop Builder
+                  </a>
+                </li>
+                <li>
+                  <button type="button" onClick={handleTryNow} className="hover:text-white transition cursor-pointer text-left">
+                    Generator AI Website
+                  </button>
+                </li>
+                <li>
+                  <a href="#template" onClick={(e) => scrollToSection(e, "template")} className="hover:text-white transition">
+                    Galeri Template Bisnis
+                  </a>
+                </li>
+                <li>
+                  <span className="hover:text-white transition cursor-pointer">Order via WhatsApp</span>
+                </li>
+                <li>
+                  <span className="hover:text-white transition cursor-pointer">Stand Meja QR Kasir HD</span>
+                </li>
+                <li>
+                  <span className="hover:text-white transition cursor-pointer">Kotak Masuk Leads Tamu</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Col 3: Solusi Bisnis UMKM (2 cols) */}
+            <div className="col-span-1 md:col-span-2 space-y-3">
+              <h4 className="text-xs font-black uppercase tracking-wider text-white">Solusi Bisnis</h4>
+              <ul className="space-y-2.5">
+                <li>
+                  <span className="hover:text-white transition cursor-pointer">Kafe &amp; Coffee Shop</span>
+                </li>
+                <li>
+                  <span className="hover:text-white transition cursor-pointer">Barbershop &amp; Salon</span>
+                </li>
+                <li>
+                  <span className="hover:text-white transition cursor-pointer">Laundry &amp; Cuci Sepatu</span>
+                </li>
+                <li>
+                  <span className="hover:text-white transition cursor-pointer">Restoran &amp; Kuliner</span>
+                </li>
+                <li>
+                  <span className="hover:text-white transition cursor-pointer">Klinik &amp; Skincare</span>
+                </li>
+                <li>
+                  <span className="hover:text-white transition cursor-pointer">Bengkel &amp; Jasa Servis</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Col 4: Platform & Akses (2 cols) */}
+            <div className="col-span-1 md:col-span-2 space-y-3">
+              <h4 className="text-xs font-black uppercase tracking-wider text-white">Platform</h4>
+              <ul className="space-y-2.5">
+                <li>
+                  <button type="button" onClick={handleLogin} className="hover:text-white transition cursor-pointer text-left">
+                    Masuk Merchant
+                  </button>
+                </li>
+                <li>
+                  <button type="button" onClick={handleTryNow} className="hover:text-white transition cursor-pointer text-left">
+                    Daftar Akun Baru
+                  </button>
+                </li>
+                <li>
+                  <button type="button" onClick={onAdminLogin || handleLogin} className="hover:text-white transition cursor-pointer text-left flex items-center gap-1.5 text-indigo-400 hover:text-indigo-300 font-semibold">
+                    <Lock className="w-3 h-3" />
+                    <span>Portal Administrator</span>
+                  </button>
+                </li>
+                <li>
+                  <span className="hover:text-white transition cursor-pointer">Status Berlangganan PRO</span>
+                </li>
+                <li>
+                  <a href="#cara-kerja" onClick={(e) => scrollToSection(e, "cara-kerja")} className="hover:text-white transition">
+                    Cara Mulai Bisnis
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            {/* Col 5: Bantuan & Legal (2 cols) */}
+            <div className="col-span-1 md:col-span-2 space-y-3">
+              <h4 className="text-xs font-black uppercase tracking-wider text-white">Bantuan &amp; Kontak</h4>
+              <ul className="space-y-2.5">
+                <li>
+                  <a href="mailto:support@loka.id" className="hover:text-white transition flex items-center gap-1.5">
+                    <Mail className="w-3 h-3 text-slate-500" />
+                    <span>support@loka.id</span>
+                  </a>
+                </li>
+                <li>
+                  <span className="hover:text-white transition cursor-pointer">Pusat Bantuan UMKM</span>
+                </li>
+                <li>
+                  <span className="hover:text-white transition cursor-pointer">Syarat &amp; Ketentuan</span>
+                </li>
+                <li>
+                  <span className="hover:text-white transition cursor-pointer">Kebijakan Privasi Data</span>
+                </li>
+                <li>
+                  <span className="hover:text-white transition cursor-pointer">Keamanan Cloud SSL</span>
+                </li>
+              </ul>
+            </div>
           </div>
 
-          <div className="flex items-center gap-6 font-semibold">
-            <button type="button" onClick={handleLogin} className="hover:text-slate-900 transition active:scale-95 cursor-pointer">
-              Masuk Merchant
-            </button>
-            <button type="button" onClick={handleTryNow} className="text-[#425B9A] hover:underline transition active:scale-95 cursor-pointer font-bold">
-              Daftar Gratis
-            </button>
+          {/* Bottom Bar: Copyright & Badges */}
+          <div className="pt-8 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-500">
+            <div className="flex items-center gap-2">
+              <img src={logoClean} alt="Loka" className="h-4 w-auto object-contain brightness-0 invert opacity-70" />
+              <span>&copy; {new Date().getFullYear()} LOKA Platform (PT Loka Teknologi Solusi). Seluruh hak cipta dilindungi.</span>
+            </div>
+
+            <div className="flex items-center gap-6"></div>
           </div>
         </div>
       </footer>

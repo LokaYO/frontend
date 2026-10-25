@@ -107,6 +107,7 @@ function MainApp() {
           setAuthMode('login');
           navigate('/login');
         }}
+        onAdminLogin={() => navigate('/admin')}
       />
     );
   }

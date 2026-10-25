@@ -150,7 +150,7 @@ export const PublicSitePage: React.FC<Props> = ({ slug }) => {
             className="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span>Ke Beranda LokalSite</span>
+            <span>Ke Beranda LOKA</span>
           </a>
         </div>
       </div>
@@ -172,7 +172,7 @@ export const PublicSitePage: React.FC<Props> = ({ slug }) => {
             href="/"
             className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition"
           >
-            <span>Buka LokalSite</span>
+            <span>Buka LOKA</span>
           </a>
         </div>
       </div>

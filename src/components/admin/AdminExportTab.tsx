@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useToast } from '../../context/ToastContext';
+import { getApiUrl } from '../../services/api.client';
 import {
   FileSpreadsheet,
   Download,
@@ -18,9 +19,9 @@ export const AdminExportTab: React.FC = () => {
   const handleDownload = async (endpoint: string, filenameFallback: string, typeKey: string) => {
     try {
       setDownloading(typeKey);
-      const res = await fetch(endpoint, {
+      const res = await fetch(getApiUrl(endpoint), {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('lokalsite_token') || ''}`,
+          Authorization: `Bearer ${localStorage.getItem('loka_token') || localStorage.getItem('lokalsite_token') || ''}`,
         },
       });
 

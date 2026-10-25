@@ -28,6 +28,7 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   public handleReset = () => {
+    localStorage.removeItem('loka_token');
     localStorage.removeItem('lokalsite_token');
     window.location.href = '/';
   };

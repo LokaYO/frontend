@@ -15,7 +15,9 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(() => localStorage.getItem('lokalsite_token'));
+  const [token, setToken] = useState<string | null>(
+    () => localStorage.getItem('loka_token') || localStorage.getItem('lokalsite_token')
+  );
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -42,6 +44,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [token]);
 
   const login = (newToken: string, newUser: User) => {
+    localStorage.setItem('loka_token', newToken);
     localStorage.setItem('lokalsite_token', newToken);
     setToken(newToken);
     setUser(newUser);
@@ -55,6 +58,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         // Silently ignore network failures on logout
       }
     }
+    localStorage.removeItem('loka_token');
     localStorage.removeItem('lokalsite_token');
     setToken(null);
     setUser(null);

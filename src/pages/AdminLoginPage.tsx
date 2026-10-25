@@ -61,8 +61,19 @@ export const AdminLoginPage: React.FC<Props> = ({ onNavigateHome, onNavigateUser
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4 animate-fade-in">
-      <div className="max-w-md w-full bg-white rounded-3xl shadow-xl border border-slate-200/80 p-8 space-y-6 animate-scale-up">
+    <div className="relative min-h-screen bg-gradient-to-br from-slate-50 via-slate-100/80 to-blue-50/40 flex items-center justify-center p-4 overflow-hidden animate-fade-in">
+      {/* Decorative Background Glows & Grid Pattern */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800c_1px,transparent_1px),linear-gradient(to_bottom,#8080800c_1px,transparent_1px)] bg-[size:28px_28px] pointer-events-none" />
+
+      {/* Ambient Gradient Orbs */}
+      <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-[#425B9A]/20 blur-[110px] pointer-events-none animate-pulse" style={{ animationDuration: '6s' }} />
+      <div className="absolute -bottom-36 -right-36 w-[30rem] h-[30rem] rounded-full bg-[#76C0EC]/25 blur-[120px] pointer-events-none" />
+      <div className="absolute top-1/4 -right-24 w-80 h-80 rounded-full bg-[#425B9A]/15 blur-[90px] pointer-events-none" />
+      <div className="absolute -bottom-20 -left-20 w-80 h-80 rounded-full bg-[#76C0EC]/20 blur-[90px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[580px] h-[580px] rounded-full bg-gradient-to-tr from-[#425B9A]/15 via-[#76C0EC]/15 to-transparent blur-[130px] pointer-events-none" />
+
+      {/* Main Admin Card */}
+      <div className="relative z-10 max-w-md w-full bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl shadow-indigo-950/10 border border-white/80 ring-1 ring-slate-900/5 p-8 space-y-6 animate-scale-up">
         {/* Top Navigation & Back */}
         <div className="flex items-center justify-between">
           <button
@@ -109,7 +120,7 @@ export const AdminLoginPage: React.FC<Props> = ({ onNavigateHome, onNavigateUser
             <button
               type="button"
               disabled={loading}
-              onClick={() => handleQuickLogin('admin@lokalsite.id')}
+              onClick={() => handleQuickLogin('admin@loka.id')}
               className="p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-left transition active:scale-95 cursor-pointer disabled:opacity-50"
             >
               <div className="flex items-center gap-1.5 text-xs font-extrabold text-[#425B9A]">
@@ -117,14 +128,14 @@ export const AdminLoginPage: React.FC<Props> = ({ onNavigateHome, onNavigateUser
                 <span>Super Admin</span>
               </div>
               <span className="text-[10px] text-slate-400 block truncate mt-0.5 font-mono">
-                admin@lokalsite.id
+                admin@loka.id
               </span>
             </button>
 
             <button
               type="button"
               disabled={loading}
-              onClick={() => handleQuickLogin('support@lokalsite.id')}
+              onClick={() => handleQuickLogin('support@loka.id')}
               className="p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-left transition active:scale-95 cursor-pointer disabled:opacity-50"
             >
               <div className="flex items-center gap-1.5 text-xs font-extrabold text-indigo-700">
@@ -132,7 +143,7 @@ export const AdminLoginPage: React.FC<Props> = ({ onNavigateHome, onNavigateUser
                 <span>Staf Support</span>
               </div>
               <span className="text-[10px] text-slate-400 block truncate mt-0.5 font-mono">
-                support@lokalsite.id
+                support@loka.id
               </span>
             </button>
           </div>
@@ -159,7 +170,7 @@ export const AdminLoginPage: React.FC<Props> = ({ onNavigateHome, onNavigateUser
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@lokalsite.id"
+                placeholder="admin@loka.id"
                 className="w-full pl-9 pr-3 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:ring-2 focus:ring-[#425B9A]"
               />
             </div>

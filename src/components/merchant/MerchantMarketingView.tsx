@@ -81,7 +81,7 @@ export const MerchantMarketingView: React.FC<Props> = ({ websites, onOpenPublicS
     if (!qrDataUrl || !selectedWebsite) return;
     const link = document.createElement('a');
     link.href = qrDataUrl;
-    link.download = `QR_${selectedWebsite.slug}_LokalSite.png`;
+    link.download = `QR_${selectedWebsite.slug}_Loka.png`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
