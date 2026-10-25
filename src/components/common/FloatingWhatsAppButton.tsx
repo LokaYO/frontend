@@ -26,6 +26,7 @@ export const FloatingWhatsAppButton: React.FC<Props> = ({
 }) => {
   const { isMobile } = useViewport();
   const [showTooltip, setShowTooltip] = useState(false);
+  const [editorPreviewOpen, setEditorPreviewOpen] = useState(false);
   const status = getOperatingStatus(operatingHours, openTime, closeTime);
 
   // Clean phone number (e.g. 08123... -> 628123...)
@@ -42,7 +43,7 @@ export const FloatingWhatsAppButton: React.FC<Props> = ({
   const handleClick = (e: React.MouseEvent) => {
     if (isEditor) {
       e.preventDefault();
-      alert(`Preview WhatsApp Chat ke ${cleanPhone || 'Nomor WA Bisnis'}:\n\n"${textToSend}"`);
+      setEditorPreviewOpen(true);
       return;
     }
 
@@ -127,6 +128,62 @@ export const FloatingWhatsAppButton: React.FC<Props> = ({
           <MessageCircle className={`${isMobile ? 'w-5 h-5' : 'w-6 h-6 sm:w-7 sm:h-7'}`} />
         </a>
       </div>
+
+      {/* Editor WhatsApp Preview Modal */}
+      {editorPreviewOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-fade-in text-left">
+          <div className="bg-white rounded-3xl max-w-sm w-full overflow-hidden shadow-2xl border border-slate-200 animate-scale-up">
+            {/* Header WhatsApp Bar */}
+            <div className="bg-emerald-600 p-4 text-white flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center font-bold text-xs">
+                  WA
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold leading-tight truncate">{businessName || 'Nomor WhatsApp Toko'}</h4>
+                  <span className="text-[10px] text-emerald-100 flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-300" />
+                    +{cleanPhone || '6281234567890'}
+                  </span>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setEditorPreviewOpen(false)}
+                className="p-1 rounded-full hover:bg-white/20 text-white transition cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Simulated Chat Bubble */}
+            <div className="p-5 bg-[#e5ddd5]/40 space-y-3">
+              <span className="text-[10px] text-center block text-slate-400 font-medium">
+                Pratinjau Pesan Otomatis (Mode Editor)
+              </span>
+
+              <div className="bg-white rounded-2xl rounded-tr-xs p-3.5 shadow-xs border border-slate-100 text-xs text-slate-800 space-y-1 ml-auto max-w-[90%]">
+                <p className="leading-relaxed whitespace-pre-wrap">{textToSend}</p>
+                <div className="flex items-center justify-end gap-1 text-[9px] text-slate-400">
+                  <span>12:00</span>
+                  <span className="text-emerald-600 font-bold">✓✓</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Action Footer */}
+            <div className="p-3.5 bg-white border-t border-slate-100 flex items-center justify-end">
+              <button
+                type="button"
+                onClick={() => setEditorPreviewOpen(false)}
+                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition cursor-pointer"
+              >
+                Tutup Pratinjau
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

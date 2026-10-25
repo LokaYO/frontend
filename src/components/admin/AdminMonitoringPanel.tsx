@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { adminService, MonitoringUser, PlatformStats, UserDetails, AdminWebsite } from "../../services/admin.service";
 import { useAuth } from "../../context/AuthContext";
+import { ConfirmModal } from "../common/ConfirmModal";
 import {
   Users,
   ShieldCheck,
@@ -610,6 +611,8 @@ export const AdminMonitoringPanel: React.FC<AdminMonitoringPanelProps> = ({ acti
   const [activeCategory, setActiveCategory] = useState<"clients" | "internal" | "all">("clients");
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [userToDelete, setUserToDelete] = useState<{ id: string; name: string } | null>(null);
+  const [isDeletingUser, setIsDeletingUser] = useState(false);
 
   const loadData = useCallback(async () => {
     try {
@@ -654,19 +657,25 @@ export const AdminMonitoringPanel: React.FC<AdminMonitoringPanelProps> = ({ acti
     }
   };
 
-  const handleDeleteUser = async (userId: string, userName: string) => {
-    if (!window.confirm(`Yakin ingin menghapus user "${userName}" beserta seluruh websitenya?`)) return;
+  const handleDeleteUser = (userId: string, userName: string) => {
+    setUserToDelete({ id: userId, name: userName });
+  };
+
+  const confirmDeleteUser = async () => {
+    if (!userToDelete) return;
+    const { id: userId, name: userName } = userToDelete;
     try {
-      setActionLoading(userId);
+      setIsDeletingUser(true);
       await adminService.deleteUser(userId);
       setUsers((prev) => prev.filter((u) => u.id !== userId));
       setSelectedUserId(null);
       loadData();
       toast.info("Akun Pengguna Dihapus", `User "${userName}" beserta seluruh websitenya telah dihapus.`);
+      setUserToDelete(null);
     } catch (err: any) {
       toast.error("Gagal Menghapus User", err.message || "Terjadi kesalahan sistem");
     } finally {
-      setActionLoading(null);
+      setIsDeletingUser(false);
     }
   };
 
@@ -1064,6 +1073,25 @@ export const AdminMonitoringPanel: React.FC<AdminMonitoringPanelProps> = ({ acti
           </div>
         </>
       )}
+
+      {/* Delete User & Websites Modal */}
+      <ConfirmModal
+        isOpen={!!userToDelete}
+        title="Hapus Akun Pengguna?"
+        message={
+          userToDelete ? (
+            <span>
+              Yakin ingin menghapus pengguna <strong className="text-slate-800">"{userToDelete.name}"</strong>? Seluruh data akun, sesi login aktif, dan seluruh website yang dimiliki akan dihapus secara permanen dari server.
+            </span>
+          ) : ''
+        }
+        confirmText="Ya, Hapus Akun & Data"
+        cancelText="Batal"
+        variant="danger"
+        loading={isDeletingUser}
+        onConfirm={confirmDeleteUser}
+        onClose={() => setUserToDelete(null)}
+      />
     </div>
   );
 };

@@ -9,6 +9,7 @@ import { useAuth } from '../context/AuthContext';
 import { websiteService } from '../services/website.service';
 import { sectionService } from '../services/section.service';
 import { CheckCircle2, Copy, ExternalLink, Globe, X } from 'lucide-react';
+import { ConfirmModal } from '../components/common/ConfirmModal';
 
 interface Props {
   websiteId: string;
@@ -28,6 +29,8 @@ export const EditorPage: React.FC<Props> = ({ websiteId, onBackToDashboard }) =>
   const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
   const [isAddSectionOpen, setIsAddSectionOpen] = useState(false);
   const [publishModalOpen, setPublishModalOpen] = useState(false);
+  const [sectionToDelete, setSectionToDelete] = useState<string | null>(null);
+  const [isDeletingSection, setIsDeletingSection] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
 
   // Fetch website data with sections
@@ -142,12 +145,17 @@ export const EditorPage: React.FC<Props> = ({ websiteId, onBackToDashboard }) =>
     setWebsite({ ...website, sections: updated });
   };
 
-  // Delete section
-  const handleDeleteSection = async (sectionId: string) => {
-    if (!website?.sections || !token) return;
-    if (!window.confirm('Yakin ingin menghapus section ini?')) return;
+  // Delete section trigger
+  const handleDeleteSection = (sectionId: string) => {
+    setSectionToDelete(sectionId);
+  };
+
+  const confirmDeleteSection = async () => {
+    if (!website?.sections || !token || !sectionToDelete) return;
+    const sectionId = sectionToDelete;
 
     try {
+      setIsDeletingSection(true);
       await sectionService.deleteSection(website.id, sectionId);
 
       const updated = website.sections
@@ -158,8 +166,11 @@ export const EditorPage: React.FC<Props> = ({ websiteId, onBackToDashboard }) =>
       if (activeSectionId === sectionId) {
         setActiveSectionId(updated.length > 0 ? updated[0].id : null);
       }
+      setSectionToDelete(null);
     } catch (err) {
       console.error('Delete section failed:', err);
+    } finally {
+      setIsDeletingSection(false);
     }
   };
 
@@ -409,6 +420,19 @@ export const EditorPage: React.FC<Props> = ({ websiteId, onBackToDashboard }) =>
           </div>
         </div>
       )}
+
+      {/* Delete Section Confirmation Modal */}
+      <ConfirmModal
+        isOpen={!!sectionToDelete}
+        title="Hapus Section Halaman?"
+        message="Yakin ingin menghapus section ini dari susunan website Anda? Tindakan ini akan menghapus konten section tersebut."
+        confirmText="Ya, Hapus Section"
+        cancelText="Batal"
+        variant="danger"
+        loading={isDeletingSection}
+        onConfirm={confirmDeleteSection}
+        onClose={() => setSectionToDelete(null)}
+      />
     </div>
   );
 };

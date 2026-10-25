@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { Website, Lead } from '../../types/schema';
 import { websiteService } from '../../services/website.service';
+import { ConfirmModal } from './ConfirmModal';
 
 interface Props {
   isOpen: boolean;
@@ -27,6 +28,8 @@ export const LeadsModal: React.FC<Props> = ({ isOpen, onClose, website }) => {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [leadToDelete, setLeadToDelete] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const fetchLeads = async () => {
     if (!website) return;
@@ -60,13 +63,21 @@ export const LeadsModal: React.FC<Props> = ({ isOpen, onClose, website }) => {
     }
   };
 
-  const handleDelete = async (leadId: string) => {
-    if (!window.confirm('Hapus pesan ini dari buku tamu?')) return;
+  const handleDelete = (leadId: string) => {
+    setLeadToDelete(leadId);
+  };
+
+  const confirmDeleteLead = async () => {
+    if (!leadToDelete) return;
     try {
-      await websiteService.deleteLead(website.id, leadId);
-      setLeads((prev) => prev.filter((l) => l.id !== leadId));
+      setIsDeleting(true);
+      await websiteService.deleteLead(website.id, leadToDelete);
+      setLeads((prev) => prev.filter((l) => l.id !== leadToDelete));
+      setLeadToDelete(null);
     } catch (err) {
       console.error('Delete lead failed:', err);
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -246,12 +257,25 @@ export const LeadsModal: React.FC<Props> = ({ isOpen, onClose, website }) => {
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition"
+            className="px-4 py-2 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition cursor-pointer"
           >
             Tutup
           </button>
         </div>
       </div>
+
+      {/* Delete Single Lead Confirmation */}
+      <ConfirmModal
+        isOpen={!!leadToDelete}
+        title="Hapus Pesan Buku Tamu?"
+        message="Yakin ingin menghapus pesan ini dari buku tamu website? Data pesan yang telah dihapus tidak dapat dipulihkan."
+        confirmText="Ya, Hapus"
+        cancelText="Batal"
+        variant="danger"
+        loading={isDeleting}
+        onConfirm={confirmDeleteLead}
+        onClose={() => setLeadToDelete(null)}
+      />
     </div>
   );
 };

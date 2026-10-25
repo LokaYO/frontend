@@ -30,11 +30,12 @@ export const ContactSection: React.FC<Props> = ({ content, theme, isEditor, slug
   const [sending, setSending] = useState(false);
   const [sentSuccess, setSentSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [editorNotice, setEditorNotice] = useState(false);
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isEditor) {
-      alert("Mode Pratinjau Editor: Formulir kontak berfungsi penuh di halaman web publik pengunjung.");
+      setEditorNotice(true);
       return;
     }
 
@@ -198,6 +199,18 @@ export const ContactSection: React.FC<Props> = ({ content, theme, isEditor, slug
             </div>
           ) : (
             <form onSubmit={handleFormSubmit} className="space-y-4">
+              {editorNotice && (
+                <div className="p-3 bg-blue-50 border border-blue-200 rounded-xl text-xs text-blue-700 flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0" />
+                    <span>Mode Pratinjau Editor: Formulir kontak berfungsi penuh di website publik pengunjung.</span>
+                  </div>
+                  <button type="button" onClick={() => setEditorNotice(false)} className="text-blue-500 hover:text-blue-700 text-sm font-bold">
+                    &times;
+                  </button>
+                </div>
+              )}
+
               {errorMessage && (
                 <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 flex items-center gap-2">
                   <AlertCircle className="w-4 h-4 shrink-0" />

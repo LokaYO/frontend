@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { adminService, AdminAnnouncement } from '../../services/admin.service';
 import { useToast } from '../../context/ToastContext';
+import { ConfirmModal } from '../common/ConfirmModal';
 import {
   Megaphone,
   Plus,
@@ -22,6 +23,8 @@ export const AdminAnnouncementsTab: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [annToDelete, setAnnToDelete] = useState<AdminAnnouncement | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Form State
   const [title, setTitle] = useState('');
@@ -94,17 +97,22 @@ export const AdminAnnouncementsTab: React.FC = () => {
     }
   };
 
-  const handleDelete = async (ann: AdminAnnouncement) => {
-    if (!window.confirm(`Hapus pengumuman "${ann.title}"?`)) return;
+  const handleDelete = (ann: AdminAnnouncement) => {
+    setAnnToDelete(ann);
+  };
+
+  const confirmDelete = async () => {
+    if (!annToDelete) return;
     try {
-      setActionLoading(ann.id);
-      await adminService.deleteAnnouncement(ann.id);
-      setAnnouncements((prev) => prev.filter((a) => a.id !== ann.id));
-      toast.info('Pengumuman Dihapus', `"${ann.title}" telah dihapus.`);
+      setIsDeleting(true);
+      await adminService.deleteAnnouncement(annToDelete.id);
+      setAnnouncements((prev) => prev.filter((a) => a.id !== annToDelete.id));
+      toast.info('Pengumuman Dihapus', `"${annToDelete.title}" telah dihapus.`);
+      setAnnToDelete(null);
     } catch (err: any) {
       toast.error('Gagal Menghapus', err.message || 'Terjadi kesalahan sistem');
     } finally {
-      setActionLoading(null);
+      setIsDeleting(false);
     }
   };
 
@@ -421,6 +429,25 @@ export const AdminAnnouncementsTab: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* Delete Announcement Modal */}
+      <ConfirmModal
+        isOpen={!!annToDelete}
+        title="Hapus Pengumuman Siaran?"
+        message={
+          annToDelete ? (
+            <span>
+              Yakin ingin menghapus pengumuman <strong className="text-slate-800">"{annToDelete.title}"</strong>? Pengumuman ini akan ditarik permanen dari seluruh dashboard pengguna.
+            </span>
+          ) : ''
+        }
+        confirmText="Ya, Hapus Pengumuman"
+        cancelText="Batal"
+        variant="danger"
+        loading={isDeleting}
+        onConfirm={confirmDelete}
+        onClose={() => setAnnToDelete(null)}
+      />
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { adminService, AdminModerationWebsite } from '../../services/admin.service';
 import { useToast } from '../../context/ToastContext';
+import { ConfirmModal } from '../common/ConfirmModal';
 import {
   Globe,
   Search,
@@ -45,6 +46,8 @@ export const AdminModerationTab: React.FC<Props> = ({ currentAdminRole }) => {
   const [websites, setWebsites] = useState<AdminModerationWebsite[]>([]);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [siteToUnsuspend, setSiteToUnsuspend] = useState<AdminModerationWebsite | null>(null);
+  const [isUnsuspending, setIsUnsuspending] = useState(false);
 
   // Merchant Selection State
   const [selectedMerchantId, setSelectedMerchantId] = useState<string | null>(null);
@@ -163,16 +166,15 @@ export const AdminModerationTab: React.FC<Props> = ({ currentAdminRole }) => {
     }
   };
 
-  const handleUnsuspend = async (site: AdminModerationWebsite) => {
-    if (
-      !window.confirm(
-        `Pulihkan website "${site.name}"? Status akan dikembalikan ke Draft agar pemilik dapat memperbaikinya.`
-      )
-    ) {
-      return;
-    }
+  const handleUnsuspend = (site: AdminModerationWebsite) => {
+    setSiteToUnsuspend(site);
+  };
+
+  const confirmUnsuspend = async () => {
+    if (!siteToUnsuspend) return;
+    const site = siteToUnsuspend;
     try {
-      setActionLoading(site.id);
+      setIsUnsuspending(true);
       await adminService.unsuspendWebsite(site.id);
       setWebsites((prev) =>
         prev.map((w) =>
@@ -183,10 +185,11 @@ export const AdminModerationTab: React.FC<Props> = ({ currentAdminRole }) => {
         'Penangguhan Dicabut!',
         `Website "${site.name}" berhasil dipulihkan dan dikembalikan ke status Draft.`
       );
+      setSiteToUnsuspend(null);
     } catch (err: any) {
       toast.error('Gagal Memulihkan Website', err.message || 'Terjadi kesalahan sistem');
     } finally {
-      setActionLoading(null);
+      setIsUnsuspending(false);
     }
   };
 
@@ -884,6 +887,25 @@ export const AdminModerationTab: React.FC<Props> = ({ currentAdminRole }) => {
           </div>
         </div>
       )}
+
+      {/* Unsuspend Confirmation Modal */}
+      <ConfirmModal
+        isOpen={!!siteToUnsuspend}
+        title="Pulihkan Website yang Ditangguhkan?"
+        message={
+          siteToUnsuspend ? (
+            <span>
+              Yakin ingin mencabut status penangguhan website <strong className="text-slate-800">"{siteToUnsuspend.name}"</strong>? Status website akan dikembalikan ke <strong>Draft</strong> agar pemilik usaha dapat mengedit dan mempublikasikannya kembali.
+            </span>
+          ) : ''
+        }
+        confirmText="Ya, Pulihkan ke Draft"
+        cancelText="Batal"
+        variant="warning"
+        loading={isUnsuspending}
+        onConfirm={confirmUnsuspend}
+        onClose={() => setSiteToUnsuspend(null)}
+      />
     </div>
   );
 };

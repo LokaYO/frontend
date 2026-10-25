@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { websiteService } from '../../services/website.service';
 import { Website } from '../../types/schema';
 import { useToast } from '../../context/ToastContext';
+import { ConfirmModal } from '../common/ConfirmModal';
 import {
   Inbox,
   Search,
@@ -45,6 +46,8 @@ export const MerchantLeadsView: React.FC<Props> = ({ websites }) => {
   const [statusFilter, setStatusFilter] = useState<'all' | 'unread' | 'read'>('all');
   const [search, setSearch] = useState('');
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [leadToDelete, setLeadToDelete] = useState<{ websiteId: string; leadId: string } | null>(null);
+  const [isDeletingLead, setIsDeletingLead] = useState(false);
 
   const loadLeads = useCallback(async () => {
     try {
@@ -78,17 +81,23 @@ export const MerchantLeadsView: React.FC<Props> = ({ websites }) => {
     }
   };
 
-  const handleDeleteLead = async (websiteId: string, leadId: string) => {
-    if (!window.confirm('Hapus pesan kontak ini dari kotak masuk Anda?')) return;
+  const handleDeleteLead = (websiteId: string, leadId: string) => {
+    setLeadToDelete({ websiteId, leadId });
+  };
+
+  const confirmDeleteLead = async () => {
+    if (!leadToDelete) return;
+    const { websiteId, leadId } = leadToDelete;
     try {
-      setActionLoading(leadId);
+      setIsDeletingLead(true);
       await websiteService.deleteLead(websiteId, leadId);
       setLeads((prev) => prev.filter((l) => l.id !== leadId));
       toast.success('Pesan Berhasil Dihapus');
+      setLeadToDelete(null);
     } catch (err: any) {
       toast.error('Gagal Menghapus Pesan', err.message);
     } finally {
-      setActionLoading(null);
+      setIsDeletingLead(false);
     }
   };
 
@@ -452,6 +461,19 @@ export const MerchantLeadsView: React.FC<Props> = ({ websites }) => {
           </span>
         </div>
       </div>
+
+      {/* Delete Lead Confirmation Modal */}
+      <ConfirmModal
+        isOpen={!!leadToDelete}
+        title="Hapus Pesan Masuk?"
+        message="Yakin ingin menghapus pesan kontak ini dari kotak masuk Anda? Data pesan tidak dapat dipulihkan kembali."
+        confirmText="Ya, Hapus Pesan"
+        cancelText="Batal"
+        variant="danger"
+        loading={isDeletingLead}
+        onConfirm={confirmDeleteLead}
+        onClose={() => setLeadToDelete(null)}
+      />
     </div>
   );
 };

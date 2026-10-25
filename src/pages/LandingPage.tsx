@@ -451,7 +451,7 @@ export const LandingPage: React.FC<Props> = ({ onTryNow, onLogin, onAdminLogin }
               {/* Country & Support */}
               <div className="pt-1 flex items-center gap-2 text-slate-500 text-[11px]">
                 <MapPin className="w-3.5 h-3.5 text-slate-400" />
-                <span>Jakarta &amp; Seluruh Wilayah Indonesia 🇮🇩</span>
+                <span>Bandar Lampung, Lampung</span>
               </div>
             </div>
 
@@ -523,12 +523,6 @@ export const LandingPage: React.FC<Props> = ({ onTryNow, onLogin, onAdminLogin }
                 <li>
                   <button type="button" onClick={handleTryNow} className="hover:text-white transition cursor-pointer text-left">
                     Daftar Akun Baru
-                  </button>
-                </li>
-                <li>
-                  <button type="button" onClick={onAdminLogin || handleLogin} className="hover:text-white transition cursor-pointer text-left flex items-center gap-1.5 text-indigo-400 hover:text-indigo-300 font-semibold">
-                    <Lock className="w-3 h-3" />
-                    <span>Portal Administrator</span>
                   </button>
                 </li>
                 <li>
