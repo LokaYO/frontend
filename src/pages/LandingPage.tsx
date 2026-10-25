@@ -566,7 +566,7 @@ export const LandingPage: React.FC<Props> = ({ onTryNow, onLogin, onAdminLogin }
           <div className="pt-8 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-500">
             <div className="flex items-center gap-2">
               <img src={logoClean} alt="Loka" className="h-4 w-auto object-contain brightness-0 invert opacity-70" />
-              <span>&copy; {new Date().getFullYear()} LOKA Platform (PT Loka Teknologi Solusi). Seluruh hak cipta dilindungi.</span>
+              <span>&copy; {new Date().getFullYear()} LOKA Platform. Seluruh hak cipta dilindungi.</span>
             </div>
 
             <div className="flex items-center gap-6"></div>
