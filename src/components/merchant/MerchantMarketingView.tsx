@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import QRCode from 'qrcode';
 import { Website } from '../../types/schema';
+import { getPublicSiteUrl, getPublicSiteDisplayUrl } from '../../utils/url.utils';
 import { useToast } from '../../context/ToastContext';
 import {
   QrCode,
@@ -43,7 +44,8 @@ export const MerchantMarketingView: React.FC<Props> = ({ websites, onOpenPublicS
 
   const businessName = selectedWebsite?.businessInfo?.name || selectedWebsite?.name || 'Bisnis Lokal';
   const category = selectedWebsite?.businessInfo?.category || 'Katalog & Layanan';
-  const fullUrl = selectedWebsite ? `${window.location.origin}/sites/${selectedWebsite.slug}` : '';
+  const fullUrl = selectedWebsite ? getPublicSiteUrl(selectedWebsite.slug) : '';
+  const displayUrl = selectedWebsite ? getPublicSiteDisplayUrl(selectedWebsite.slug) : '';
 
   // Synchronize stand title with selected website
   useEffect(() => {
@@ -237,7 +239,7 @@ export const MerchantMarketingView: React.FC<Props> = ({ websites, onOpenPublicS
             <div class="cta-sub">Buka Kamera Ponsel &bull; Arahkan ke Kode QR &bull; Buka Katalog Online</div>
 
             <div class="footer">
-              <span>/sites/${selectedWebsite?.slug}</span>
+              <span>${displayUrl}</span>
               <span class="logo-text">Loka</span>
             </div>
           </div>
@@ -501,7 +503,7 @@ export const MerchantMarketingView: React.FC<Props> = ({ websites, onOpenPublicS
 
             {/* Card Footer Watermark */}
             <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-400 font-mono">
-              <span className="truncate max-w-[160px]">/sites/{selectedWebsite?.slug}</span>
+              <span className="truncate max-w-[160px]">{displayUrl}</span>
               <img src={logoClean} alt="Loka" className="h-3.5 w-auto object-contain" />
             </div>
           </div>

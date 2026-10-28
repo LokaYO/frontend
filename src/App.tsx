@@ -44,15 +44,38 @@ function MainApp() {
     return <PublicSitePage slug={querySlug} />;
   }
 
-  // 3. PRIORITY 2: Wildcard Subdomain Detection (misal: kopi-senja.lokalsite.id atau kopi-senja.localhost)
+  // 3. PRIORITY 2: Wildcard Subdomain Detection (misal: kopi-senja.loka.id atau kopi-senja.ruubia.my.id)
   const host = window.location.hostname.toLowerCase();
   const isIpAddress = /^(\d{1,3}\.){3}\d{1,3}$/.test(host);
 
   if (!isIpAddress) {
-    const hostParts = host.split('.');
-    const isLocalhostSubdomain = hostParts.length === 2 && hostParts[1] === 'localhost';
-    const isDomainSubdomain = hostParts.length >= 3;
-    const subdomainCandidate = (isLocalhostSubdomain || isDomainSubdomain) ? hostParts[0] : null;
+    const parts = host.split('.');
+
+    // Helper: Ekstraksi subdomain yang akurat dengan mempertimbangkan ccTLD (.my.id, .co.id) dan platform domain (*.web.app)
+    let subdomainCandidate: string | null = null;
+
+    if (parts.length === 2 && parts[1] === 'localhost') {
+      subdomainCandidate = parts[0];
+    } else if (
+      host.endsWith('.web.app') ||
+      host.endsWith('.firebaseapp.com') ||
+      host.endsWith('.vercel.app') ||
+      host.endsWith('.pages.dev')
+    ) {
+      // Pada *.web.app, root domain adalah "project.web.app" (3 part). Subdomain toko butuh 4 part (toko.project.web.app)
+      if (parts.length >= 4) {
+        subdomainCandidate = parts[0];
+      }
+    } else if (/\.(my|co|web|ac|sch|or|biz|go|mil)\.[a-z]{2,3}$/.test(host)) {
+      // Pada domain 2 tingkat seperti *.my.id (contoh: ruubia.my.id = 3 part), subdomain butuh 4 part (toko.ruubia.my.id)
+      if (parts.length >= 4) {
+        subdomainCandidate = parts[0];
+      }
+    } else if (parts.length >= 3) {
+      // Pada domain biasa seperti *.id / *.com (contoh: loka.id = 2 part), subdomain butuh 3 part (toko.loka.id)
+      subdomainCandidate = parts[0];
+    }
+
     const isSystemSubdomain =
       subdomainCandidate && ['www', 'app', 'admin', 'api', 'localhost'].includes(subdomainCandidate);
 

@@ -10,6 +10,7 @@ import { websiteService } from '../services/website.service';
 import { sectionService } from '../services/section.service';
 import { CheckCircle2, Copy, ExternalLink, Globe, X } from 'lucide-react';
 import { ConfirmModal } from '../components/common/ConfirmModal';
+import { getPublicSiteUrl } from '../utils/url.utils';
 
 interface Props {
   websiteId: string;
@@ -250,7 +251,7 @@ export const EditorPage: React.FC<Props> = ({ websiteId, onBackToDashboard }) =>
   }
 
   const activeSection = website.sections?.find((s) => s.id === activeSectionId) || null;
-  const publicUrl = `${window.location.origin}/sites/${website.slug}`;
+  const publicUrl = getPublicSiteUrl(website.slug);
 
   // Viewport width styling
   const getViewportWidthClass = () => {
@@ -408,7 +409,7 @@ export const EditorPage: React.FC<Props> = ({ websiteId, onBackToDashboard }) =>
                 Lanjut Mengedit
               </button>
               <a
-                href={`/sites/${website.slug}`}
+                href={publicUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-1 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-xs font-bold text-white shadow-sm flex items-center justify-center gap-1.5 transition"

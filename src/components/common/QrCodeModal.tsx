@@ -13,6 +13,7 @@ import {
   Store,
 } from 'lucide-react';
 import { Website } from '../../types/schema';
+import { getPublicSiteUrl, getPublicSiteDisplayUrl } from '../../utils/url.utils';
 
 interface Props {
   isOpen: boolean;
@@ -27,9 +28,8 @@ export const QrCodeModal: React.FC<Props> = ({ isOpen, onClose, website }) => {
 
   const businessName = website?.businessInfo?.name || website?.name || 'Bisnis Lokal';
   const category = website?.businessInfo?.category || 'Katalog & Layanan';
-  const fullUrl = website
-    ? `${window.location.origin}/sites/${website.slug}`
-    : '';
+  const fullUrl = website ? getPublicSiteUrl(website.slug) : '';
+  const displayUrl = website ? getPublicSiteDisplayUrl(website.slug) : '';
 
   useEffect(() => {
     if (!isOpen || !fullUrl) return;
@@ -208,7 +208,7 @@ export const QrCodeModal: React.FC<Props> = ({ isOpen, onClose, website }) => {
             <div class="cta-sub">Buka Kamera Ponsel &bull; Arahkan ke Kode QR &bull; Buka Katalog Online</div>
 
             <div class="footer">
-              <span>/sites/${website?.slug}</span>
+              <span>${displayUrl}</span>
               <span class="logo-text">Loka</span>
             </div>
           </div>
