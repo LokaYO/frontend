@@ -77,5 +77,13 @@ export const websiteService = {
   async submitPublicLead(slug: string, leadData: { name: string; phone: string; message: string; serviceInterest?: string }): Promise<{ success: boolean; message: string; leadId: string }> {
     return apiClient.post(`/api/public/sites/${slug}/leads`, leadData);
   },
+
+  async trackPublicEvent(slug: string, type: 'view' | 'whatsapp'): Promise<void> {
+    try {
+      await apiClient.post(`/api/public/sites/${slug}/track`, { type });
+    } catch {
+      // Non-blocking track error
+    }
+  },
 };
 

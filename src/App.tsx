@@ -8,6 +8,7 @@ import { DashboardPage } from './pages/DashboardPage';
 import { EditorPage } from './pages/EditorPage';
 import { PublicSitePage } from './pages/PublicSitePage';
 import { ShieldAlert, ArrowLeft, LogOut } from 'lucide-react';
+import { getPublicSiteUrl } from './utils/url.utils';
 
 function MainApp() {
   const { user, loading, logout } = useAuth();
@@ -34,6 +35,23 @@ function MainApp() {
   const siteMatch = currentPath.match(/^\/sites\/([a-zA-Z0-9_-]+)/);
   if (siteMatch) {
     const slug = siteMatch[1];
+    const host = window.location.hostname.toLowerCase();
+    const isLocalhost = host === 'localhost' || host === '127.0.0.1' || /^(\d{1,3}\.){3}\d{1,3}$/.test(host);
+
+    // Di production (*.ruuby.my.id / ruuby.my.id / Firebase), otomatis redirect ke format subdomain resmi
+    if (!isLocalhost && (host.includes('ruuby.my.id') || host.endsWith('.web.app') || host.endsWith('.firebaseapp.com'))) {
+      const targetUrl = getPublicSiteUrl(slug);
+      window.location.replace(targetUrl);
+      return (
+        <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+          <div className="text-center space-y-3">
+            <div className="w-10 h-10 border-3 border-[#425B9A] border-t-transparent rounded-full animate-spin mx-auto" />
+            <p className="text-xs font-semibold text-slate-500">Mengarahkan ke subdomain resmi https://{slug}.ruuby.my.id...</p>
+          </div>
+        </div>
+      );
+    }
+
     return <PublicSitePage slug={slug} />;
   }
 
@@ -116,6 +134,7 @@ function MainApp() {
         <AuthPage
           initialMode={authMode}
           onNavigateHome={() => navigate('/')}
+          onNavigateAdmin={() => navigate('/admin')}
         />
       );
     }
@@ -199,6 +218,15 @@ function MainApp() {
       onOpenPublicSite={(slug) => {
         window.history.pushState({}, '', `/sites/${slug}`);
         setCurrentPath(`/sites/${slug}`);
+        const publicUrl = getPublicSiteUrl(slug);
+        const host = window.location.hostname.toLowerCase();
+        const isLocal = host === 'localhost' || host === '127.0.0.1' || /^(\d{1,3}\.){3}\d{1,3}$/.test(host);
+        if (!isLocal) {
+          window.open(publicUrl, '_blank', 'noopener,noreferrer');
+        } else {
+          window.history.pushState({}, '', `/sites/${slug}`);
+          setCurrentPath(`/sites/${slug}`);
+        }
       }}
     />
   );

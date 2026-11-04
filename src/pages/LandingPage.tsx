@@ -184,6 +184,7 @@ export const LandingPage: React.FC<Props> = ({ onTryNow, onLogin, onAdminLogin }
                   <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
                 </div>
                 <div className="bg-white px-3 py-1 rounded-lg text-[11px] font-mono text-slate-600 border border-slate-200/70 flex-1 truncate text-left">https://loka.id/sites/paw-and-tail-care</div>
+                <div className="bg-white px-3 py-1 rounded-lg text-[11px] font-mono text-slate-600 border border-slate-200/70 flex-1 truncate text-left">https://paw-and-tail-care.ruuby.my.id</div>
                 <div className="flex items-center gap-1 text-[11px] font-bold text-[#425B9A] px-2">
                   <Zap className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Live Mode</span>
@@ -532,6 +533,11 @@ export const LandingPage: React.FC<Props> = ({ onTryNow, onLogin, onAdminLogin }
                   <a href="#cara-kerja" onClick={(e) => scrollToSection(e, "cara-kerja")} className="hover:text-white transition">
                     Cara Mulai Bisnis
                   </a>
+                </li>
+                <li>
+                  <button type="button" onClick={onAdminLogin} className="hover:text-white transition cursor-pointer text-left text-slate-400">
+                    Portal Administrator
+                  </button>
                 </li>
               </ul>
             </div>

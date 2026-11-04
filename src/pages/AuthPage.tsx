@@ -18,24 +18,34 @@ export const AuthPage: React.FC<Props> = ({ onNavigateAdmin, onNavigateHome, ini
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg(null);
+    setSuccessMsg(null);
     setLoading(true);
 
     try {
-      const data = isRegister ? await authService.register(name, email, password) : await authService.login(email, password);
+      if (isRegister) {
+        await authService.register(name, email, password);
+        // Setelah registrasi sukses, jangan langsung auto-login ke dashboard.
+        // Arahkan ke tab login agar user login secara sadar dan resmi.
+        setIsRegister(false);
+        setPassword("");
+        setSuccessMsg("Pendaftaran berhasil! Akun Anda telah aktif, silakan masuk dengan email dan password Anda.");
+      } else {
+        const data = await authService.login(email, password);
+        login(data.token, data.user);
 
-      login(data.token, data.user);
-
-      // Jika yang login ternyata admin, arahkan ke /admin
-      if ((data.user.role === "admin" || data.user.role === "support") && onNavigateAdmin) {
-        onNavigateAdmin();
+        // Jika yang login ternyata admin, arahkan ke /admin
+        if ((data.user.role === "admin" || data.user.role === "support") && onNavigateAdmin) {
+          onNavigateAdmin();
+        }
       }
     } catch (err: any) {
       console.error("Auth error:", err);
-      setErrorMsg(err.message || "Gagal masuk");
+      setErrorMsg(err.message || (isRegister ? "Gagal mendaftar" : "Gagal masuk"));
     } finally {
       setLoading(false);
     }
@@ -81,6 +91,7 @@ export const AuthPage: React.FC<Props> = ({ onNavigateAdmin, onNavigateHome, ini
             onClick={() => {
               setIsRegister(false);
               setErrorMsg(null);
+              setSuccessMsg(null);
             }}
             className={`flex-1 py-2 text-xs font-bold rounded-lg transition cursor-pointer ${!isRegister ? "bg-white text-slate-900 shadow-xs" : "text-slate-500 hover:text-slate-900"}`}
           >
@@ -91,6 +102,7 @@ export const AuthPage: React.FC<Props> = ({ onNavigateAdmin, onNavigateHome, ini
             onClick={() => {
               setIsRegister(true);
               setErrorMsg(null);
+              setSuccessMsg(null);
             }}
             className={`flex-1 py-2 text-xs font-bold rounded-lg transition cursor-pointer ${isRegister ? "bg-white text-slate-900 shadow-xs" : "text-slate-500 hover:text-slate-900"}`}
           >
@@ -98,8 +110,16 @@ export const AuthPage: React.FC<Props> = ({ onNavigateAdmin, onNavigateHome, ini
           </button>
         </div>
 
+        {/* Success Notification */}
+        {successMsg && (
+          <div className="p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-700 text-xs flex items-start gap-2 shadow-2xs animate-in fade-in">
+            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+            <span className="leading-relaxed">{successMsg}</span>
+          </div>
+        )}
+
         {/* Error Notification */}
-        {errorMsg && <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-red-600 text-xs">{errorMsg}</div>}
+        {errorMsg && <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-red-600 text-xs animate-in fade-in">{errorMsg}</div>}
 
         {/* Auth Form */}
         <form onSubmit={handleSubmit} className="space-y-4">

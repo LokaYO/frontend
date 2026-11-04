@@ -20,9 +20,23 @@ export const AboutSection: React.FC<Props> = ({ content, theme }) => {
   const isRight = imagePosition === 'right' && !isMobile && !isTablet;
 
   const secondaryImage = (content as any).secondaryImageUrl;
+  const padding = (content as any).padding || 'normal';
+
+  const paddingClass =
+    padding === 'compact'
+      ? isMobile
+        ? 'py-8'
+        : 'py-10 sm:py-14'
+      : padding === 'spacious'
+      ? isMobile
+        ? 'py-20'
+        : 'py-24 sm:py-36'
+      : isMobile
+      ? 'py-12'
+      : 'py-16 sm:py-24';
 
   return (
-    <section id="about" className={`${isMobile ? 'py-12' : 'py-16 sm:py-24'} bg-white`}>
+    <section id="about" className={`${paddingClass} bg-white`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div
           className={`grid grid-cols-1 ${

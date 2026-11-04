@@ -284,6 +284,7 @@ export const PricingModal: React.FC<Props> = ({ isOpen, onClose, onUpgraded }) =
                   </div>
                   <p className="text-[11px] text-slate-500 mt-0.5 leading-relaxed">
                     Bebas menentukan alamat URL tanpa 4 digit angka acak (misal: <code className="bg-slate-100 text-blue-600 font-mono px-1 rounded">/sites/kopi-senja</code>).
+                    Bebas menentukan alamat subdomain tanpa 4 digit angka acak (misal: <code className="bg-slate-100 text-blue-600 font-mono px-1 rounded">kopi-senja.ruuby.my.id</code>).
                   </p>
                 </div>
               </div>

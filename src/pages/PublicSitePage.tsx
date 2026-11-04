@@ -34,12 +34,26 @@ export const PublicSitePage: React.FC<Props> = ({ slug }) => {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ type: 'view' }),
         }).catch(() => {});
+        websiteService.trackPublicEvent(slug, 'view');
       } catch (err: any) {
         console.error('Fetch public site failed:', err);
-        if (err.details?.isSuspended || err.isSuspended) {
+        const isSuspendedError =
+          Boolean(err.details?.isSuspended) ||
+          Boolean(err.isSuspended) ||
+          (typeof err.message === 'string' && (
+            err.message.toLowerCase().includes('ditangguhkan') ||
+            err.message.toLowerCase().includes('suspended')
+          ));
+
+        if (isSuspendedError) {
           setIsSuspended(true);
-          setSuspendReason(err.details?.suspendReason || err.suspendReason || err.message);
-        } else if (err.details?.isDraft || err.status === 403) {
+          setSuspendReason(
+            err.details?.suspendReason ||
+            err.suspendReason ||
+            err.message ||
+            'Website ini dinonaktifkan sementara oleh Administrator karena melanggar ketentuan layanan platform LOKA.'
+          );
+        } else if (err.details?.isDraft || err.isDraft || err.status === 403) {
           setIsDraft(true);
         }
         setErrorMsg(err.message || 'Halaman tidak dapat diakses.');

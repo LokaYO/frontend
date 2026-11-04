@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { Website } from '../../types/schema';
+import { getPublicSiteDisplayUrl, getPublicSiteUrl } from '../../utils/url.utils';
 import {
   TrendingUp,
   Eye,
@@ -251,6 +252,7 @@ export const MerchantAnalyticsView: React.FC<Props> = ({
                         <div>
                           <span className="font-extrabold text-slate-900 block text-sm">{site.name}</span>
                           <span className="text-[11px] text-slate-400 font-mono">/sites/{site.slug}</span>
+                          <span className="text-[11px] text-slate-400 font-mono">{getPublicSiteDisplayUrl(site.slug)}</span>
                         </div>
                       </td>
 
