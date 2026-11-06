@@ -657,7 +657,7 @@ export const AdminMonitoringPanel: React.FC<AdminMonitoringPanelProps> = ({ acti
     }
   };
 
-  const handleDeleteUser = (userId: string, userName: string) => {
+  const handleDeleteUser = async (userId: string, userName: string) => {
     setUserToDelete({ id: userId, name: userName });
   };
 
