@@ -16,12 +16,18 @@ export function getApiUrl(path: string): string {
 export class ApiError extends Error {
   status: number;
   details?: any;
+  isSuspended?: boolean;
+  suspendReason?: string | null;
+  isDraft?: boolean;
 
   constructor(message: string, status: number, details?: any) {
     super(message);
     this.name = 'ApiError';
     this.status = status;
     this.details = details;
+    this.isSuspended = Boolean(details?.isSuspended);
+    this.suspendReason = details?.suspendReason || null;
+    this.isDraft = Boolean(details?.isDraft);
   }
 }
 
@@ -36,6 +42,8 @@ async function request<T = any>(endpoint: string, options: RequestOptions = {}):
 
   const defaultHeaders: Record<string, string> = {
     'Content-Type': 'application/json',
+    'Cache-Control': 'no-cache, no-store',
+    Pragma: 'no-cache',
   };
 
   if (resolvedToken) {
@@ -47,6 +55,7 @@ async function request<T = any>(endpoint: string, options: RequestOptions = {}):
       ...defaultHeaders,
       ...(headers as Record<string, string>),
     },
+    cache: 'no-store',
     ...rest,
   });
 
@@ -61,7 +70,12 @@ async function request<T = any>(endpoint: string, options: RequestOptions = {}):
   }
 
   if (!res.ok) {
-    throw new ApiError(data.error || 'Terjadi kesalahan pada server', res.status, data.details);
+    const errorDetails = data.details || {
+      isSuspended: Boolean(data.isSuspended),
+      suspendReason: data.suspendReason,
+      isDraft: Boolean(data.isDraft),
+    };
+    throw new ApiError(data.error || 'Terjadi kesalahan pada server', res.status, errorDetails);
   }
 
   return data as T;

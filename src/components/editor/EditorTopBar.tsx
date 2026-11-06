@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Website } from '../../types/schema';
+import { getPublicSiteUrl } from '../../utils/url.utils';
 import {
   ArrowLeft,
   Monitor,
@@ -48,7 +49,7 @@ export const EditorTopBar: React.FC<Props> = ({
   const [titleInput, setTitleInput] = useState(website.name);
   const [copied, setCopied] = useState(false);
 
-  const publicUrl = `${window.location.origin}/sites/${website.slug}`;
+  const publicUrl = getPublicSiteUrl(website.slug);
 
   const handleTitleSubmit = () => {
     setIsEditingTitle(false);
@@ -220,7 +221,7 @@ export const EditorTopBar: React.FC<Props> = ({
               {copied ? <CheckCircle className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
             </button>
             <a
-              href={`/sites/${website.slug}`}
+              href={publicUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1 px-3 py-2 rounded-xl text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition"

@@ -24,11 +24,18 @@ export const NavbarSection: React.FC<Props> = ({ content, theme, businessInfo, i
 
   // In mobile or tablet mode, or viewport below lg, use hamburger menu
   const forceMobileMenu = isMobile || isTablet;
+  const padding = (content as any).padding || 'normal';
+  const navHeightClass =
+    padding === 'compact'
+      ? 'h-14 sm:h-16'
+      : padding === 'spacious'
+      ? 'h-20 sm:h-24'
+      : 'h-16 sm:h-20';
 
   return (
     <nav className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200/80 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 sm:h-20 gap-4">
+        <div className={`flex items-center justify-between ${navHeightClass} gap-4`}>
           {/* Brand */}
           <div className="flex items-center gap-3 min-w-0">
             <div className="relative shrink-0">

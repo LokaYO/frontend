@@ -164,8 +164,8 @@ export const EditorRightSidebar: React.FC<Props> = ({ section, onUpdateContent, 
             <span>Tata Letak Grid & Spasi</span>
           </div>
 
-          {/* Grid Columns Setting (for multi-item sections like services, features, gallery, testimonials) */}
-          {["services", "features", "gallery", "testimonials"].includes(section.type) && (
+          {/* Grid Columns Setting (for multi-item sections like services, features, gallery, testimonials, contact) */}
+          {["services", "features", "gallery", "testimonials", "contact"].includes(section.type) && (
             <div>
               <label className="block text-[11px] font-semibold text-slate-600 mb-1.5">Jumlah Kolom Grid:</label>
               <div className="grid grid-cols-3 gap-1.5">
@@ -179,7 +179,7 @@ export const EditorRightSidebar: React.FC<Props> = ({ section, onUpdateContent, 
                     type="button"
                     onClick={() => handleChange("columns", colOpt.val)}
                     className={`py-1.5 rounded-lg text-[11px] font-bold border transition cursor-pointer ${
-                      (content.columns || (section.type === "testimonials" ? "2" : section.type === "features" ? "3" : "4")) === colOpt.val
+                      (content.columns || (section.type === "testimonials" ? "2" : section.type === "features" || section.type === "contact" ? "3" : "4")) === colOpt.val
                         ? "bg-blue-600 border-blue-600 text-white shadow-xs"
                         : "bg-white border-slate-200 text-slate-700 hover:bg-slate-100"
                     }`}

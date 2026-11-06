@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { websiteService } from '../services/website.service';
 import { CreateWebsiteModal } from '../components/modals/CreateWebsiteModal';
 import { PRESET_TEMPLATES, PresetTemplate } from '../templates/presetTemplates';
+import { getPublicSiteUrl, getPublicSiteDisplayUrl } from '../utils/url.utils';
 import {
   Plus,
   Globe,
@@ -202,7 +203,7 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
   };
 
   const copyPublicLink = (slug: string) => {
-    const url = `${window.location.origin}/sites/${slug}`;
+    const url = getPublicSiteUrl(slug);
     navigator.clipboard.writeText(url);
     setCopiedSlug(slug);
     toast.success('Tautan Tersalin!', 'Alamat link landing page berhasil disalin ke clipboard.');
@@ -705,7 +706,8 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {filteredWebsites.map((site) => {
                     const isPublished = site.status === 'published';
-                    const publicUrl = `${window.location.origin}/sites/${site.slug}`;
+                    const publicUrl = getPublicSiteUrl(site.slug);
+                    const displayUrl = getPublicSiteDisplayUrl(site.slug);
 
                     return (
                       <div
@@ -748,7 +750,7 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
                               {site.name}
                             </h3>
                             <p className="text-[11px] font-mono text-slate-500 truncate">
-                              /sites/{site.slug}
+                              {displayUrl}
                             </p>
                           </div>
                         </div>
@@ -837,7 +839,7 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
                                 )}
                               </button>
                               <a
-                                href={`/sites/${site.slug}`}
+                                href={publicUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="p-2 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 rounded-xl transition"

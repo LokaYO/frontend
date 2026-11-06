@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { adminService, AuditLogItem } from '../../services/admin.service';
+import { getPublicSiteDisplayUrl } from '../../utils/url.utils';
 import {
   History,
   Search,
@@ -130,6 +131,7 @@ export const AdminAuditLogsTab: React.FC = () => {
       return (
         <span>
           Website: <strong>{d.name || d.websiteId}</strong> {d.slug ? `(/sites/${d.slug})` : ''}
+          Website: <strong>{d.name || d.websiteId}</strong> {d.slug ? `(${getPublicSiteDisplayUrl(d.slug)})` : ''}
         </span>
       );
     }

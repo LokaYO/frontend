@@ -17,8 +17,17 @@ export const ContactSection: React.FC<Props> = ({ content, theme, isEditor, slug
   const cleanPhone = content.whatsapp ? content.whatsapp.replace(/\D/g, "") : "";
   const waUrl = `https://wa.me/${cleanPhone}?text=Halo,%20saya%20ingin%20menghubungi%20Anda`;
   const { isMobile, isTablet } = useViewport();
+  const columns = (content as any).columns || "3";
 
-  const gridColsClass = isMobile ? "grid-cols-1" : isTablet ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3";
+  const gridColsClass = isMobile
+    ? "grid-cols-1"
+    : isTablet
+    ? "grid-cols-1 sm:grid-cols-2"
+    : columns === "2"
+    ? "grid-cols-1 md:grid-cols-2 max-w-4xl"
+    : columns === "4"
+    ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 max-w-6xl"
+    : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-5xl";
 
   // Lead Form State
   const [formData, setFormData] = useState({
@@ -63,8 +72,16 @@ export const ContactSection: React.FC<Props> = ({ content, theme, isEditor, slug
     }
   };
 
+  const padding = (content as any).padding || 'normal';
+  const paddingClass =
+    padding === 'compact'
+      ? 'py-8 sm:py-14'
+      : padding === 'spacious'
+      ? 'py-24 sm:py-36'
+      : 'py-16 sm:py-24';
+
   return (
-    <section id="contact" className="py-16 sm:py-24 bg-white border-t border-slate-100">
+    <section id="contact" className={`${paddingClass} bg-white border-t border-slate-100`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto space-y-4 mb-14">
           {content.badge && (

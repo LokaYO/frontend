@@ -12,9 +12,23 @@ interface Props {
 export const CtaSection: React.FC<Props> = ({ content, theme, isEditor }) => {
   const primaryColor = theme.primaryColor || '#2563eb';
   const { isMobile } = useViewport();
+  const padding = (content as any).padding || 'normal';
+
+  const paddingClass =
+    padding === 'compact'
+      ? isMobile
+        ? 'py-8'
+        : 'py-10 sm:py-12'
+      : padding === 'spacious'
+      ? isMobile
+        ? 'py-20'
+        : 'py-24 sm:py-32'
+      : isMobile
+      ? 'py-12'
+      : 'py-16 sm:py-20';
 
   return (
-    <section className={`${isMobile ? 'py-12' : 'py-16 sm:py-20'} bg-slate-900 text-white relative overflow-hidden`}>
+    <section className={`${paddingClass} bg-slate-900 text-white relative overflow-hidden`}>
       {/* Decorative gradient overlay */}
       <div
         className="absolute inset-0 opacity-20 pointer-events-none"

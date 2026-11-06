@@ -8,6 +8,7 @@ import { DashboardPage } from './pages/DashboardPage';
 import { EditorPage } from './pages/EditorPage';
 import { PublicSitePage } from './pages/PublicSitePage';
 import { ShieldAlert, ArrowLeft, LogOut } from 'lucide-react';
+import { getPublicSiteUrl } from './utils/url.utils';
 
 function MainApp() {
   const { user, loading, logout } = useAuth();
@@ -34,6 +35,23 @@ function MainApp() {
   const siteMatch = currentPath.match(/^\/sites\/([a-zA-Z0-9_-]+)/);
   if (siteMatch) {
     const slug = siteMatch[1];
+    const host = window.location.hostname.toLowerCase();
+    const isLocalhost = host === 'localhost' || host === '127.0.0.1' || /^(\d{1,3}\.){3}\d{1,3}$/.test(host);
+
+    // Di production (*.ruuby.my.id / ruuby.my.id / Firebase), otomatis redirect ke format subdomain resmi
+    if (!isLocalhost && (host.includes('ruuby.my.id') || host.endsWith('.web.app') || host.endsWith('.firebaseapp.com'))) {
+      const targetUrl = getPublicSiteUrl(slug);
+      window.location.replace(targetUrl);
+      return (
+        <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+          <div className="text-center space-y-3">
+            <div className="w-10 h-10 border-3 border-[#425B9A] border-t-transparent rounded-full animate-spin mx-auto" />
+            <p className="text-xs font-semibold text-slate-500">Mengarahkan ke subdomain resmi https://{slug}.ruuby.my.id...</p>
+          </div>
+        </div>
+      );
+    }
+
     return <PublicSitePage slug={slug} />;
   }
 
@@ -44,15 +62,38 @@ function MainApp() {
     return <PublicSitePage slug={querySlug} />;
   }
 
-  // 3. PRIORITY 2: Wildcard Subdomain Detection (misal: kopi-senja.lokalsite.id atau kopi-senja.localhost)
+  // 3. PRIORITY 2: Wildcard Subdomain Detection (misal: kopi-senja.loka.id atau kopi-senja.ruubia.my.id)
   const host = window.location.hostname.toLowerCase();
   const isIpAddress = /^(\d{1,3}\.){3}\d{1,3}$/.test(host);
 
   if (!isIpAddress) {
-    const hostParts = host.split('.');
-    const isLocalhostSubdomain = hostParts.length === 2 && hostParts[1] === 'localhost';
-    const isDomainSubdomain = hostParts.length >= 3;
-    const subdomainCandidate = (isLocalhostSubdomain || isDomainSubdomain) ? hostParts[0] : null;
+    const parts = host.split('.');
+
+    // Helper: Ekstraksi subdomain yang akurat dengan mempertimbangkan ccTLD (.my.id, .co.id) dan platform domain (*.web.app)
+    let subdomainCandidate: string | null = null;
+
+    if (parts.length === 2 && parts[1] === 'localhost') {
+      subdomainCandidate = parts[0];
+    } else if (
+      host.endsWith('.web.app') ||
+      host.endsWith('.firebaseapp.com') ||
+      host.endsWith('.vercel.app') ||
+      host.endsWith('.pages.dev')
+    ) {
+      // Pada *.web.app, root domain adalah "project.web.app" (3 part). Subdomain toko butuh 4 part (toko.project.web.app)
+      if (parts.length >= 4) {
+        subdomainCandidate = parts[0];
+      }
+    } else if (/\.(my|co|web|ac|sch|or|biz|go|mil)\.[a-z]{2,3}$/.test(host)) {
+      // Pada domain 2 tingkat seperti *.my.id (contoh: ruubia.my.id = 3 part), subdomain butuh 4 part (toko.ruubia.my.id)
+      if (parts.length >= 4) {
+        subdomainCandidate = parts[0];
+      }
+    } else if (parts.length >= 3) {
+      // Pada domain biasa seperti *.id / *.com (contoh: loka.id = 2 part), subdomain butuh 3 part (toko.loka.id)
+      subdomainCandidate = parts[0];
+    }
+
     const isSystemSubdomain =
       subdomainCandidate && ['www', 'app', 'admin', 'api', 'localhost'].includes(subdomainCandidate);
 
@@ -93,6 +134,7 @@ function MainApp() {
         <AuthPage
           initialMode={authMode}
           onNavigateHome={() => navigate('/')}
+          onNavigateAdmin={() => navigate('/admin')}
         />
       );
     }
@@ -176,6 +218,15 @@ function MainApp() {
       onOpenPublicSite={(slug) => {
         window.history.pushState({}, '', `/sites/${slug}`);
         setCurrentPath(`/sites/${slug}`);
+        const publicUrl = getPublicSiteUrl(slug);
+        const host = window.location.hostname.toLowerCase();
+        const isLocal = host === 'localhost' || host === '127.0.0.1' || /^(\d{1,3}\.){3}\d{1,3}$/.test(host);
+        if (!isLocal) {
+          window.open(publicUrl, '_blank', 'noopener,noreferrer');
+        } else {
+          window.history.pushState({}, '', `/sites/${slug}`);
+          setCurrentPath(`/sites/${slug}`);
+        }
       }}
     />
   );

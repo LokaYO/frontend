@@ -584,10 +584,25 @@ export const CreateWebsiteModal: React.FC<Props> = ({
 
           {/* STEP 2B: TEMPLATE GALLERY */}
           {step === 'template_gallery' && (
-            <div className="space-y-5">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-4">
+              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-center justify-between gap-3 text-xs">
+                <div className="flex items-center gap-2 text-slate-600">
+                  <span className="text-base">🎨</span>
+                  <span>
+                    Pilih salah satu template siap pakai di bawah. Anda dapat menyesuaikan konten, gambar, dan warna di editor kapan saja.
+                  </span>
+                </div>
+                {selectedTemplate && (
+                  <span className="shrink-0 px-2.5 py-1 rounded-full bg-[#425B9A]/10 text-[#425B9A] font-bold text-[11px] flex items-center gap-1">
+                    <Check className="w-3.5 h-3.5 text-[#425B9A]" /> {selectedTemplate.name}
+                  </span>
+                )}
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pb-2">
                 {PRESET_TEMPLATES.map((tpl) => {
                   const isLocked = tpl.isPro && user?.plan !== 'pro';
+                  const isSelected = selectedTemplate?.id === tpl.id;
                   return (
                     <div
                       key={tpl.id}
@@ -599,12 +614,12 @@ export const CreateWebsiteModal: React.FC<Props> = ({
                         setSelectedTemplate(tpl);
                         setTemplateSiteName(tpl.name);
                       }}
-                      className={`rounded-2xl border-2 overflow-hidden cursor-pointer transition flex flex-col justify-between group relative ${
+                      className={`rounded-2xl border-2 overflow-hidden cursor-pointer transition-all duration-200 flex flex-col justify-between group relative ${
                         isLocked
                           ? 'border-amber-200/90 bg-amber-50/20 hover:border-amber-400'
-                          : selectedTemplate?.id === tpl.id
-                          ? 'border-[#425B9A] ring-2 ring-[#76C0EC]/40 shadow-md'
-                          : 'border-slate-200 hover:border-slate-300'
+                          : isSelected
+                          ? 'border-[#425B9A] bg-[#425B9A]/5 ring-2 ring-[#425B9A]/30 shadow-md scale-[1.01]'
+                          : 'border-slate-200 hover:border-slate-300 hover:shadow-xs'
                       }`}
                     >
                       <div className="relative h-36 overflow-hidden">
@@ -614,7 +629,7 @@ export const CreateWebsiteModal: React.FC<Props> = ({
                           className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
                         />
                         <div className="absolute top-2 left-2 flex items-center gap-1.5 flex-wrap">
-                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-white/90 text-slate-800 shadow-xs">
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-white/95 text-slate-800 shadow-xs">
                             {tpl.category}
                           </span>
                           {tpl.isPro && (
@@ -624,23 +639,31 @@ export const CreateWebsiteModal: React.FC<Props> = ({
                             </span>
                           )}
                         </div>
+
+                        {isSelected && (
+                          <div className="absolute top-2 right-2">
+                            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-[#425B9A] text-white flex items-center gap-1 shadow-md">
+                              <Check className="w-3 h-3 stroke-[3]" /> Terpilih
+                            </span>
+                          </div>
+                        )}
                       </div>
 
-                      <div className="p-4 space-y-1">
-                        <h5 className="text-xs font-bold text-slate-900 flex items-center justify-between">
-                          <span className="flex items-center gap-1">
-                            {tpl.name}
-                            {tpl.isPro && <Crown className="w-3.5 h-3.5 text-amber-500 fill-amber-400" />}
-                          </span>
-                          {selectedTemplate?.id === tpl.id && (
-                            <Check className="w-4 h-4 text-[#425B9A]" />
-                          )}
-                        </h5>
-                        <p className="text-[11px] text-slate-500 line-clamp-2">
-                          {tpl.description}
-                        </p>
-                        {isLocked && (
-                          <div className="pt-1.5 flex items-center justify-between text-[10px]">
+                      <div className="p-4 space-y-1.5 flex-1 flex flex-col justify-between">
+                        <div className="space-y-1">
+                          <h5 className="text-xs font-bold text-slate-900 flex items-center justify-between">
+                            <span className="flex items-center gap-1">
+                              {tpl.name}
+                              {tpl.isPro && <Crown className="w-3.5 h-3.5 text-amber-500 fill-amber-400" />}
+                            </span>
+                          </h5>
+                          <p className="text-[11px] text-slate-500 line-clamp-2 leading-relaxed">
+                            {tpl.description}
+                          </p>
+                        </div>
+
+                        {isLocked ? (
+                          <div className="pt-2 flex items-center justify-between text-[10px]">
                             <span className="text-amber-700 font-bold">Khusus Member PRO</span>
                             {onOpenPricing && (
                               <button
@@ -656,41 +679,37 @@ export const CreateWebsiteModal: React.FC<Props> = ({
                               </button>
                             )}
                           </div>
+                        ) : isSelected ? (
+                          <div className="pt-2.5 mt-2 border-t border-[#425B9A]/20 flex items-center justify-between gap-2">
+                            <span className="text-[11px] font-semibold text-[#425B9A] flex items-center gap-1">
+                              <Check className="w-3.5 h-3.5 text-[#425B9A]" /> Siap digunakan
+                            </span>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleSelectTemplateSubmit(tpl);
+                              }}
+                              disabled={loading}
+                              className="px-3.5 py-1.5 rounded-lg bg-[#425B9A] hover:bg-[#354a7d] text-white text-xs font-bold flex items-center gap-1.5 shadow-xs transition active:scale-95 cursor-pointer disabled:opacity-50"
+                            >
+                              <span>{loading ? 'Memproses...' : 'Gunakan Sekarang'}</span>
+                              <ArrowRight className="w-3.5 h-3.5 text-[#76C0EC]" />
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="pt-2 mt-1 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400 group-hover:text-slate-600 transition">
+                            <span>Klik untuk memilih</span>
+                            <span className="text-xs font-semibold text-[#425B9A] flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+                              Pilih Template <ArrowRight className="w-3 h-3 text-[#76C0EC]" />
+                            </span>
+                          </div>
                         )}
                       </div>
                     </div>
                   );
                 })}
               </div>
-
-              {selectedTemplate && (
-                <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-700 mb-1">
-                      Nama Website / Bisnis Anda:
-                    </label>
-                    <input
-                      type="text"
-                      value={templateSiteName}
-                      onChange={(e) => setTemplateSiteName(e.target.value)}
-                      placeholder={selectedTemplate.name}
-                      className="w-full text-xs px-3 py-2 bg-white border border-slate-200 rounded-xl outline-none focus:ring-1 focus:ring-[#425B9A]"
-                    />
-                  </div>
-
-                  <div className="flex items-center justify-end gap-2 pt-1">
-                    <button
-                      type="button"
-                      onClick={() => handleSelectTemplateSubmit(selectedTemplate)}
-                      disabled={loading}
-                      className="px-6 py-2.5 rounded-xl bg-[#425B9A] hover:bg-[#354a7d] text-xs font-bold text-white shadow-sm flex items-center gap-2 active:scale-95 transition disabled:opacity-50 cursor-pointer"
-                    >
-                      <span>{loading ? 'Menyiapkan...' : `Gunakan Template ${selectedTemplate.name}`}</span>
-                      <ArrowRight className="w-4 h-4 text-[#76C0EC]" />
-                    </button>
-                  </div>
-                </div>
-              )}
             </div>
           )}
 
@@ -836,6 +855,65 @@ export const CreateWebsiteModal: React.FC<Props> = ({
             </form>
           )}
         </div>
+
+        {/* Modal Sticky Bottom Action Bar for Template Gallery */}
+        {step === 'template_gallery' && (
+          <div className="shrink-0 p-3.5 sm:p-4 bg-slate-50/95 backdrop-blur-md border-t border-slate-200 shadow-md">
+            {selectedTemplate ? (
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+                <div className="flex-1 flex flex-col sm:flex-row sm:items-center gap-2">
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                    <span className="text-xs font-bold text-slate-800">
+                      Template: <span className="text-[#425B9A] font-extrabold">{selectedTemplate.name}</span>
+                    </span>
+                  </div>
+                  <div className="flex-1 max-w-sm">
+                    <input
+                      type="text"
+                      value={templateSiteName}
+                      onChange={(e) => setTemplateSiteName(e.target.value)}
+                      placeholder={`Nama website (default: ${selectedTemplate.name})`}
+                      className="w-full text-xs px-3 py-1.5 bg-white border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-[#425B9A]/30 focus:border-[#425B9A] transition"
+                    />
+                  </div>
+                </div>
+                <div className="flex items-center justify-end gap-2 shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => setSelectedTemplate(null)}
+                    className="px-3 py-2 rounded-xl text-xs font-semibold text-slate-500 hover:text-slate-800 hover:bg-slate-200/70 transition cursor-pointer"
+                  >
+                    Batal Pilih
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleSelectTemplateSubmit(selectedTemplate)}
+                    disabled={loading}
+                    className="px-5 py-2.5 rounded-xl bg-[#425B9A] hover:bg-[#354a7d] text-xs font-bold text-white shadow-md flex items-center justify-center gap-2 active:scale-95 transition disabled:opacity-50 cursor-pointer"
+                  >
+                    <span>{loading ? 'Menyiapkan...' : 'Lanjutkan dengan Template Ini'}</span>
+                    <ArrowRight className="w-4 h-4 text-[#76C0EC]" />
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center justify-between text-xs text-slate-500">
+                <div className="flex items-center gap-2">
+                  <span className="text-base">👆</span>
+                  <span>Silakan <strong>klik salah satu kartu template</strong> di atas untuk memilih dan langsung membuat website.</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setStep('choose_method')}
+                  className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-white transition cursor-pointer"
+                >
+                  Kembali
+                </button>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

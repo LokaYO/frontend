@@ -25,10 +25,19 @@ export const HeroSection: React.FC<Props> = ({ content, theme, isEditor }) => {
   const heroButtonText = content.buttonText || (content as any).ctaText || '';
   const heroButtonUrl = content.buttonUrl || (content as any).ctaUrl || '#contact';
 
+  const padding = (content as any).padding || 'normal';
+
   // Background Cover layout variant
   if (isBackground && content.imageUrl) {
+    const bgPadding =
+      padding === 'compact'
+        ? 'py-14 sm:py-20 lg:py-24 min-h-[400px]'
+        : padding === 'spacious'
+        ? 'py-32 sm:py-44 lg:py-52 min-h-[620px]'
+        : 'py-24 sm:py-32 lg:py-40 min-h-[520px]';
+
     return (
-      <section className="relative overflow-hidden py-24 sm:py-32 lg:py-40 bg-slate-900 text-white flex items-center justify-center min-h-[520px]">
+      <section className={`relative overflow-hidden ${bgPadding} bg-slate-900 text-white flex items-center justify-center`}>
         {/* Background Image with Dark Contrast Gradient Overlay */}
         <div className="absolute inset-0 z-0">
           <img
@@ -90,7 +99,24 @@ export const HeroSection: React.FC<Props> = ({ content, theme, isEditor }) => {
     );
   }
 
-  const sectionPadding = isMobile ? 'py-10' : isTablet ? 'py-14 sm:py-16' : 'py-16 sm:py-24 lg:py-28';
+  const sectionPadding =
+    padding === 'compact'
+      ? isMobile
+        ? 'py-6 sm:py-8'
+        : isTablet
+        ? 'py-8 sm:py-10'
+        : 'py-10 sm:py-14 lg:py-16'
+      : padding === 'spacious'
+      ? isMobile
+        ? 'py-16 sm:py-20'
+        : isTablet
+        ? 'py-20 sm:py-24'
+        : 'py-24 sm:py-32 lg:py-36'
+      : isMobile
+      ? 'py-10'
+      : isTablet
+      ? 'py-14 sm:py-16'
+      : 'py-16 sm:py-24 lg:py-28';
   const gridLayout = isMobile
     ? 'grid grid-cols-1 gap-8 items-center'
     : isTablet

@@ -84,6 +84,7 @@ export const LandingPage: React.FC<Props> = ({
         {/* ── 3 Easy Steps Section ── */}
         <LandingHowItWorks />
 
+<<<<<<< HEAD
         {/* ── Bottom Call-to-Action Banner ── */}
         <LandingCtaBanner onTryNow={handleTryNow} />
       </main>
@@ -95,6 +96,469 @@ export const LandingPage: React.FC<Props> = ({
         onScrollTo={scrollToSection}
         onAdminLogin={onAdminLogin}
       />
+=======
+        {/* Ambient Glowing Blobs & Aurora */}
+        <div className="absolute -top-24 -left-32 w-[34rem] h-[34rem] rounded-full bg-[#425B9A]/20 blur-[130px] pointer-events-none animate-pulse" style={{ animationDuration: "7s" }} />
+        <div className="absolute top-12 -right-32 w-[36rem] h-[36rem] rounded-full bg-[#76C0EC]/25 blur-[140px] pointer-events-none" />
+        <div className="absolute top-28 left-1/2 -translate-x-1/2 w-[720px] h-[400px] bg-gradient-to-tr from-[#425B9A]/15 via-[#76C0EC]/20 to-transparent rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute top-[480px] left-1/2 -translate-x-1/2 w-[550px] h-[300px] bg-[#76C0EC]/15 rounded-full blur-[100px] pointer-events-none" />
+
+        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8">
+          {/* Main Headline */}
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.15] max-w-4xl mx-auto drop-shadow-2xs">Hadirkan Website Bisnis &amp; Katalog Online Tanpa Ribet</h1>
+
+          {/* Subtitle */}
+          <p className="text-sm sm:text-base lg:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
+            Solusi praktis bagi UMKM, restoran, barbershop, salon, klinik, dan toko lokal untuk membuat landing page profesional dalam hitungan menit. Terhubung otomatis ke WhatsApp, siap mendatangkan pelanggan.
+          </p>
+
+          {/* Primary CTA Buttons */}
+          <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
+            <button
+              type="button"
+              onClick={handleTryNow}
+              className="w-full sm:w-auto px-8 py-4 rounded-2xl text-sm font-black text-white bg-[#425B9A] hover:bg-[#354a7d] shadow-lg shadow-[#425B9A]/25 hover:shadow-xl transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-2.5 group"
+            >
+              <span>Try Now</span>
+              <ArrowRight className="w-4 h-4 text-[#76C0EC] group-hover:translate-x-1 transition-transform" />
+            </button>
+
+            <a
+              href="#fitur"
+              onClick={(e) => scrollToSection(e, "fitur")}
+              className="w-full sm:w-auto px-6 py-4 rounded-2xl text-sm font-bold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200/90 shadow-xs transition cursor-pointer flex items-center justify-center gap-2"
+            >
+              <span>Pelajari Fitur</span>
+              <ChevronRight className="w-4 h-4 text-slate-400" />
+            </a>
+          </div>
+
+          {/* Trust Highlights */}
+          <div className="pt-8 flex flex-wrap items-center justify-center gap-6 sm:gap-10 text-xs font-semibold text-slate-500">
+            <span className="flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+              <span>Tanpa Keahlian Koding</span>
+            </span>
+            <span className="flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-[#425B9A]" />
+              <span>Order Otomatis via WhatsApp</span>
+            </span>
+            <span className="flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+              <span>Stand Meja QR Kasir Siap Cetak</span>
+            </span>
+            <span className="flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-[#425B9A]" />
+              <span>Desain Responsif Mobile & Tablet</span>
+            </span>
+          </div>
+
+          {/* ── Interactive Preview Mockup Card ── */}
+          <div className="pt-16 sm:pt-20 max-w-4xl mx-auto">
+            <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-3 sm:p-5 border border-white/80 ring-1 ring-slate-900/5 shadow-2xl shadow-indigo-950/10 relative overflow-hidden">
+              <div className="bg-slate-100 rounded-2xl border border-slate-200 p-2 sm:p-3 flex items-center gap-2 mb-3">
+                <div className="flex items-center gap-1.5 px-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-400" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
+                </div>
+                <div className="bg-white px-3 py-1 rounded-lg text-[11px] font-mono text-slate-600 border border-slate-200/70 flex-1 truncate text-left">https://loka.id/sites/paw-and-tail-care</div>
+                <div className="bg-white px-3 py-1 rounded-lg text-[11px] font-mono text-slate-600 border border-slate-200/70 flex-1 truncate text-left">https://paw-and-tail-care.ruuby.my.id</div>
+                <div className="flex items-center gap-1 text-[11px] font-bold text-[#425B9A] px-2">
+                  <Zap className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">Live Mode</span>
+                </div>
+              </div>
+
+              {/* Mockup Inside Visual */}
+              <div className="bg-gradient-to-br from-slate-50 to-white rounded-2xl p-6 sm:p-10 border border-slate-100 text-left space-y-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-5">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-2xl bg-[#425B9A] text-white flex items-center justify-center font-bold shadow-xs">P</div>
+                    <div>
+                      <h3 className="font-extrabold text-base text-slate-900">Paw & Tail Care</h3>
+                      <span className="text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                        Buka Sekarang (09:00 - 20:00)
+                      </span>
+                    </div>
+                  </div>
+                  <button type="button" onClick={onTryNow} className="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold text-xs flex items-center gap-2 self-start sm:self-auto shadow-xs hover:bg-emerald-700 transition">
+                    <MessageCircle className="w-4 h-4" />
+                    <span>Booking Grooming via WA</span>
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="p-4 bg-white rounded-2xl border border-slate-200/80 shadow-2xs space-y-1">
+                    <span className="text-[11px] font-bold text-slate-400 uppercase">Paket Populer</span>
+                    <h4 className="font-bold text-sm text-slate-900">Full Grooming Treatment</h4>
+                    <p className="text-xs text-slate-500">Mandi herbal, potong kuku, & hair styling.</p>
+                    <span className="font-extrabold text-[#425B9A] text-xs block pt-2">Rp 120.000</span>
+                  </div>
+                  <div className="p-4 bg-white rounded-2xl border border-slate-200/80 shadow-2xs space-y-1">
+                    <span className="text-[11px] font-bold text-slate-400 uppercase">Penitipan Nyaman</span>
+                    <h4 className="font-bold text-sm text-slate-900">Hotel Anabul VIP Room</h4>
+                    <p className="text-xs text-slate-500">Ruangan ber-AC, CCTV live 24 jam, & makan.</p>
+                    <span className="font-extrabold text-[#425B9A] text-xs block pt-2">Rp 85.000 / hari</span>
+                  </div>
+                  <div className="p-4 bg-white rounded-2xl border border-slate-200/80 shadow-2xs space-y-1">
+                    <span className="text-[11px] font-bold text-slate-400 uppercase">Perawatan Medis</span>
+                    <h4 className="font-bold text-sm text-slate-900">Vaksin & Konsultasi Dokter</h4>
+                    <p className="text-xs text-slate-500">Ditangani dokter hewan berizin profesional.</p>
+                    <span className="font-extrabold text-[#425B9A] text-xs block pt-2">Rp 150.000</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Core Features Section ── */}
+      <section id="fitur" className="scroll-mt-20 py-20 md:py-28 bg-slate-50/60 border-y border-slate-200/80">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <div className="text-center max-w-2xl mx-auto space-y-3">
+            <span className="text-xs font-black uppercase tracking-widest text-[#425B9A] block">Fitur Lengkap</span>
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Semua yang Dibutuhkan Usaha Anda Ada di Sini</h2>
+            <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">Dirancang khusus untuk mempermudah operasional dan promosi pemilik bisnis lokal di Indonesia.</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Feature 1 */}
+            <div className="bg-white p-6 sm:p-7 rounded-3xl border border-slate-200/90 shadow-xs space-y-3">
+              <span className="w-12 h-12 rounded-2xl bg-[#425B9A]/10 text-[#425B9A] flex items-center justify-center">
+                <Sliders className="w-6 h-6" />
+              </span>
+              <h3 className="font-extrabold text-base text-slate-900">Drag & Drop Section Builder</h3>
+              <p className="text-xs text-slate-500 leading-relaxed">Susun seksi Hero, Layanan, Jam Buka, Galeri Foto, hingga Formulir Kontak semudah menggeser kartu dengan live preview.</p>
+            </div>
+
+            {/* Feature 2 */}
+            <div className="bg-white p-6 sm:p-7 rounded-3xl border border-slate-200/90 shadow-xs space-y-3">
+              <span className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                <MessageCircle className="w-6 h-6" />
+              </span>
+              <h3 className="font-extrabold text-base text-slate-900">Integrasi WhatsApp Otomatis</h3>
+              <p className="text-xs text-slate-500 leading-relaxed">Tombol CTA langsung mengarahkan pesan yang sudah diformat ke nomor WhatsApp Anda tanpa perantara.</p>
+            </div>
+
+            {/* Feature 3 */}
+            <div className="bg-white p-6 sm:p-7 rounded-3xl border border-slate-200/90 shadow-xs space-y-3">
+              <span className="w-12 h-12 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center">
+                <QrCode className="w-6 h-6" />
+              </span>
+              <h3 className="font-extrabold text-base text-slate-900">Stand Meja QR Kasir Siap Cetak</h3>
+              <p className="text-xs text-slate-500 leading-relaxed">Dapatkan kartu akrilik stand meja kasir otomatis beresolusi tinggi (A5/A6) untuk discan langsung oleh pembeli di toko fisik.</p>
+            </div>
+
+            {/* Feature 4 */}
+            <div className="bg-white p-6 sm:p-7 rounded-3xl border border-slate-200/90 shadow-xs space-y-3">
+              <span className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                <Inbox className="w-6 h-6" />
+              </span>
+              <h3 className="font-extrabold text-base text-slate-900">Kotak Masuk Leads Pelanggan</h3>
+              <p className="text-xs text-slate-500 leading-relaxed">Kumpulkan pesan formulir dari pengunjung website dalam satu dashboard dan ekspor ke format Excel/CSV kapan saja.</p>
+            </div>
+
+            {/* Feature 5 */}
+            <div className="bg-white p-6 sm:p-7 rounded-3xl border border-slate-200/90 shadow-xs space-y-3">
+              <span className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                <TrendingUp className="w-6 h-6" />
+              </span>
+              <h3 className="font-extrabold text-base text-slate-900">Analitik & Performa Real-Time</h3>
+              <p className="text-xs text-slate-500 leading-relaxed">Ketahui jumlah pengunjung harian dan seberapa banyak pelanggan yang tertarik menghubungi WhatsApp toko Anda.</p>
+            </div>
+
+            {/* Feature 6 */}
+            <div className="bg-white p-6 sm:p-7 rounded-3xl border border-slate-200/90 shadow-xs space-y-3">
+              <span className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center">
+                <Smartphone className="w-6 h-6" />
+              </span>
+              <h3 className="font-extrabold text-base text-slate-900">100% Responsif & Ringan</h3>
+              <p className="text-xs text-slate-500 leading-relaxed">Website dimuat cepat di semua smartphone pelanggan tanpa lemot, dioptimalkan untuk koneksi internet seluler.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Preset Templates Showcase ── */}
+      <section id="template" className="scroll-mt-20 py-20 md:py-28 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+            <div>
+              <span className="text-xs font-black uppercase tracking-widest text-[#425B9A] block">Galeri Template</span>
+              <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mt-1">Pilih Desain Siap Pakai untuk Jenis Bisnis Anda</h2>
+            </div>
+            <button type="button" onClick={onTryNow} className="inline-flex items-center gap-1.5 text-xs font-bold text-[#425B9A] hover:underline cursor-pointer">
+              <span>Jelajahi Semua Template</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              {
+                title: "Kedai Kopi & Cafe",
+                category: "Kuliner",
+                tag: "Bestseller",
+                desc: "Tampilkan menu signature, jam buka, dan link pemesanan online.",
+                color: "from-amber-700 to-amber-900",
+              },
+              {
+                title: "Pet Care & Salon Grooming",
+                category: "Jasa & Hewan",
+                tag: "Populer",
+                desc: "Daftar tarif perawatan, booking appointment, dan foto anabul.",
+                color: "from-sky-600 to-[#425B9A]",
+              },
+              {
+                title: "Barbershop & Studio Rambut",
+                category: "Grooming",
+                tag: "Modern",
+                desc: "Katalog gaya rambut, tarif cukur, dan testimoni pelanggan puas.",
+                color: "from-slate-800 to-slate-950",
+              },
+              {
+                title: "Klinik Kecantikan & Skincare",
+                category: "Kesehatan",
+                tag: "Elegan",
+                desc: "Jadwal dokter, konsultasi treatment, dan ulasan pasien.",
+                color: "from-rose-600 to-pink-700",
+              },
+            ].map((t, idx) => (
+              <div key={idx} className="bg-white rounded-3xl border border-slate-200/90 shadow-xs overflow-hidden group hover:shadow-md transition flex flex-col justify-between">
+                <div>
+                  <div className={`h-36 bg-gradient-to-tr ${t.color} p-5 flex flex-col justify-between text-white relative`}>
+                    <span className="self-start px-2 py-0.5 rounded-full text-[10px] font-black bg-white/20 backdrop-blur-xs">{t.tag}</span>
+                    <div>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-white/80 block">{t.category}</span>
+                      <h4 className="font-extrabold text-base leading-tight mt-0.5">{t.title}</h4>
+                    </div>
+                  </div>
+                  <div className="p-5">
+                    <p className="text-xs text-slate-500 leading-relaxed">{t.desc}</p>
+                  </div>
+                </div>
+
+                <div className="p-5 pt-0">
+                  <button
+                    type="button"
+                    onClick={onTryNow}
+                    className="w-full py-2.5 rounded-xl bg-slate-100 hover:bg-[#425B9A] hover:text-white text-slate-700 text-xs font-bold transition flex items-center justify-center gap-1 cursor-pointer"
+                  >
+                    <span>Gunakan Template</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── 3 Easy Steps Section ── */}
+      <section id="cara-kerja" className="scroll-mt-20 py-20 md:py-28 bg-slate-50/60 border-y border-slate-200/80">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <div className="text-center max-w-xl mx-auto space-y-2">
+            <span className="text-xs font-black uppercase tracking-widest text-[#425B9A] block">Cara Kerja</span>
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Online dalam 3 Langkah Sederhana</h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+            <div className="bg-white p-7 rounded-3xl border border-slate-200/90 shadow-xs space-y-3">
+              <span className="w-12 h-12 rounded-2xl bg-[#425B9A] text-white font-black text-lg flex items-center justify-center mx-auto shadow-sm">1</span>
+              <h3 className="font-extrabold text-base text-slate-900">Pilih Template Bisnis</h3>
+              <p className="text-xs text-slate-500 leading-relaxed">Pilih tema yang sesuai dengan bidang usaha Anda, dari kuliner, salon, klinik, hingga jasa servis.</p>
+            </div>
+
+            <div className="bg-white p-7 rounded-3xl border border-slate-200/90 shadow-xs space-y-3">
+              <span className="w-12 h-12 rounded-2xl bg-[#425B9A] text-white font-black text-lg flex items-center justify-center mx-auto shadow-sm">2</span>
+              <h3 className="font-extrabold text-base text-slate-900">Lengkapi Profil & Menu</h3>
+              <p className="text-xs text-slate-500 leading-relaxed">Masukkan nama toko, jam operasional, foto produk/layanan, dan nomor WhatsApp admin Anda.</p>
+            </div>
+
+            <div className="bg-white p-7 rounded-3xl border border-slate-200/90 shadow-xs space-y-3">
+              <span className="w-12 h-12 rounded-2xl bg-[#425B9A] text-white font-black text-lg flex items-center justify-center mx-auto shadow-sm">3</span>
+              <h3 className="font-extrabold text-base text-slate-900">Publish & Bagikan Link</h3>
+              <p className="text-xs text-slate-500 leading-relaxed">Website Anda langsung aktif online! Bagikan di bio Instagram, TikTok, dan cetak QR stand meja toko Anda.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Bottom Call-to-Action Banner ── */}
+      <section className="py-20 md:py-28 bg-white">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-gradient-to-r from-[#2c3d69] via-[#425B9A] to-[#3a639b] text-white rounded-3xl p-8 sm:p-14 text-center space-y-6 shadow-xl relative overflow-hidden">
+            <div className="max-w-xl mx-auto space-y-3 relative z-10">
+              <img src={logoWithTagline} alt="Loka - Your Bussines, Online" className="h-16 w-auto mx-auto object-contain brightness-0 invert opacity-95" />
+              <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight mt-4">Siap Meningkatkan Penjualan Bisnis Anda?</h2>
+              <p className="text-xs sm:text-sm text-slate-200 leading-relaxed max-w-md mx-auto">Bergabunglah dengan ribuan pelaku usaha lokal yang telah memiliki website profesional sendiri.</p>
+            </div>
+
+            <div className="pt-2 relative z-10">
+              <button
+                type="button"
+                onClick={handleTryNow}
+                className="px-8 py-4 rounded-2xl text-sm font-black bg-white text-[#425B9A] hover:bg-slate-100 shadow-lg active:scale-95 transition-all cursor-pointer inline-flex items-center gap-2"
+              >
+                <span>Try Now</span>
+                <ArrowRight className="w-4 h-4 text-[#425B9A]" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Real SaaS Mega Footer ── */}
+      <footer className="bg-slate-950 text-slate-400 border-t border-slate-800/80 pt-16 pb-12 text-xs">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          {/* Main Footer Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-12 gap-8 lg:gap-12">
+            {/* Col 1: Brand & Mission (4 cols on desktop) */}
+            <div className="col-span-2 md:col-span-4 space-y-4">
+              <div className="flex items-center gap-2">
+                <img src={logoWithTagline} alt="Loka - Your Bussines, Online" className="h-12 w-auto object-contain brightness-0 invert opacity-95" />
+              </div>
+
+              <p className="text-slate-400 text-xs leading-relaxed max-w-sm">
+                Platform B2B SaaS pembuatan website &amp; katalog online instan khusus UMKM lokal Indonesia. Terhubung otomatis ke WhatsApp &amp; cetak QR stand meja kasir tanpa butuh keahlian coding.
+              </p>
+
+              {/* Status Badge */}
+
+              {/* Country & Support */}
+              <div className="pt-1 flex items-center gap-2 text-slate-500 text-[11px]">
+                <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                <span>Bandar Lampung, Lampung</span>
+              </div>
+            </div>
+
+            {/* Col 2: Fitur & Produk (2 cols) */}
+            <div className="col-span-1 md:col-span-2 space-y-3">
+              <h4 className="text-xs font-black uppercase tracking-wider text-white">Fitur Produk</h4>
+              <ul className="space-y-2.5">
+                <li>
+                  <a href="#fitur" onClick={(e) => scrollToSection(e, "fitur")} className="hover:text-white transition">
+                    Drag &amp; Drop Builder
+                  </a>
+                </li>
+                <li>
+                  <button type="button" onClick={handleTryNow} className="hover:text-white transition cursor-pointer text-left">
+                    Generator AI Website
+                  </button>
+                </li>
+                <li>
+                  <a href="#template" onClick={(e) => scrollToSection(e, "template")} className="hover:text-white transition">
+                    Galeri Template Bisnis
+                  </a>
+                </li>
+                <li>
+                  <span className="hover:text-white transition cursor-pointer">Order via WhatsApp</span>
+                </li>
+                <li>
+                  <span className="hover:text-white transition cursor-pointer">Stand Meja QR Kasir HD</span>
+                </li>
+                <li>
+                  <span className="hover:text-white transition cursor-pointer">Kotak Masuk Leads Tamu</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Col 3: Solusi Bisnis UMKM (2 cols) */}
+            <div className="col-span-1 md:col-span-2 space-y-3">
+              <h4 className="text-xs font-black uppercase tracking-wider text-white">Solusi Bisnis</h4>
+              <ul className="space-y-2.5">
+                <li>
+                  <span className="hover:text-white transition cursor-pointer">Kafe &amp; Coffee Shop</span>
+                </li>
+                <li>
+                  <span className="hover:text-white transition cursor-pointer">Barbershop &amp; Salon</span>
+                </li>
+                <li>
+                  <span className="hover:text-white transition cursor-pointer">Laundry &amp; Cuci Sepatu</span>
+                </li>
+                <li>
+                  <span className="hover:text-white transition cursor-pointer">Restoran &amp; Kuliner</span>
+                </li>
+                <li>
+                  <span className="hover:text-white transition cursor-pointer">Klinik &amp; Skincare</span>
+                </li>
+                <li>
+                  <span className="hover:text-white transition cursor-pointer">Bengkel &amp; Jasa Servis</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Col 4: Platform & Akses (2 cols) */}
+            <div className="col-span-1 md:col-span-2 space-y-3">
+              <h4 className="text-xs font-black uppercase tracking-wider text-white">Platform</h4>
+              <ul className="space-y-2.5">
+                <li>
+                  <button type="button" onClick={handleLogin} className="hover:text-white transition cursor-pointer text-left">
+                    Masuk Merchant
+                  </button>
+                </li>
+                <li>
+                  <button type="button" onClick={handleTryNow} className="hover:text-white transition cursor-pointer text-left">
+                    Daftar Akun Baru
+                  </button>
+                </li>
+                <li>
+                  <span className="hover:text-white transition cursor-pointer">Status Berlangganan PRO</span>
+                </li>
+                <li>
+                  <a href="#cara-kerja" onClick={(e) => scrollToSection(e, "cara-kerja")} className="hover:text-white transition">
+                    Cara Mulai Bisnis
+                  </a>
+                </li>
+                <li>
+                  <button type="button" onClick={onAdminLogin} className="hover:text-white transition cursor-pointer text-left text-slate-400">
+                    Portal Administrator
+                  </button>
+                </li>
+              </ul>
+            </div>
+
+            {/* Col 5: Bantuan & Legal (2 cols) */}
+            <div className="col-span-1 md:col-span-2 space-y-3">
+              <h4 className="text-xs font-black uppercase tracking-wider text-white">Bantuan &amp; Kontak</h4>
+              <ul className="space-y-2.5">
+                <li>
+                  <a href="mailto:support@loka.id" className="hover:text-white transition flex items-center gap-1.5">
+                    <Mail className="w-3 h-3 text-slate-500" />
+                    <span>support@loka.id</span>
+                  </a>
+                </li>
+                <li>
+                  <span className="hover:text-white transition cursor-pointer">Pusat Bantuan UMKM</span>
+                </li>
+                <li>
+                  <span className="hover:text-white transition cursor-pointer">Syarat &amp; Ketentuan</span>
+                </li>
+                <li>
+                  <span className="hover:text-white transition cursor-pointer">Kebijakan Privasi Data</span>
+                </li>
+                <li>
+                  <span className="hover:text-white transition cursor-pointer">Keamanan Cloud SSL</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Bottom Bar: Copyright & Badges */}
+          <div className="pt-8 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-500">
+            <div className="flex items-center gap-2">
+              <img src={logoClean} alt="Loka" className="h-4 w-auto object-contain brightness-0 invert opacity-70" />
+              <span>&copy; {new Date().getFullYear()} LOKA Platform. Seluruh hak cipta dilindungi.</span>
+            </div>
+
+            <div className="flex items-center gap-6"></div>
+          </div>
+        </div>
+      </footer>
+>>>>>>> 35f85626997b820ca71b0879cb75a48827407958
     </div>
   );
 };

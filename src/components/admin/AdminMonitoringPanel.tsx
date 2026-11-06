@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { adminService, MonitoringUser, PlatformStats, UserDetails, AdminWebsite } from "../../services/admin.service";
 import { useAuth } from "../../context/AuthContext";
 import { ConfirmModal } from "../common/ConfirmModal";
+import { getPublicSiteUrl, getPublicSiteDisplayUrl } from "../../utils/url.utils";
 import {
   Users,
   ShieldCheck,
@@ -156,7 +157,8 @@ interface WebsiteCardProps {
 const WebsiteCard: React.FC<WebsiteCardProps> = ({ website }) => {
   const [sectionsExpanded, setSectionsExpanded] = useState(true);
   const isPublished = website.status === "published";
-  const publicUrl = `${window.location.origin}/sites/${website.slug}`;
+  const publicUrl = getPublicSiteUrl(website.slug);
+  const displayUrl = getPublicSiteDisplayUrl(website.slug);
   const bi = website.businessInfo || {};
 
   return (
@@ -180,6 +182,7 @@ const WebsiteCard: React.FC<WebsiteCardProps> = ({ website }) => {
 
           <h3 className="text-lg font-black text-slate-900 tracking-tight">{website.name}</h3>
           <p className="text-xs text-blue-600 font-mono">/sites/{website.slug}</p>
+          <p className="text-xs text-blue-600 font-mono">{displayUrl}</p>
         </div>
 
         {/* Action Link */}
@@ -702,20 +705,10 @@ export const AdminMonitoringPanel: React.FC<AdminMonitoringPanelProps> = ({ acti
 
   const onlineCount = users.filter((u) => u.isCurrentlyOnline).length;
 
-  // JIKA SEDANG MEMBUKA DETAIL USER -> TAMPILKAN DEDICATED FULL VIEW
-  if (selectedUserId) {
-    return (
-      <ClientDetailView
-        userId={selectedUserId}
-        onBack={() => setSelectedUserId(null)}
-        currentAdminRole={user?.role || ""}
-        onRoleChange={handleRoleChange}
-        onPlanChange={handlePlanChange}
-        onDelete={handleDeleteUser}
-        actionLoading={actionLoading}
-      />
-    );
-  }
+  // Reset detail user saat tab admin berpindah
+  useEffect(() => {
+    setSelectedUserId(null);
+  }, [mainTab]);
 
   return (
     <div className="space-y-6">
@@ -793,8 +786,19 @@ export const AdminMonitoringPanel: React.FC<AdminMonitoringPanelProps> = ({ acti
 
       {/* ── TAB 1: PENGGUNA & CLIENT MONITORING ── */}
       {mainTab === "users" && (
-        <>
-          {/* ── Top Header ───────────────────────────────────── */}
+        selectedUserId ? (
+          <ClientDetailView
+            userId={selectedUserId}
+            onBack={() => setSelectedUserId(null)}
+            currentAdminRole={user?.role || ""}
+            onRoleChange={handleRoleChange}
+            onPlanChange={handlePlanChange}
+            onDelete={handleDeleteUser}
+            actionLoading={actionLoading}
+          />
+        ) : (
+          <>
+            {/* ── Top Header ───────────────────────────────────── */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-slate-200 shadow-xs">
             <div>
               <div className="flex items-center gap-2">
@@ -1072,7 +1076,7 @@ export const AdminMonitoringPanel: React.FC<AdminMonitoringPanelProps> = ({ acti
             </div>
           </div>
         </>
-      )}
+      ))}
 
       {/* Delete User & Websites Modal */}
       <ConfirmModal

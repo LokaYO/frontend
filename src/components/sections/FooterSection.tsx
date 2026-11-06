@@ -9,8 +9,16 @@ interface Props {
 }
 
 export const FooterSection: React.FC<Props> = ({ content, isEditor }) => {
+  const padding = (content as any).padding || 'normal';
+  const paddingClass =
+    padding === 'compact'
+      ? 'py-6 sm:py-8'
+      : padding === 'spacious'
+      ? 'py-16 sm:py-24'
+      : 'py-12';
+
   return (
-    <footer className="bg-slate-950 text-slate-400 py-12 border-t border-slate-900">
+    <footer className={`bg-slate-950 text-slate-400 ${paddingClass} border-t border-slate-900`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 pb-8 border-b border-slate-800/80">
           {/* Tagline */}

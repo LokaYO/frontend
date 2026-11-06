@@ -746,7 +746,7 @@ export const PRESET_TEMPLATES: PresetTemplate[] = [
     name: 'AutoPrima Service',
     category: 'Bengkel & Servis Mobil',
     description: 'Template kredibel, terpercaya, dan to-the-point untuk bengkel mobil, motor, AC, atau jasa reparasi lokal.',
-    previewImage: 'https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&w=800&q=80',
+    previewImage: 'https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=800&q=80',
     businessInfo: {
       name: 'Bengkel AutoPrima Service',
       category: 'Bengkel Mobil & Perawatan Otomotif',

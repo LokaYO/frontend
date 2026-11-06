@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { adminService, AdminModerationWebsite } from '../../services/admin.service';
 import { useToast } from '../../context/ToastContext';
 import { ConfirmModal } from '../common/ConfirmModal';
+import { getPublicSiteUrl, getPublicSiteDisplayUrl } from '../../utils/url.utils';
 import {
   Globe,
   Search,
@@ -707,11 +708,13 @@ export const AdminModerationTab: React.FC<Props> = ({ currentAdminRole }) => {
                               </span>
                               <a
                                 href={`/sites/${site.slug}`}
+                                href={getPublicSiteUrl(site.slug)}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-[11px] text-[#425B9A] hover:underline inline-flex items-center gap-1 font-mono mt-0.5"
                               >
                                 <span>/sites/{site.slug}</span>
+                                <span>{getPublicSiteDisplayUrl(site.slug)}</span>
                                 <ExternalLink className="w-3 h-3" />
                               </a>
                               {isSuspended && site.suspendReason && (
@@ -771,6 +774,7 @@ export const AdminModerationTab: React.FC<Props> = ({ currentAdminRole }) => {
                               {/* Public Site Preview */}
                               <a
                                 href={`/sites/${site.slug}`}
+                                href={getPublicSiteUrl(site.slug)}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition"
@@ -848,6 +852,7 @@ export const AdminModerationTab: React.FC<Props> = ({ currentAdminRole }) => {
               </p>
               <p>
                 <strong>URL:</strong> /sites/{selectedSiteForSuspend.slug}
+                <strong>URL:</strong> {getPublicSiteDisplayUrl(selectedSiteForSuspend.slug)}
               </p>
               <p>
                 <strong>Pemilik:</strong> {selectedSiteForSuspend.ownerName} ({selectedSiteForSuspend.ownerEmail})

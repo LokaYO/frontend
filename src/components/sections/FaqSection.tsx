@@ -158,8 +158,16 @@ export const FaqSection: React.FC<Props> = ({ content, theme, isEditor, onUpdate
     }
   };
 
+  const padding = (content as any).padding || 'normal';
+  const paddingClass =
+    padding === 'compact'
+      ? 'py-8 sm:py-12'
+      : padding === 'spacious'
+      ? 'py-24 sm:py-36'
+      : 'py-16 sm:py-24';
+
   return (
-    <section id="faq" className="py-16 sm:py-24 bg-slate-50/70">
+    <section id="faq" className={`${paddingClass} bg-slate-50/70`}>
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center space-y-4 mb-12 sm:mb-16">

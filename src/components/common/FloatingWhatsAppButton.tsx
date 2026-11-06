@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { MessageCircle, Clock, X, Sparkles } from 'lucide-react';
 import { getOperatingStatus } from '../../utils/operatingHours';
 import { useViewport } from '../../context/ViewportContext';
+import { websiteService } from '../../services/website.service';
 
 interface Props {
   phone: string;
@@ -54,6 +55,7 @@ export const FloatingWhatsAppButton: React.FC<Props> = ({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ type: 'whatsapp_click' }),
       }).catch((err) => console.error('Tracking WA click failed:', err));
+      websiteService.trackPublicEvent(slug, 'whatsapp');
     }
   };
 
