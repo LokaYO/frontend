@@ -58,25 +58,24 @@ export const AuthPage: React.FC<Props> = ({
       } else {
         const data = await authService.login(email, password);
         login(data.token, data.user);
-        const data = isRegister
-          ? await authService.register(name, email, password)
-          : await authService.login(email, password);
-
-        login(data.token, data.user);
 
         // Jika yang login ternyata admin, arahkan ke /admin
         if ((data.user.role === "admin" || data.user.role === "support") && onNavigateAdmin) {
           onNavigateAdmin();
         }
-      } catch (err: any) {
-        console.error("Auth error:", err);
-        setErrorMsg(err.message || (isRegister ? "Gagal mendaftar" : "Gagal masuk"));
-      } finally {
-        setLoading(false);
       }
-    };
+    } catch (err: unknown) {
+      console.error("Auth error:", err);
+      setErrorMsg(
+        (err instanceof Error ? err.message : null) ||
+          (isRegister ? "Gagal mendaftar" : "Gagal masuk"),
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    return (
+  return (
       <div
         className="relative min-h-screen w-full flex flex-col justify-between overflow-x-hidden"
         style={{
