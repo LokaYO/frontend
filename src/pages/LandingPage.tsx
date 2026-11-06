@@ -1,31 +1,13 @@
 import React, { useState } from "react";
 import {
-  ArrowRight,
-  Sparkles,
-  Smartphone,
-  CheckCircle2,
-  Store,
-  QrCode,
-  Inbox,
-  TrendingUp,
-  Globe,
-  Sliders,
-  ShieldCheck,
-  ChevronRight,
-  ExternalLink,
-  MessageCircle,
-  Zap,
-  Layers,
-  Award,
-  Eye,
-  Crown,
-  Mail,
-  MapPin,
-  Lock,
-  Heart,
-} from "lucide-react";
-import logoClean from "../assets/Logo Loka (1) (1).png";
-import logoWithTagline from "../assets/Logo Loka (2).png";
+  LandingNavbar,
+  LandingHero,
+  LandingFeatures,
+  LandingTemplates,
+  LandingHowItWorks,
+  LandingCtaBanner,
+  LandingFooter,
+} from "../components/landing";
 
 interface Props {
   onTryNow: () => void;
@@ -33,7 +15,11 @@ interface Props {
   onAdminLogin?: () => void;
 }
 
-export const LandingPage: React.FC<Props> = ({ onTryNow, onLogin, onAdminLogin }) => {
+export const LandingPage: React.FC<Props> = ({
+  onTryNow,
+  onLogin,
+  onAdminLogin,
+}) => {
   const [isNavigating, setIsNavigating] = useState(false);
 
   const handleTryNow = () => {
@@ -50,7 +36,10 @@ export const LandingPage: React.FC<Props> = ({ onTryNow, onLogin, onAdminLogin }
     }, 200);
   };
 
-  const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+  const scrollToSection = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    id: string
+  ) => {
     e.preventDefault();
     const el = document.getElementById(id);
     if (el) {
@@ -61,63 +50,53 @@ export const LandingPage: React.FC<Props> = ({ onTryNow, onLogin, onAdminLogin }
   return (
     <div
       className={`min-h-screen bg-white text-slate-900 font-sans antialiased selection:bg-[#425B9A]/20 selection:text-[#425B9A] scroll-smooth transition-all duration-200 ${
-        isNavigating ? "opacity-60 scale-[0.995] pointer-events-none" : "opacity-100"
+        isNavigating
+          ? "opacity-60 scale-[0.995] pointer-events-none"
+          : "opacity-100"
       }`}
     >
       {/* Top Route Loading Progress Bar */}
-      {isNavigating && <div className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#425B9A] via-[#76C0EC] to-[#425B9A] animate-pulse z-50" />}
-      {/* ── Top Announcement Banner ── */}
-      <div className="bg-[#425B9A] text-white py-2 px-4 text-center text-xs font-semibold flex items-center justify-center gap-2">
-        <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-white/20 uppercase tracking-wider">Baru</span>
-        <span>Platform B2B SaaS Landing Page & Katalog WhatsApp Khusus Bisnis Lokal Indonesia 🇮🇩</span>
-      </div>
+      {isNavigating && (
+        <div className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#425B9A] via-[#76C0EC] to-[#425B9A] animate-pulse z-50" />
+      )}
 
-      {/* ── Sticky Navigation Bar ── */}
-      <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200/70">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between">
-          {/* Logo */}
-          <div className="flex items-center gap-3">
-            <a href="/" className="flex items-center gap-2 group">
-              <img src={logoClean} alt="Loka" className="h-8 w-auto object-contain transition-transform group-hover:scale-105" />
-            </a>
-          </div>
+      {/* ── Sticky/Floating Navigation Bar (Matches Figma Top Layout) ── */}
+      <LandingNavbar
+        onLogin={handleLogin}
+        onTryNow={handleTryNow}
+        onScrollTo={scrollToSection}
+      />
 
-          {/* Desktop Navigation Links */}
-          <nav className="hidden md:flex items-center gap-8 text-xs font-bold text-slate-600">
-            <a href="#fitur" onClick={(e) => scrollToSection(e, "fitur")} className="hover:text-[#425B9A] transition cursor-pointer">
-              Fitur Unggulan
-            </a>
-            <a href="#template" onClick={(e) => scrollToSection(e, "template")} className="hover:text-[#425B9A] transition cursor-pointer">
-              Galeri Template
-            </a>
-            <a href="#cara-kerja" onClick={(e) => scrollToSection(e, "cara-kerja")} className="hover:text-[#425B9A] transition cursor-pointer">
-              Cara Kerja
-            </a>
-          </nav>
+      {/* ── Main Content Sections ── */}
+      <main>
+        {/* ── Hero Section (Matches Figma 3D Cloud Sky + Wave + Mockups) ── */}
+        <LandingHero
+          onTryNow={handleTryNow}
+          onScrollTo={scrollToSection}
+        />
 
-          {/* Action CTAs */}
-          <div className="flex items-center gap-2.5">
-            <button type="button" onClick={handleLogin} className="px-3.5 py-2 text-xs font-bold text-slate-700 hover:text-slate-900 transition active:scale-95 cursor-pointer">
-              Masuk
-            </button>
+        {/* ── Core Features Section ── */}
+        <LandingFeatures />
 
-            <button
-              type="button"
-              onClick={handleTryNow}
-              className="px-4 py-2.5 rounded-xl text-xs font-extrabold text-white bg-[#425B9A] hover:bg-[#354a7d] shadow-sm hover:shadow transition active:scale-95 cursor-pointer flex items-center gap-2"
-            >
-              <span>Try Now</span>
-              <ArrowRight className="w-3.5 h-3.5 text-[#76C0EC]" />
-            </button>
-          </div>
-        </div>
-      </header>
+        {/* ── Preset Templates Showcase ── */}
+        <LandingTemplates onTryNow={handleTryNow} />
 
-      {/* ── Hero Section ── */}
-      <section className="relative pt-16 pb-24 sm:pt-24 md:pt-32 md:pb-36 overflow-hidden bg-gradient-to-b from-slate-50 via-slate-100/60 to-white">
-        {/* Decorative Grid Mesh with Radial Fade Mask */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800c_1px,transparent_1px),linear-gradient(to_bottom,#8080800c_1px,transparent_1px)] bg-[size:32px_32px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_35%,#000_70%,transparent_100%)] pointer-events-none" />
+        {/* ── 3 Easy Steps Section ── */}
+        <LandingHowItWorks />
 
+<<<<<<< HEAD
+        {/* ── Bottom Call-to-Action Banner ── */}
+        <LandingCtaBanner onTryNow={handleTryNow} />
+      </main>
+
+      {/* ── Real SaaS Mega Footer ── */}
+      <LandingFooter
+        onTryNow={handleTryNow}
+        onLogin={handleLogin}
+        onScrollTo={scrollToSection}
+        onAdminLogin={onAdminLogin}
+      />
+=======
         {/* Ambient Glowing Blobs & Aurora */}
         <div className="absolute -top-24 -left-32 w-[34rem] h-[34rem] rounded-full bg-[#425B9A]/20 blur-[130px] pointer-events-none animate-pulse" style={{ animationDuration: "7s" }} />
         <div className="absolute top-12 -right-32 w-[36rem] h-[36rem] rounded-full bg-[#76C0EC]/25 blur-[140px] pointer-events-none" />
@@ -579,6 +558,7 @@ export const LandingPage: React.FC<Props> = ({ onTryNow, onLogin, onAdminLogin }
           </div>
         </div>
       </footer>
+>>>>>>> 35f85626997b820ca71b0879cb75a48827407958
     </div>
   );
 };
