@@ -65,18 +65,25 @@ export const LandingNavbar: React.FC<LandingNavbarProps> = ({
           </a>
         </div>
 
-        {/* Center Pill Navigation — Figma: white bg, rounded-[23px], nav items with Beranda active */}
+        {/* Center Pill Navigation — Figma: white bg when at top, transparent without box when scrolled down */}
         <div className="hidden md:flex items-center justify-center">
-          <nav className="bg-white rounded-[23px] shadow-lg shadow-indigo-950/10 px-8 lg:px-10 py-3.5 lg:py-[15px] flex items-center gap-8 lg:gap-[61px] text-[12px] font-medium font-poppins border border-slate-100">
+          <nav
+            className={`transition-all duration-300 flex items-center text-[12px] lg:text-[13px] font-medium font-poppins ${
+              isScrolled
+                ? "bg-transparent shadow-none border-transparent px-2 py-1 gap-8 lg:gap-[48px]"
+                : "bg-white rounded-[23px] shadow-lg shadow-indigo-950/10 px-8 lg:px-10 py-3.5 lg:py-[15px] border border-slate-100 gap-8 lg:gap-[61px]"
+            }`}
+          >
             {navLinks.map((link) => (
               <a
                 key={link.id}
                 href={link.id === "beranda" ? "#" : `#${link.id}`}
                 onClick={(e) => handleNavClick(e, link.id)}
-                className={`relative py-1 transition cursor-pointer ${activeTab === link.id
-                  ? "text-[#425B9A]"
-                  : "text-black hover:text-[#425B9A]"
-                  }`}
+                className={`relative py-1 transition cursor-pointer ${
+                  activeTab === link.id
+                    ? "text-[#425B9A] font-semibold"
+                    : "text-slate-800 hover:text-[#425B9A]"
+                }`}
               >
                 <span>{link.label}</span>
                 {activeTab === link.id && (
