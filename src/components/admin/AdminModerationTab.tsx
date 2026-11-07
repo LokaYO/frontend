@@ -707,13 +707,11 @@ export const AdminModerationTab: React.FC<Props> = ({ currentAdminRole }) => {
                                 {site.name}
                               </span>
                               <a
-                                href={`/sites/${site.slug}`}
                                 href={getPublicSiteUrl(site.slug)}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-[11px] text-[#425B9A] hover:underline inline-flex items-center gap-1 font-mono mt-0.5"
                               >
-                                <span>/sites/{site.slug}</span>
                                 <span>{getPublicSiteDisplayUrl(site.slug)}</span>
                                 <ExternalLink className="w-3 h-3" />
                               </a>
@@ -773,7 +771,6 @@ export const AdminModerationTab: React.FC<Props> = ({ currentAdminRole }) => {
                             <div className="flex items-center justify-end gap-2">
                               {/* Public Site Preview */}
                               <a
-                                href={`/sites/${site.slug}`}
                                 href={getPublicSiteUrl(site.slug)}
                                 target="_blank"
                                 rel="noopener noreferrer"

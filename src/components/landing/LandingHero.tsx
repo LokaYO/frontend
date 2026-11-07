@@ -159,7 +159,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
           HERO BANNER SECTION (Sky + Wave + Mockups + Badges)
           Height calibrated to fit laptop screens (1080p / 900p)
           ═══════════════════════════════════════════════════════ */}
-      <section className="relative min-h-[700px] lg:min-h-[760px] xl:min-h-[840px] flex flex-col justify-between pt-24 sm:pt-28 lg:pt-32 pb-8 sm:pb-12">
+      <section className="relative min-h-[700px] lg:min-h-[760px] xl:min-h-[840px] flex flex-col justify-between pt-24 sm:pt-28 lg:pt-32 pb-8 sm:pb-12 ">
         {/* ── Background Layer 1: Dreamy Blue Sky with Fluffy White Clouds ── */}
         <div className="absolute inset-0 pointer-events-none select-none overflow-hidden">
           <img
@@ -170,7 +170,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
         </div>
 
         {/* ── Background Layer 2: Figma Wave SVGs (Navy #425B9A + Soft Blue #73A4CC) ── */}
-        <div className="absolute inset-0 pointer-events-none select-none overflow-hidden hidden md:block">
+        <div className="absolute -inset-20 pointer-events-none select-none overflow-hidden hidden md:block mt-20">
           <img
             src={waveDesktop5}
             alt=""
@@ -182,13 +182,13 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
         <div className="absolute inset-0 bg-[#73A4CC]/95 md:hidden pointer-events-none" />
 
         {/* ── Background Layer 3: Soft Bottom Fade into Fluffy Clouds & White ── */}
-        <div className="absolute bottom-0 left-0 right-0 h-28 sm:h-36 bg-gradient-to-t from-white via-white/50 to-transparent pointer-events-none" />
+        <div className="absolute -bottom-8 left-0 right-0 h-28 sm:h-36 bg-gradient-to-t from-white via-white/50 to-transparent pointer-events-none" />
 
         {/* ── Main Content Container: Left Text + Right 3D Mockups ── */}
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex-1 flex items-center">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 items-center w-full py-4">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 items-center w-full py-4 ">
             {/* Left Column: Headlines & CTA Buttons (on the soft blue background) */}
-            <div className="lg:col-span-7 text-left space-y-6 max-w-xl xl:max-w-2xl">
+            <div className="lg:col-span-7 text-left space-y-6 max-w-xl xl:max-w-2xl mt-0 lg:-mt-30">
               {/* Main Headline */}
               <h1 className="font-poppins font-bold text-3xl sm:text-4xl lg:text-[46px] xl:text-[54px] text-white tracking-tight leading-[1.14]">
                 Hadirkan Website Bisnis &amp; Katalog Online Tanpa Ribet
@@ -207,7 +207,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                 <button
                   type="button"
                   onClick={onTryNow}
-                  className="flex items-center justify-center gap-3 px-6 sm:px-7 py-3 sm:py-3.5 rounded-[14px] text-[15px] sm:text-base font-poppins font-medium text-white shadow-xl shadow-[#425B9A]/30 hover:shadow-2xl hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer group"
+                  className="flex items-center justify-center gap-2 px-6 sm:px-4 py-3 sm:py-3.5 rounded-[14px] text-[15px] sm:text-base font-poppins font-medium text-white shadow-xl shadow-[#425B9A]/30 hover:shadow-2xl hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer group"
                   style={{
                     backgroundImage:
                       "linear-gradient(108.5deg, #425B9A 0.8%, #76C0EC 100%)",
@@ -217,7 +217,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                   <img
                     src={arrowNext}
                     alt=""
-                    className="w-5 h-5 text-white group-hover:translate-x-1 transition-transform"
+                    className="w-5 h-5 text-white group-hover:translate-x-1 transition-transform "
                   />
                 </button>
 
@@ -225,7 +225,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                 <a
                   href="#fitur"
                   onClick={(e) => onScrollTo(e, "fitur")}
-                  className="flex items-center justify-center gap-3 px-6 sm:px-7 py-3 sm:py-3.5 rounded-[14px] text-[15px] sm:text-base font-poppins font-medium text-white bg-[#73a4cc] hover:bg-[#6295bd] border-2 border-white shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer group"
+                  className="flex items-center justify-center gap-2 px-6 sm:px-4 py-3 sm:py-3.5 rounded-[14px] text-[15px] sm:text-base font-poppins font-medium text-white bg-[#73a4cc] hover:bg-[#6295bd] border-2 border-white shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer group"
                 >
                   <span>Pelajari Fitur</span>
                   <img
@@ -246,12 +246,12 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                   <img
                     src={mockupTablet}
                     alt="Tablet Dashboard"
-                    className="w-full h-auto drop-shadow-xl -scale-x-100"
+                    className="w-full h-auto drop-shadow-xl -scale-x-100 "
                   />
                 </div>
 
                 {/* Background 3D Smartphone Mockup (Upper Right) */}
-                <div className="absolute top-[4%] right-[2%] sm:right-[4%] z-10 w-[36%] max-w-[190px] sm:max-w-[220px] pointer-events-none select-none transition-transform duration-500 hover:-translate-y-1">
+                <div className="absolute top-[4%] right-[2%] sm:right-[4%] lg:left-[50%] z-10 w-[36%] max-w-[190px] sm:max-w-[220px] pointer-events-none select-none transition-transform duration-500 hover:-translate-y-1 ">
                   <img
                     src={mockupPhone}
                     alt="Smartphone UI"
@@ -260,7 +260,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                 </div>
 
                 {/* Sparkle Star (Floating to the left of laptop screen at wave border) */}
-                <div className="absolute top-[44%] left-[-4%] sm:left-[-2%] z-25 w-12 sm:w-16 lg:w-20 pointer-events-none select-none animate-pulse">
+                <div className="absolute top-[44%] left-[-4%] sm:left-[-2%] z-25 w-12 sm:w-16 lg:w-20 pointer-events-none select-none animate-pulse ">
                   <img
                     src={starSparkle}
                     alt="Sparkle"
@@ -269,7 +269,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                 </div>
 
                 {/* Foreground 3D Laptop Mockup (Center Foreground, Overlapping Tablet & Phone) */}
-                <div className="absolute bottom-0 left-[2%] sm:left-[4%] z-20 w-[94%] max-w-[480px] sm:max-w-[520px] pointer-events-none select-none transition-transform duration-500 hover:scale-[1.01]">
+                <div className="absolute bottom-0 left-[2%] sm:left-[4%] lg:-left-[15%] z-20 w-[100%] max-w-[480px] sm:max-w-[520px] scale-125 pointer-events-none select-none transition-transform duration-500 hover:scale-[1.01]">
                   <img
                     src={mockupLaptop}
                     alt="Laptop Website Builder"
