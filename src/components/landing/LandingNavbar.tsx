@@ -49,11 +49,10 @@ export const LandingNavbar: React.FC<LandingNavbarProps> = ({
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ease-in-out ${
-        isScrolled
-          ? "bg-white/70 backdrop-blur-xl shadow-[0_4px_30px_rgba(0,0,0,0.04)] border-b border-white/60 py-2 sm:py-2.5"
-          : "bg-transparent py-3 sm:py-4"
-      }`}
+      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ease-in-out ${isScrolled
+        ? " backdrop-blur-xl shadow-[0_4px_30px_rgba(0,0,0,0.04)] border-b border-white/60 py-2 sm:py-2.5"
+        : "bg-transparent py-3 sm:py-4"
+        }`}
       style={{
         backdropFilter: isScrolled ? "blur(18px)" : "none",
         WebkitBackdropFilter: isScrolled ? "blur(18px)" : "none",
@@ -74,11 +73,10 @@ export const LandingNavbar: React.FC<LandingNavbarProps> = ({
         {/* Center Pill Navigation — Figma: white rounded pill with smooth blur glass transition on scroll */}
         <div className="hidden md:flex items-center justify-center">
           <nav
-            className={`rounded-[23px] px-8 lg:px-10 py-3 lg:py-[14px] flex items-center gap-8 lg:gap-[61px] text-[12px] font-medium font-poppins transition-all duration-300 ${
-              isScrolled
-                ? "bg-white/80 backdrop-blur-md border border-white/70 shadow-sm"
-                : "bg-white border border-slate-100 shadow-lg shadow-indigo-950/10"
-            }`}
+            className={`rounded-[23px] px-8 lg:px-10 py-3 lg:py-[14px] flex items-center gap-8 lg:gap-[61px] text-[12px] font-medium font-poppins transition-all duration-300 ${isScrolled
+              ? "bg-white/80 backdrop-blur-md border border-white/70 shadow-sm"
+              : "bg-white border border-slate-100 shadow-lg shadow-indigo-950/10"
+              }`}
             style={{
               backdropFilter: isScrolled ? "blur(12px)" : "none",
               WebkitBackdropFilter: isScrolled ? "blur(12px)" : "none",
@@ -89,11 +87,10 @@ export const LandingNavbar: React.FC<LandingNavbarProps> = ({
                 key={link.id}
                 href={link.id === "beranda" ? "#" : `#${link.id}`}
                 onClick={(e) => handleNavClick(e, link.id)}
-                className={`relative py-1 transition cursor-pointer ${
-                  activeTab === link.id
-                    ? "text-[#425B9A] font-semibold"
-                    : "text-slate-800 hover:text-[#425B9A]"
-                }`}
+                className={`relative py-1 transition cursor-pointer ${activeTab === link.id
+                  ? "text-[#425B9A] font-semibold"
+                  : "text-slate-800 hover:text-[#425B9A]"
+                  }`}
               >
                 <span>{link.label}</span>
                 {activeTab === link.id && (
@@ -128,11 +125,10 @@ export const LandingNavbar: React.FC<LandingNavbarProps> = ({
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle Menu"
-            className={`p-1.5 rounded-xl shadow-sm border transition ${
-              isScrolled
-                ? "bg-white/80 backdrop-blur-md text-[#425B9A] border-white/60"
-                : "bg-white/20 text-white border-white/30"
-            }`}
+            className={`p-1.5 rounded-xl shadow-sm border transition ${isScrolled
+              ? "bg-white/80 backdrop-blur-md text-[#425B9A] border-white/60"
+              : "bg-white/20 text-white border-white/30"
+              }`}
           >
             {mobileMenuOpen ? (
               <X className="w-5 h-5" />
@@ -158,11 +154,10 @@ export const LandingNavbar: React.FC<LandingNavbarProps> = ({
                 key={link.id}
                 href={link.id === "beranda" ? "#" : `#${link.id}`}
                 onClick={(e) => handleNavClick(e, link.id)}
-                className={`px-3.5 py-2.5 rounded-xl hover:bg-slate-100/80 transition flex items-center justify-between ${
-                  activeTab === link.id
-                    ? "text-[#425B9A] bg-white/90 shadow-xs"
-                    : "text-slate-700"
-                }`}
+                className={`px-3.5 py-2.5 rounded-xl hover:bg-slate-100/80 transition flex items-center justify-between ${activeTab === link.id
+                  ? "text-[#425B9A] bg-white/90 shadow-xs"
+                  : "text-slate-700"
+                  }`}
               >
                 <span>{link.label}</span>
               </a>

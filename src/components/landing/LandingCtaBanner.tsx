@@ -1,7 +1,7 @@
 import React from "react";
+import { motion } from "motion/react";
 
 /* ── Logo & Icons ── */
-import logoClean from "../../assets/Logo Loka (1) (1).png";
 import arrowNext from "../../assets/hero/arrow-next.svg";
 
 /* ── Ambient background blur ── */
@@ -67,17 +67,29 @@ export const LandingCtaBanner: React.FC<LandingCtaBannerProps> = ({
       `}</style>
 
       {/* ── Background Layer: Ambient radial blur from Figma ── */}
-      <div className="absolute inset-0 pointer-events-none select-none flex items-center justify-center overflow-hidden">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.85 }}
+        whileInView={{ opacity: 0.5, scale: 1.25 }}
+        viewport={{ once: true }}
+        transition={{ duration: 1.2, ease: "easeOut" }}
+        className="absolute inset-0 pointer-events-none select-none flex items-center justify-center overflow-hidden"
+      >
         <img
           src={ellipseCta}
           alt=""
-          className="w-[763px] h-[763px] max-w-none opacity-50 scale-125"
+          className="w-[763px] h-[763px] max-w-none"
         />
-      </div>
+      </motion.div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* ── Main CTA Showcase Card (Figma Node 16:506 / Desktop-7) ── */}
-        <div className="cta-banner relative max-w-[1084px] mx-auto h-[440px] sm:h-[480px] lg:h-[500px] rounded-[24px] sm:rounded-[28px] border-4 sm:border-8 border-[#425B9A] overflow-hidden shadow-[0px_20px_50px_-10px_rgba(66,91,154,0.35)] bg-slate-900 group">
+        {/* ── Main CTA Showcase Card (Figma Node 16:506 / Desktop-7) with Entrance Animation ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 40, scale: 0.97 }}
+          whileInView={{ opacity: 1, y: 0, scale: 1 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          className="cta-banner relative max-w-[1084px] mx-auto h-[440px] sm:h-[480px] lg:h-[500px] rounded-[24px] sm:rounded-[28px] border-4 sm:border-8 border-[#425B9A] overflow-hidden shadow-[0px_20px_50px_-10px_rgba(66,91,154,0.35)] bg-slate-900 group"
+        >
           {/* ═══════════════════════════════════════════════════════
               LAYER 1: THREE-ROW ANIMATED MARQUEE TEMPLATE GRID
               Row 1 & 3 scroll left, Row 2 scrolls right
@@ -155,34 +167,62 @@ export const LandingCtaBanner: React.FC<LandingCtaBannerProps> = ({
           <div className="absolute inset-0 bg-slate-950/45 sm:bg-slate-950/40 backdrop-blur-[0px] transition-colors duration-300" />
 
           {/* ═══════════════════════════════════════════════════════
-              LAYER 3: CENTER HERO CONTENT (Logo + Heading + CTA)
+              LAYER 3: CENTER HERO CONTENT (Heading + Subtitle + CTA)
               ═══════════════════════════════════════════════════════ */}
           <div className="relative z-10 h-full flex flex-col items-center justify-center p-6 sm:p-10 text-center space-y-4 sm:space-y-6">
-            {/* Brand Logo */}
-            <div className="w-[160px] sm:w-[204px] h-auto drop-shadow-lg transition-transform duration-300 hover:scale-105">
-            </div>
-
             {/* Heading 2 - Main Title (2 Lines in Figma) */}
             <div className="space-y-1 max-w-2xl">
-              <h2 className="font-poppins font-bold text-2xl sm:text-4xl lg:text-[46px] xl:text-[50px] text-white tracking-tight leading-[1.15] drop-shadow-md">
+              <motion.h2
+                initial={{ opacity: 0, y: 22 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{
+                  duration: 0.6,
+                  delay: 0.15,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                className="font-poppins font-bold text-2xl sm:text-4xl lg:text-[46px] xl:text-[50px] text-white tracking-tight leading-[1.15] drop-shadow-md"
+              >
                 Siap Meningkatkan Penjualan
                 <br />
                 Bisnis Anda?
-              </h2>
+              </motion.h2>
             </div>
 
             {/* Subtitle Description */}
-            <p className="font-poppins font-medium text-xs sm:text-base text-white/95 max-w-[530px] leading-relaxed drop-shadow-sm px-2">
+            <motion.p
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{
+                duration: 0.6,
+                delay: 0.25,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+              className="font-poppins font-medium text-xs sm:text-base text-white/95 max-w-[530px] leading-relaxed drop-shadow-sm px-2"
+            >
               Bergabunglah dengan ribuan pelaku usaha lokal yang telah memiliki
               website profesional sendiri.
-            </p>
+            </motion.p>
 
             {/* CTA Button: Coba Sekarang */}
-            <div className="pt-2">
-              <button
+            <motion.div
+              initial={{ opacity: 0, y: 16, scale: 0.95 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{
+                duration: 0.5,
+                delay: 0.35,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+              className="pt-2"
+            >
+              <motion.button
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.96 }}
                 type="button"
                 onClick={onTryNow}
-                className="inline-flex items-center justify-center gap-2.5 px-7 py-3 sm:px-8 sm:py-3.5 rounded-[13px] sm:rounded-[14px] text-[15px] sm:text-base font-poppins font-medium text-white shadow-xl shadow-[#425B9A]/40 hover:shadow-2xl hover:scale-[1.03] active:scale-[0.98] transition-all cursor-pointer group/btn"
+                className="inline-flex items-center justify-center gap-2.5 px-7 py-3 sm:px-8 sm:py-3.5 rounded-[13px] sm:rounded-[14px] text-[15px] sm:text-base  font-poppins font-medium text-white shadow-xl shadow-[#425B9A]/40 hover:shadow-2xl transition-all cursor-pointer group/btn"
                 style={{
                   backgroundImage:
                     "linear-gradient(108.5deg, #425B9A 0.8%, #76C0EC 100%)",
@@ -194,10 +234,10 @@ export const LandingCtaBanner: React.FC<LandingCtaBannerProps> = ({
                   alt=""
                   className="w-5 h-5 text-white group-hover/btn:translate-x-1 transition-transform"
                 />
-              </button>
-            </div>
+              </motion.button>
+            </motion.div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
