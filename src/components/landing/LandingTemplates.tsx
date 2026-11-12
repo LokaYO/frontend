@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "motion/react";
 
 /* ── Template card header images from Figma ── */
 import templateKuliner from "../../assets/templates/template-kuliner.png";
@@ -63,36 +64,65 @@ export const LandingTemplates: React.FC<LandingTemplatesProps> = ({
       className="relative scroll-mt-20 py-24 sm:py-28 lg:py-32 bg-[#f0f9ff] overflow-hidden"
     >
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* ── Section Header ── */}
+        {/* ── Section Header with Staggered Entrance ── */}
         <div className="space-y-4 mb-12 sm:mb-16">
           {/* Tagline / Badge */}
-          <p className="font-poppins font-semibold text-sm sm:text-[16px] text-[#2563eb] tracking-[0.8px] uppercase">
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="font-poppins font-semibold text-sm sm:text-[16px] text-[#2563eb] tracking-[0.8px] uppercase"
+          >
             GALERI TEMPLATE
-          </p>
+          </motion.p>
 
           {/* Main Title Row with Link */}
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+          <motion.div
+            initial={{ opacity: 0, y: 22 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{
+              duration: 0.6,
+              delay: 0.1,
+              ease: [0.16, 1, 0.3, 1],
+            }}
+            className="flex flex-col lg:flex-row lg:items-end justify-between gap-6"
+          >
             <h2 className="font-poppins font-bold text-3xl sm:text-4xl lg:text-[48px] xl:text-[40px] text-[#0f172a] tracking-tight leading-[1.18] max-w-3xl">
               Pilih Desain Siap Pakai untuk Jenis Bisnis Anda
             </h2>
 
-            <button
+            <motion.button
+              whileHover={{ x: 4 }}
               type="button"
               onClick={onTryNow}
-              className="inline-flex items-center gap-2 font-poppins font-semibold text-sm sm:text-[16px] text-[#1e40af] hover:text-[#1d4ed8] hover:translate-x-0.5 transition-all cursor-pointer self-start lg:self-auto shrink-0 pb-1"
+              className="inline-flex items-center gap-2 font-poppins font-semibold text-sm sm:text-[16px] text-[#1e40af] hover:text-[#1d4ed8] transition-all cursor-pointer self-start lg:self-auto shrink-0 pb-1"
             >
               <span>Jelajahi Semua Template</span>
               <img src={iconArrowLink} alt="" className="w-4 h-4" />
-            </button>
-          </div>
+            </motion.button>
+          </motion.div>
         </div>
 
-        {/* ── 4 Business Category Template Cards ── */}
+        {/* ── 4 Business Category Template Cards (Appears one by one / Staggered) ── */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-6 lg:gap-[24px]">
           {templates.map((card, idx) => (
-            <div
+            <motion.div
               key={idx}
-              className="group bg-white rounded-[22px] border border-[#f1f5f9] shadow-[0px_4px_24px_0px_rgba(0,0,0,0.06)] hover:shadow-[0px_14px_34px_0px_rgba(30,58,138,0.12)] hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col justify-between"
+              initial={{ opacity: 0, y: 35, scale: 0.96 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{
+                duration: 0.55,
+                delay: idx * 0.1,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+              whileHover={{
+                y: -6,
+                transition: { duration: 0.25, ease: "easeOut" },
+              }}
+              className="group bg-white rounded-[22px] border border-[#f1f5f9] shadow-[0px_4px_24px_0px_rgba(0,0,0,0.06)] hover:shadow-[0px_16px_36px_0px_rgba(30,58,138,0.14)] transition-shadow duration-300 overflow-hidden flex flex-col justify-between"
             >
               <div>
                 {/* Header Image Banner with Overlay */}
@@ -151,7 +181,7 @@ export const LandingTemplates: React.FC<LandingTemplatesProps> = ({
                   />
                 </button>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

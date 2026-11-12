@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "motion/react";
 
 /* ── Feature icon SVGs from Figma ── */
 import iconBuilder from "../../assets/features/icon-builder.svg";
@@ -62,44 +63,88 @@ export const LandingFeatures: React.FC = () => {
       className="relative scroll-mt-20 py-24 sm:py-28 lg:py-32 bg-[#f7f9ff] overflow-hidden"
     >
       {/* ── Background Layer: Soft ambient glow ellipse from Figma ── */}
-      <div className="absolute inset-0 pointer-events-none select-none flex items-center justify-center overflow-hidden">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.85 }}
+        whileInView={{ opacity: 0.6, scale: 1.25 }}
+        viewport={{ once: true }}
+        transition={{ duration: 1.2, ease: "easeOut" }}
+        className="absolute inset-0 pointer-events-none select-none flex items-center justify-center overflow-hidden"
+      >
         <img
           src={ellipseBg}
           alt=""
-          className="w-[984px] h-[984px] max-w-none opacity-60 scale-125"
+          className="w-[984px] h-[984px] max-w-none"
         />
-      </div>
+      </motion.div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* ── Section Header Container ── */}
+        {/* ── Section Header Container with Staggered Entrance ── */}
         <div className="text-center max-w-3xl mx-auto space-y-4 mb-14 sm:mb-16 lg:mb-20">
           {/* Tagline / Badge */}
-          <p className="font-poppins font-semibold text-sm sm:text-[16px] text-[#2563eb] tracking-[0.8px] uppercase">
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="font-poppins font-semibold text-sm sm:text-[16px] text-[#2563eb] tracking-[0.8px] uppercase"
+          >
             FITUR LENGKAP
-          </p>
+          </motion.p>
 
           {/* Heading 2 - Main Title */}
-          <h2 className="font-poppins font-bold text-3xl sm:text-4xl lg:text-[40px] text-[#0f172a] tracking-tight leading-[1.18]">
+          <motion.h2
+            initial={{ opacity: 0, y: 22 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{
+              duration: 0.6,
+              delay: 0.1,
+              ease: [0.16, 1, 0.3, 1],
+            }}
+            className="font-poppins font-bold text-3xl sm:text-4xl lg:text-[40px] text-[#0f172a] tracking-tight leading-[1.18]"
+          >
             Semua yang Dibutuhkan Usaha Anda <br /> Ada di Sini
-          </h2>
+          </motion.h2>
 
           {/* Subtitle Description */}
-          <p className="font-poppins font-normal text-base sm:text-[14px] text-[#64748b] leading-relaxed max-w-2xl mx-auto pt-1">
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{
+              duration: 0.6,
+              delay: 0.2,
+              ease: [0.16, 1, 0.3, 1],
+            }}
+            className="font-poppins font-normal text-base sm:text-[14px] text-[#64748b] leading-relaxed max-w-2xl mx-auto pt-1"
+          >
             Dirancang khusus untuk mempermudah operasional dan promosi pemilik bisnis lokal di Indonesia.
-          </p>
+          </motion.p>
         </div>
 
-        {/* ── 6 Feature Cards Grid (3 Columns, 2 Rows) ── */}
+        {/* ── 6 Feature Cards Grid (Appears one by one / Staggered) ── */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-[42px]">
           {features.map((item, idx) => (
-            <div
+            <motion.div
               key={idx}
-              className="group bg-white rounded-[32px] border border-[#f1f5f9] p-7 sm:p-8 lg:p-[32px] shadow-[0px_5px_26px_-5px_rgba(118,192,236,0.15)] hover:shadow-[0px_14px_36px_-6px_rgba(66,91,154,0.16)] hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
+              initial={{ opacity: 0, y: 35, scale: 0.96 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{
+                duration: 0.55,
+                delay: idx * 0.1,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+              whileHover={{
+                y: -6,
+                transition: { duration: 0.25, ease: "easeOut" },
+              }}
+              className="group bg-white rounded-[32px] border border-[#f1f5f9] p-7 sm:p-8 lg:p-[32px] shadow-[0px_5px_26px_-5px_rgba(118,192,236,0.15)] hover:shadow-[0px_16px_40px_-6px_rgba(66,91,154,0.18)] transition-shadow duration-300 flex flex-col justify-between cursor-default"
             >
               <div>
                 {/* Icon Wrapper (Rounded square with pastel tint) */}
                 <div
-                  className={`w-16 h-16 rounded-[16px] ${item.iconBg} flex items-center justify-center shrink-0 mb-6 transition-transform group-hover:scale-105 duration-300`}
+                  className={`w-16 h-16 rounded-[16px] ${item.iconBg} flex items-center justify-center shrink-0 mb-6 transition-all duration-300 group-hover:scale-110 group-hover:-rotate-3`}
                 >
                   <img
                     src={item.icon}
@@ -118,7 +163,7 @@ export const LandingFeatures: React.FC = () => {
                   {item.desc}
                 </p>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
