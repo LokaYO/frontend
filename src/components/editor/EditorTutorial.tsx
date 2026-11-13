@@ -31,7 +31,7 @@ const EDITOR_TUTORIAL_STEPS: TutorialStep[] = [
     icon: <Sparkles className="w-5 h-5" />,
     title: 'Selamat Datang di Editor Visual Loka! 🎨',
     description:
-      'Ini adalah studio tempat Anda mendesain dan menyesuaikan seluruh tampilan landing page bisnis Anda secara visual dan langsung (WYSIWYG). Mari kita pelajari fungsi tiap panelnya.',
+      'Ini adalah studio tempat Anda mendesain dan menyesuaikan seluruh tampilan landing page bisnis Anda secara visual dan langsung. Mari kita pelajari fungsi tiap panelnya.',
     position: 'center',
   },
   {
