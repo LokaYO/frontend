@@ -30,26 +30,42 @@ function MainApp() {
     setCurrentPath(path);
   };
 
-  // 1. PRIORITY 1: Direct Path URL (Local Fallback: /sites/:slug)
-  // Bekerja 100% di http://localhost:5173/sites/:slug dan http://127.0.0.1:5173/sites/:slug
+  // 1. PRIORITY 1: Direct Path URL (Local & Fallback: /sites/:slug)
   const siteMatch = currentPath.match(/^\/sites\/([a-zA-Z0-9_-]+)/);
   if (siteMatch) {
     const slug = siteMatch[1];
     const host = window.location.hostname.toLowerCase();
     const isLocalhost = host === 'localhost' || host === '127.0.0.1' || /^(\d{1,3}\.){3}\d{1,3}$/.test(host);
 
-    // Di production (*.ruuby.my.id / ruuby.my.id / Firebase), otomatis redirect ke format subdomain resmi
-    if (!isLocalhost && (host.includes('ruuby.my.id') || host.endsWith('.web.app') || host.endsWith('.firebaseapp.com'))) {
+    // Di subdomain toko sendiri (misal: paw-tail-care.ruuby.my.id/sites/paw-tail-care),
+    // hapus path /sites/:slug agar URL bersih tanpa loop
+    const parts = host.split('.');
+    const isAlreadyOnSubdomain =
+      !isLocalhost &&
+      /\.(my|co|web|ac|sch|or|biz|go|mil)\.[a-z]{2,3}$/.test(host) &&
+      parts.length >= 4 &&
+      parts[0] === slug;
+
+    if (isAlreadyOnSubdomain) {
+      window.history.replaceState({}, '', '/');
+      return <PublicSitePage slug={slug} />;
+    }
+
+    // Jika di root domain production (ruuby.my.id / *.web.app)
+    if (!isLocalhost && (host === 'ruuby.my.id' || host === 'www.ruuby.my.id' || host.endsWith('.web.app') || host.endsWith('.firebaseapp.com'))) {
       const targetUrl = getPublicSiteUrl(slug);
-      window.location.replace(targetUrl);
-      return (
-        <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-          <div className="text-center space-y-3">
-            <div className="w-10 h-10 border-3 border-[#425B9A] border-t-transparent rounded-full animate-spin mx-auto" />
-            <p className="text-xs font-semibold text-slate-500">Mengarahkan ke subdomain resmi https://{slug}.ruuby.my.id...</p>
+      // Cegah reload jika URL tujuan sama persis dengan URL saat ini
+      if (window.location.href !== targetUrl) {
+        window.location.replace(targetUrl);
+        return (
+          <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+            <div className="text-center space-y-3">
+              <div className="w-10 h-10 border-3 border-[#425B9A] border-t-transparent rounded-full animate-spin mx-auto" />
+              <p className="text-xs font-semibold text-slate-500">Mengarahkan ke subdomain resmi https://{slug}.ruuby.my.id...</p>
+            </div>
           </div>
-        </div>
-      );
+        );
+      }
     }
 
     return <PublicSitePage slug={slug} />;

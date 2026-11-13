@@ -46,12 +46,9 @@ export function getPublicSiteUrl(slug: string): string {
   if (!slug) return '';
 
   if (typeof window === 'undefined') {
-    return `/sites/${slug}`;
     return `https://${slug}.ruuby.my.id`;
   }
 
-  const { origin } = window.location;
-  return `${origin}/sites/${slug}`;
   const host = window.location.hostname.toLowerCase();
 
   // Fallback localhost development
@@ -63,14 +60,8 @@ export function getPublicSiteUrl(slug: string): string {
   return `https://${slug}.${baseDomain}`;
 }
 
-/**
- * Menghasilkan tampilan label URL yang rapi untuk ditampilkan di UI / kartu website.
- * Contoh: "/sites/kopi-senja-2907"
- * Contoh: "kopi-senja-2907.ruuby.my.id"
- */
 export function getPublicSiteDisplayUrl(slug: string): string {
   if (!slug) return '';
-  return `/sites/${slug}`;
 
   if (typeof window !== 'undefined') {
     const host = window.location.hostname.toLowerCase();

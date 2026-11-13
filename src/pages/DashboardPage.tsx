@@ -44,6 +44,7 @@ import { MerchantMarketingView } from '../components/merchant/MerchantMarketingV
 import { QrCodeModal } from '../components/common/QrCodeModal';
 import { LeadsModal } from '../components/common/LeadsModal';
 import { PricingModal } from '../components/modals/PricingModal';
+import { ProSuccessModal } from '../components/modals/ProSuccessModal';
 import { adminService, AdminAnnouncement } from '../services/admin.service';
 import { DashboardTutorial, TutorialTriggerButton } from '../components/common/DashboardTutorial';
 import logoClean from '../assets/Logo Loka (1) (1).png';
@@ -88,6 +89,7 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [selectedPresetTemplate, setSelectedPresetTemplate] = useState<PresetTemplate | null>(null);
   const [isPricingModalOpen, setIsPricingModalOpen] = useState(false);
+  const [isProSuccessModalOpen, setIsProSuccessModalOpen] = useState(false);
   const [copiedSlug, setCopiedSlug] = useState<string | null>(null);
   const [selectedQrSite, setSelectedQrSite] = useState<Website | null>(null);
   const [selectedLeadsSite, setSelectedLeadsSite] = useState<Website | null>(null);
@@ -1545,7 +1547,16 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
             onClose={() => setIsPricingModalOpen(false)}
             onUpgraded={() => {
               fetchWebsites();
-              window.location.reload();
+              setIsProSuccessModalOpen(true);
+            }}
+          />
+
+          {/* Pro Activated Celebration Modal */}
+          <ProSuccessModal
+            isOpen={isProSuccessModalOpen}
+            onClose={() => {
+              setIsProSuccessModalOpen(false);
+              fetchWebsites();
             }}
           />
         </>
