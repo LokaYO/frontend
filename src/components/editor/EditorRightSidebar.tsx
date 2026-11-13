@@ -86,7 +86,7 @@ interface Props {
 export const EditorRightSidebar: React.FC<Props> = ({ section, onUpdateContent, onClose }) => {
   if (!section) {
     return (
-      <aside className="w-88 bg-white border-l border-slate-200 flex flex-col shrink-0 h-full z-20 p-6 items-center justify-center text-center">
+      <aside data-tour="editor-inspector" className="w-88 bg-white border-l border-slate-200 flex flex-col shrink-0 h-full z-20 p-6 items-center justify-center text-center">
         <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400 mb-3">
           <Sliders className="w-6 h-6" />
         </div>
@@ -143,7 +143,7 @@ export const EditorRightSidebar: React.FC<Props> = ({ section, onUpdateContent, 
   };
 
   return (
-    <aside className="w-88 bg-white border-l border-slate-200 flex flex-col shrink-0 h-full z-20 overflow-hidden">
+    <aside data-tour="editor-inspector" className="w-88 bg-white border-l border-slate-200 flex flex-col shrink-0 h-full z-20 overflow-hidden">
       {/* Header */}
       <div className="p-3.5 border-b border-slate-200 flex items-center justify-between shrink-0 bg-slate-50/50">
         <div>

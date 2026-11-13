@@ -45,6 +45,7 @@ import { QrCodeModal } from '../components/common/QrCodeModal';
 import { LeadsModal } from '../components/common/LeadsModal';
 import { PricingModal } from '../components/modals/PricingModal';
 import { adminService, AdminAnnouncement } from '../services/admin.service';
+import { DashboardTutorial, TutorialTriggerButton } from '../components/common/DashboardTutorial';
 import logoClean from '../assets/Logo Loka (1) (1).png';
 import logoLokaFigma from '../assets/dashboard/logo-loka-figma.png';
 import { useToast } from '../context/ToastContext';
@@ -102,6 +103,35 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
       return [];
     }
   });
+
+
+  /* ── Tutorial System ── */
+  const TUTORIAL_KEY = 'loka_tutorial_done';
+  const [showTutorial, setShowTutorial] = useState(false);
+  const [tutorialSeen, setTutorialSeen] = useState(false);
+
+  useEffect(() => {
+    if (!isAdmin) {
+      const done = localStorage.getItem(TUTORIAL_KEY);
+      if (!done) {
+        // Small delay so dashboard renders first
+        const t = setTimeout(() => setShowTutorial(true), 600);
+        return () => clearTimeout(t);
+      } else {
+        setTutorialSeen(true);
+      }
+    }
+  }, [isAdmin]);
+
+  const handleCloseTutorial = () => {
+    localStorage.setItem(TUTORIAL_KEY, '1');
+    setShowTutorial(false);
+    setTutorialSeen(true);
+  };
+
+  const handleOpenTutorial = () => {
+    setShowTutorial(true);
+  };
 
   const dismissAnnouncement = (id: string) => {
     setDismissedAnnouncements((prev) => {
@@ -239,9 +269,10 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
     LucideIcon: React.ComponentType<{ className?: string }> | null,
     isActive: boolean,
     onClick: () => void,
-    badge?: React.ReactNode
+    badge?: React.ReactNode,
+    tourId?: string
   ) => (
-    <div key={key} className="relative my-1 pl-[15px]">
+    <div key={key} className="relative my-1 pl-[15px]" {...(tourId ? { 'data-tour': tourId } : {})}>
       {isActive && (
         <div className="absolute inset-y-0 left-[15px] right-0 bg-[#F9FAFC] rounded-l-[20px] shadow-xs pointer-events-none z-10 animate-tab-drop">
           {/* Top concave inverted notch (Figma 22px curve radius) */}
@@ -419,7 +450,8 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
                   }`}
                 >
                   {websites.length}
-                </span>
+                </span>,
+                'nav-websites'
               )}
 
               {renderNavItem(
@@ -439,7 +471,8 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
                   >
                     {unreadLeadsCount}
                   </span>
-                ) : null
+                ) : null,
+                'nav-leads'
               )}
 
               {renderNavItem(
@@ -448,7 +481,9 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
                 iconAnalyticsTab,
                 null,
                 activeNav === 'analytics',
-                () => setActiveNav('analytics')
+                () => setActiveNav('analytics'),
+                undefined,
+                'nav-analytics'
               )}
 
               {renderNavItem(
@@ -457,7 +492,9 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
                 iconQrTab,
                 null,
                 activeNav === 'marketing',
-                () => setActiveNav('marketing')
+                () => setActiveNav('marketing'),
+                undefined,
+                'nav-marketing'
               )}
 
               {renderNavItem(
@@ -475,7 +512,8 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
                   }`}
                 >
                   {PRESET_TEMPLATES.length}
-                </span>
+                </span>,
+                'nav-templates'
               )}
 
               <div className="pt-5 pb-2 px-7 text-[12px] font-poppins font-bold uppercase tracking-[0.8px] text-white">
@@ -646,6 +684,7 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
                 <button
                   type="button"
                   onClick={() => setIsPricingModalOpen(true)}
+                  data-tour="upgrade-btn"
                   className="flex items-center gap-2 px-3.5 h-[34px] bg-gradient-to-r from-[#fc9900] to-[#fe6a00] hover:brightness-105 rounded-[10px] text-white text-xs font-poppins font-semibold shadow-md shadow-orange-500/20 active:scale-95 transition cursor-pointer"
                 >
                   <img src={iconCrownHeader} alt="" className="w-4 h-4 object-contain brightness-0 invert" />
@@ -1550,6 +1589,11 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
             </div>
           </div>
         </div>
+      )}
+
+      {/* Tutorial Overlay */}
+      {showTutorial && !isAdmin && (
+        <DashboardTutorial onClose={handleCloseTutorial} />
       )}
 
       {/* Delete Website Confirmation Modal */}

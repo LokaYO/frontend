@@ -311,7 +311,7 @@ export const EditorLeftSidebar: React.FC<Props> = ({
   return (
     <aside className="w-80 bg-white border-r border-slate-200 flex flex-col shrink-0 h-full z-20 overflow-hidden select-none">
       {/* Sidebar Tabs (4 Categories) */}
-      <div className="flex border-b border-slate-200 bg-slate-50/70 p-1.5 gap-1 shrink-0">
+      <div data-tour="editor-tabs" className="flex border-b border-slate-200 bg-slate-50/70 p-1.5 gap-1 shrink-0">
         <button
           type="button"
           onClick={() => setActiveTab('sections')}
@@ -368,7 +368,7 @@ export const EditorLeftSidebar: React.FC<Props> = ({
 
       {/* Tab 1: Sections Manager */}
       {activeTab === 'sections' && (
-        <div className="flex-1 flex flex-col min-h-0">
+        <div data-tour="editor-sections" className="flex-1 flex flex-col min-h-0">
           <div className="p-3 border-b border-slate-100 flex items-center justify-between">
             <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">
               Urutan Section

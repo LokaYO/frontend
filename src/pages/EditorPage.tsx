@@ -4,6 +4,7 @@ import { EditorTopBar } from '../components/editor/EditorTopBar';
 import { EditorLeftSidebar } from '../components/editor/EditorLeftSidebar';
 import { EditorRightSidebar } from '../components/editor/EditorRightSidebar';
 import { AddSectionModal } from '../components/editor/AddSectionModal';
+import { EditorTutorial } from '../components/editor/EditorTutorial';
 import { WebsiteRenderer } from '../components/renderer/WebsiteRenderer';
 import { useAuth } from '../context/AuthContext';
 import { websiteService } from '../services/website.service';
@@ -33,6 +34,31 @@ export const EditorPage: React.FC<Props> = ({ websiteId, onBackToDashboard }) =>
   const [sectionToDelete, setSectionToDelete] = useState<string | null>(null);
   const [isDeletingSection, setIsDeletingSection] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
+
+  /* ── Editor Tutorial Guide State ── */
+  const EDITOR_TUTORIAL_KEY = 'loka_editor_tutorial_done';
+  const [showTutorial, setShowTutorial] = useState(false);
+  const [tutorialSeen, setTutorialSeen] = useState(false);
+
+  useEffect(() => {
+    const done = localStorage.getItem(EDITOR_TUTORIAL_KEY);
+    if (!done) {
+      const timer = setTimeout(() => setShowTutorial(true), 600);
+      return () => clearTimeout(timer);
+    } else {
+      setTutorialSeen(true);
+    }
+  }, []);
+
+  const handleCloseTutorial = () => {
+    localStorage.setItem(EDITOR_TUTORIAL_KEY, '1');
+    setShowTutorial(false);
+    setTutorialSeen(true);
+  };
+
+  const handleOpenTutorial = () => {
+    setShowTutorial(true);
+  };
 
   // Fetch website data with sections
   const fetchWebsite = useCallback(async () => {
@@ -282,6 +308,8 @@ export const EditorPage: React.FC<Props> = ({ websiteId, onBackToDashboard }) =>
         onPublishToggle={handlePublishToggle}
         onBack={onBackToDashboard}
         onUpdateTitle={(newTitle) => setWebsite({ ...website, name: newTitle })}
+        onOpenTutorial={handleOpenTutorial}
+        showTutorialButton={tutorialSeen}
       />
 
       {/* Main Workspace */}
@@ -420,6 +448,11 @@ export const EditorPage: React.FC<Props> = ({ websiteId, onBackToDashboard }) =>
             </div>
           </div>
         </div>
+      )}
+
+      {/* Editor Step-by-Step Tutorial Overlay */}
+      {showTutorial && (
+        <EditorTutorial onClose={handleCloseTutorial} />
       )}
 
       {/* Delete Section Confirmation Modal */}
