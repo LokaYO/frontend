@@ -6,10 +6,8 @@ import { Eye, EyeOff, Loader2 } from "lucide-react";
 /* ── Brand Logo ── */
 import logoClean from "../assets/Logo Loka (1) (1).png";
 
-/* ── 3D Illustration & Background Assets from Figma ── */
-import authLandscape from "../assets/auth/auth-landscape.png";
-import authIllustration from "../assets/auth/auth-illustration.png";
-import authShadowCharacter from "../assets/auth/auth-shadow-character.svg";
+/* ── 3D Illustration & Background Assets ── */
+import vectorLogin from "../assets/hero/vector_login.webp";
 import authEllipse17 from "../assets/auth/auth-ellipse-17.svg";
 
 /* ── Form Icons from Figma ── */
@@ -115,32 +113,14 @@ export const AuthPage: React.FC<Props> = ({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 xl:gap-12 items-center w-full h-full max-h-full">
           {/* ══════════════════════════════════════════════════
             LEFT COLUMN: 3D Illustration & Visual Canvas
-            (Anime Characters Building Website Dashboard)
             ══════════════════════════════════════════════════ */}
           <div className="hidden lg:flex lg:col-span-7 xl:col-span-7 relative items-center justify-center h-full max-h-[calc(100vh-100px)] select-none pointer-events-none">
-            {/* Soft Blue 3D Abstract Landscape Background */}
-            <div className="absolute inset-0 flex items-center justify-center">
+            <div className="relative z-10 w-full max-w-[640px] xl:max-w-[720px] flex items-center justify-center animate-illustration-fade-in">
               <img
-                src={authLandscape}
-                alt=""
-                className="w-full max-w-[820px] max-h-[calc(100vh-120px)] h-auto object-contain opacity-95 scale-105"
+                src={vectorLogin}
+                alt="Loka Platform Illustration"
+                className="w-full max-h-[calc(100vh-130px)] h-auto object-contain drop-shadow-[0_16px_36px_rgba(20,50,90,0.14)]"
               />
-            </div>
-
-            {/* 3D Web Dashboard Team Characters Illustration with matched ground shadows */}
-            <div className="relative z-10 w-full max-w-[580px] xl:max-w-[660px] flex items-center justify-center">
-              <img
-                src={authIllustration}
-                alt="3D Website Building Illustration"
-                className="w-full max-h-[calc(100vh-140px)] h-auto object-contain drop-shadow-[0_20px_40px_rgba(20,50,90,0.18)]"
-              />
-              {/* Ground Shadows directly under character feet */}
-              <div className="absolute bottom-[2%] left-[13%] w-[27%] opacity-75">
-                <img src={authShadowCharacter} alt="" className="w-full h-auto" />
-              </div>
-              <div className="absolute bottom-[1%] right-[14%] w-[27%] opacity-75">
-                <img src={authShadowCharacter} alt="" className="w-full h-auto" />
-              </div>
             </div>
           </div>
 
