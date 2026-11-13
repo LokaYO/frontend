@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Website } from '../types/schema';
 import { websiteService } from '../services/website.service';
 import { WebsiteRenderer } from '../components/renderer/WebsiteRenderer';
-import { AlertCircle, ArrowLeft, Globe, ShieldAlert } from 'lucide-react';
+import { ArrowLeft, Globe, ShieldAlert } from 'lucide-react';
+import mascotImg from '../assets/not-published/mascot.png';
+import blobShapeImg from '../assets/not-published/group320.svg';
 
 interface Props {
   slug: string;
@@ -150,23 +152,77 @@ export const PublicSitePage: React.FC<Props> = ({ slug }) => {
 
   if (isDraft) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4">
-        <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-200 text-center max-w-md space-y-4">
-          <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center mx-auto">
-            <AlertCircle className="w-6 h-6" />
+      <div
+        className="min-h-screen relative overflow-hidden flex flex-col items-center justify-center px-4"
+        style={{ background: 'linear-gradient(244deg, #E1F4FF 0%, #FFFFFF 100%)' }}
+      >
+        {/* Large Decorative Ellipse — bottom-left blob glow */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            width: 869,
+            height: 869,
+            left: -216,
+            bottom: -300,
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, #BFE6FF 0%, transparent 70%)',
+            opacity: 0.5,
+          }}
+        />
+
+        {/* Main center column */}
+        <div className="relative z-10 flex flex-col items-center w-full max-w-3xl mx-auto">
+
+          {/* Mascot + Blob Illustration */}
+          <div className="relative flex items-center justify-center w-full mb-6" style={{ height: 380 }}>
+            {/* Organic blob background shape */}
+            <img
+              src={blobShapeImg}
+              alt=""
+              aria-hidden="true"
+              className="absolute inset-0 w-full h-full object-contain pointer-events-none select-none"
+              style={{ transform: 'scale(1.08)' }}
+            />
+
+            {/* Mascot */}
+            <div style={{ width: 300, height: 300 }}>
+              <img
+                src={mascotImg}
+                alt="Maskot Loka"
+                className="w-full h-full object-contain drop-shadow-2xl select-none"
+                draggable={false}
+              />
+            </div>
           </div>
-          <h2 className="text-xl font-bold text-slate-900">Website Belum Dipublikasikan</h2>
-          <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-            Halaman ini masih dalam status draft oleh pemilik bisnis. Silakan periksa kembali nanti atau hubungi pemilik usaha secara langsung.
-          </p>
-          <a
-            href="/"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Ke Beranda LOKA</span>
-          </a>
+
+          {/* Text & CTA */}
+          <div className="flex flex-col items-center gap-5 text-center px-4">
+            <h1 className="font-poppins font-bold text-3xl sm:text-4xl text-[#1E293B] leading-tight">
+              Website Belum Dipublikasikan!
+            </h1>
+
+            <p className="font-poppins text-base sm:text-lg text-[#101010]/75 leading-relaxed max-w-[520px]">
+              Halaman ini masih dalam status draft oleh pemilik bisnis.<br className="hidden sm:block" />
+              Silahkan periksa kembali nanti atau hubungi pemilik usaha secara langsung.
+            </p>
+
+            <a
+              href="/"
+              className="inline-flex items-center gap-2.5 px-7 py-3 bg-[#425B9A] hover:bg-[#354a7d] active:scale-95 text-white font-poppins font-medium text-[15px] rounded-[8px] shadow-md shadow-[#425B9A]/30 transition-all duration-200 cursor-pointer mt-1"
+            >
+              <ArrowLeft className="w-[14px] h-[12px] shrink-0" />
+              <span>Ke Beranda Loka</span>
+            </a>
+          </div>
         </div>
+
+        {/* Float keyframe injected via style tag */}
+        <style>{`
+          @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-12px); }
+          }
+        `}</style>
       </div>
     );
   }

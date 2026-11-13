@@ -44,6 +44,45 @@ body {
   animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+/* ── Physics Drop-Fall Animation ("Jatuh Langsung ke Bawah") ── */
+@keyframes tabDropFall {
+  0% {
+    opacity: 0;
+    transform: translateY(-22px);
+  }
+  65% {
+    opacity: 1;
+    transform: translateY(3px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes contentDropFall {
+  0% {
+    opacity: 0;
+    transform: translateY(-34px);
+  }
+  70% {
+    opacity: 1;
+    transform: translateY(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-tab-drop {
+  animation: tabDropFall 0.28s cubic-bezier(0.2, 1.25, 0.4, 1) forwards;
+}
+
+.animate-content-fall {
+  animation: contentDropFall 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
 .animate-scale-up {
   animation: scaleUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
