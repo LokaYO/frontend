@@ -4,10 +4,10 @@ import { motion } from "motion/react";
 /* ── Logo & Icons ── */
 import arrowNext from "../../assets/hero/arrow-next.svg";
 
-/* ── Ambient background blur ── */
+/* ── Ambient background blur (Figma Ellipse 14, Node 51:390) ── */
 import ellipseCta from "../../assets/cta/ellipse-cta.svg";
 
-/* ── Marquee template screenshot images from Figma ── */
+/* ── Template screenshot images from Figma ── */
 import marqueePetcare from "../../assets/cta/marquee-petcare.png";
 import marqueeSkincare from "../../assets/cta/marquee-skincare.png";
 import marqueeBakery from "../../assets/cta/marquee-bakery.png";
@@ -24,221 +24,198 @@ interface LandingCtaBannerProps {
 export const LandingCtaBanner: React.FC<LandingCtaBannerProps> = ({
   onTryNow,
 }) => {
-  // Row 1 & Row 3 template cards
-  const row1Templates = [
-    { src: marqueePetcare, alt: "Pet Care Template" },
-    { src: marqueeSkincare, alt: "Skincare Template" },
-    { src: marqueeBakery, alt: "Bakery Template" },
-    { src: marqueeBarber, alt: "Barbershop Template" },
+  /* ── 5 Rows of Templates corresponding to Figma Frame 333, 336, 340, 338, 339 ── */
+  const row1 = [
+    { src: marqueeSkincare, alt: "Belora Skincare Template" },
+    { src: marqueeBakery, alt: "The Cake Haven Bakery Template" },
+    { src: marqueeBarber, alt: "Crafted Cuts Barbershop Template" },
+    { src: marqueePetcare, alt: "Pet Care & Grooming Template" },
   ];
 
-  // Row 2 template cards (middle row, scrolls opposite direction)
-  const row2Templates = [
-    { src: marqueeTowel, alt: "Laundry & Boutique Template" },
-    { src: marqueeCar, alt: "Auto Repair Template" },
-    { src: marqueeFood, alt: "Food & Restaurant Template" },
-    { src: marqueeSalon, alt: "Beauty Salon Template" },
+  const row2 = [
+    { src: marqueeSalon, alt: "Glow Beauty Salon Template" },
+    { src: marqueeTowel, alt: "Laundry & Textile Template" },
+    { src: marqueeFood, alt: "Flavoria Restaurant Template" },
+    { src: marqueeCar, alt: "Travice Car Detailing Template" },
   ];
+
+  const row3 = [
+    { src: marqueeBarber, alt: "Crafted Cuts Barbershop Template" },
+    { src: marqueePetcare, alt: "Pet Care & Grooming Template" },
+    { src: marqueeFood, alt: "Flavoria Restaurant Template" },
+    { src: marqueeSkincare, alt: "Belora Skincare Template" },
+  ];
+
+  const row4 = [
+    { src: marqueeTowel, alt: "Laundry & Textile Template" },
+    { src: marqueeBakery, alt: "The Cake Haven Bakery Template" },
+    { src: marqueeCar, alt: "Travice Car Detailing Template" },
+    { src: marqueeSalon, alt: "Glow Beauty Salon Template" },
+  ];
+
+  const row5 = [
+    { src: marqueeBakery, alt: "The Cake Haven Bakery Template" },
+    { src: marqueeFood, alt: "Flavoria Restaurant Template" },
+    { src: marqueePetcare, alt: "Pet Care & Grooming Template" },
+    { src: marqueeTowel, alt: "Laundry & Textile Template" },
+  ];
+
+  /* Helper to render infinite continuous ticker row */
+  const renderMarqueeRow = (
+    items: { src: string; alt: string }[],
+    direction: "left" | "right"
+  ) => {
+    // 4 repetitions ensure seamless -50% translateX loop across all screen sizes
+    const repeated = [...items, ...items, ...items, ...items];
+    const animClass =
+      direction === "left"
+        ? "animate-marquee-diagonal-left"
+        : "animate-marquee-diagonal-right";
+
+    return (
+      <div className="overflow-hidden w-full h-[200px] sm:h-[250px] lg:h-[304px]">
+        <div className={`${animClass} gap-5 sm:gap-6`}>
+          {repeated.map((item, idx) => (
+            <div
+              key={`${direction}-${idx}`}
+              className="w-[360px] sm:w-[450px] lg:w-[540px] h-[200px] sm:h-[250px] lg:h-[304px] rounded-[14px] sm:rounded-[18px] lg:rounded-[20px] overflow-hidden shrink-0 shadow-2xl bg-white border border-white/20"
+            >
+              <img
+                src={item.src}
+                alt={item.alt}
+                className="w-full h-full object-cover object-top select-none pointer-events-none"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
 
   return (
-    <section className="relative py-20 sm:py-28 lg:py-32 bg-[#f7f9ff] overflow-hidden">
-      {/* ── Scoped CSS keyframe animations for ultra-smooth infinite marquee ── */}
+    <section className="relative w-full h-[640px] sm:h-[740px] lg:h-[870px] bg-[#f7f9ff] overflow-hidden select-none flex items-center justify-center">
+      {/* ── Keyframe Animations for Infinite Diagonal Marquee ── */}
       <style>{`
-        @keyframes marqueeScrollLeft {
+        @keyframes marqueeDiagonalLeft {
           0% { transform: translate3d(0, 0, 0); }
           100% { transform: translate3d(-50%, 0, 0); }
         }
-        @keyframes marqueeScrollRight {
+        @keyframes marqueeDiagonalRight {
           0% { transform: translate3d(-50%, 0, 0); }
           100% { transform: translate3d(0, 0, 0); }
         }
-        .animate-marquee-left {
+        .animate-marquee-diagonal-left {
           display: flex;
           width: max-content;
-          animation: marqueeScrollLeft 32s linear infinite;
+          animation: marqueeDiagonalLeft 48s linear infinite;
           will-change: transform;
         }
-        .animate-marquee-right {
+        .animate-marquee-diagonal-right {
           display: flex;
           width: max-content;
-          animation: marqueeScrollRight 36s linear infinite;
+          animation: marqueeDiagonalRight 52s linear infinite;
           will-change: transform;
         }
       `}</style>
 
-      {/* ── Background Layer: Ambient radial blur from Figma ── */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.85 }}
-        whileInView={{ opacity: 0.5, scale: 1.25 }}
-        viewport={{ once: true }}
-        transition={{ duration: 1.2, ease: "easeOut" }}
-        className="absolute inset-0 pointer-events-none select-none flex items-center justify-center overflow-hidden"
-      >
+      {/* ═════════════════════════════════════════════════════════
+          LAYER 1: AMBIENT RADIAL GLOW (Figma Ellipse 14, Node 51:390)
+          ═════════════════════════════════════════════════════════ */}
+      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none z-0">
         <img
           src={ellipseCta}
           alt=""
-          className="w-[763px] h-[763px] max-w-none"
+          className="w-[763px] h-[763px] max-w-none opacity-80"
         />
-      </motion.div>
-
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* ── Main CTA Showcase Card (Figma Node 16:506 / Desktop-7) with Entrance Animation ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 40, scale: 0.97 }}
-          whileInView={{ opacity: 1, y: 0, scale: 1 }}
-          viewport={{ once: true, margin: "-50px" }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="cta-banner relative max-w-[1084px] mx-auto h-[440px] sm:h-[480px] lg:h-[500px] rounded-[24px] sm:rounded-[28px] border-4 sm:border-8 border-[#425B9A] overflow-hidden shadow-[0px_20px_50px_-10px_rgba(66,91,154,0.35)] bg-slate-900 group"
-        >
-          {/* ═══════════════════════════════════════════════════════
-              LAYER 1: THREE-ROW ANIMATED MARQUEE TEMPLATE GRID
-              Row 1 & 3 scroll left, Row 2 scrolls right
-              ═══════════════════════════════════════════════════════ */}
-          <div className="absolute inset-0 flex flex-col justify-between py-2 overflow-hidden select-none pointer-events-none opacity-85">
-            {/* ── Marquee Row 1 (Top, Moves Left) ── */}
-            <div className="overflow-hidden w-full h-[140px] sm:h-[155px]">
-              <div className="animate-marquee-left gap-3.5 sm:gap-4">
-                {/* 2 duplicates ensure seamless -50% infinite loop */}
-                {[...row1Templates, ...row1Templates, ...row1Templates].map(
-                  (item, idx) => (
-                    <div
-                      key={`row1-${idx}`}
-                      className="w-[240px] sm:w-[270px] h-[135px] sm:h-[152px] rounded-[10px] overflow-hidden shrink-0 shadow-sm bg-slate-800"
-                    >
-                      <img
-                        src={item.src}
-                        alt={item.alt}
-                        className="w-full h-full object-cover object-top"
-                        loading="lazy"
-                      />
-                    </div>
-                  )
-                )}
-              </div>
-            </div>
-
-            {/* ── Marquee Row 2 (Middle, Moves Right) ── */}
-            <div className="overflow-hidden w-full h-[140px] sm:h-[155px]">
-              <div className="animate-marquee-right gap-3.5 sm:gap-4">
-                {[...row2Templates, ...row2Templates, ...row2Templates].map(
-                  (item, idx) => (
-                    <div
-                      key={`row2-${idx}`}
-                      className="w-[240px] sm:w-[270px] h-[135px] sm:h-[152px] rounded-[10px] overflow-hidden shrink-0 shadow-sm bg-slate-800"
-                    >
-                      <img
-                        src={item.src}
-                        alt={item.alt}
-                        className="w-full h-full object-cover object-top"
-                        loading="lazy"
-                      />
-                    </div>
-                  )
-                )}
-              </div>
-            </div>
-
-            {/* ── Marquee Row 3 (Bottom, Moves Left) ── */}
-            <div className="overflow-hidden w-full h-[140px] sm:h-[155px]">
-              <div className="animate-marquee-left gap-3.5 sm:gap-4">
-                {[...row1Templates, ...row1Templates, ...row1Templates].map(
-                  (item, idx) => (
-                    <div
-                      key={`row3-${idx}`}
-                      className="w-[240px] sm:w-[270px] h-[135px] sm:h-[152px] rounded-[10px] overflow-hidden shrink-0 shadow-sm bg-slate-800"
-                    >
-                      <img
-                        src={item.src}
-                        alt={item.alt}
-                        className="w-full h-full object-cover object-top"
-                        loading="lazy"
-                      />
-                    </div>
-                  )
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* ═══════════════════════════════════════════════════════
-              LAYER 2: DARK GRADIENT OVERLAY (Figma Rectangle 209)
-              Darkens the moving templates so text & logo are 100% crisp
-              ═══════════════════════════════════════════════════════ */}
-          <div className="absolute inset-0 bg-slate-950/45 sm:bg-slate-950/40 backdrop-blur-[0px] transition-colors duration-300" />
-
-          {/* ═══════════════════════════════════════════════════════
-              LAYER 3: CENTER HERO CONTENT (Heading + Subtitle + CTA)
-              ═══════════════════════════════════════════════════════ */}
-          <div className="relative z-10 h-full flex flex-col items-center justify-center p-6 sm:p-10 text-center space-y-4 sm:space-y-6">
-            {/* Heading 2 - Main Title (2 Lines in Figma) */}
-            <div className="space-y-1 max-w-2xl">
-              <motion.h2
-                initial={{ opacity: 0, y: 22 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-40px" }}
-                transition={{
-                  duration: 0.6,
-                  delay: 0.15,
-                  ease: [0.16, 1, 0.3, 1],
-                }}
-                className="font-poppins font-bold text-2xl sm:text-4xl lg:text-[46px] xl:text-[50px] text-white tracking-tight leading-[1.15] drop-shadow-md"
-              >
-                Siap Meningkatkan Penjualan
-                <br />
-                Bisnis Anda?
-              </motion.h2>
-            </div>
-
-            {/* Subtitle Description */}
-            <motion.p
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-40px" }}
-              transition={{
-                duration: 0.6,
-                delay: 0.25,
-                ease: [0.16, 1, 0.3, 1],
-              }}
-              className="font-poppins font-medium text-xs sm:text-base text-white/95 max-w-[530px] leading-relaxed drop-shadow-sm px-2"
-            >
-              Bergabunglah dengan ribuan pelaku usaha lokal yang telah memiliki
-              website profesional sendiri.
-            </motion.p>
-
-            {/* CTA Button: Coba Sekarang */}
-            <motion.div
-              initial={{ opacity: 0, y: 16, scale: 0.95 }}
-              whileInView={{ opacity: 1, y: 0, scale: 1 }}
-              viewport={{ once: true, margin: "-40px" }}
-              transition={{
-                duration: 0.5,
-                delay: 0.35,
-                ease: [0.16, 1, 0.3, 1],
-              }}
-              className="pt-2"
-            >
-              <motion.button
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.96 }}
-                type="button"
-                onClick={onTryNow}
-                className="inline-flex items-center justify-center gap-2.5 px-7 py-3 sm:px-8 sm:py-3.5 rounded-[13px] sm:rounded-[14px] text-[15px] sm:text-base  font-poppins font-medium text-white shadow-xl shadow-[#425B9A]/40 hover:shadow-2xl transition-all cursor-pointer group/btn"
-                style={{
-                  backgroundImage:
-                    "linear-gradient(108.5deg, #425B9A 0.8%, #76C0EC 100%)",
-                }}
-              >
-                <span>Coba Sekarang</span>
-                <img
-                  src={arrowNext}
-                  alt=""
-                  className="w-5 h-5 text-white group-hover/btn:translate-x-1 transition-transform"
-                />
-              </motion.button>
-            </motion.div>
-          </div>
-        </motion.div>
       </div>
+
+      {/* ═════════════════════════════════════════════════════════
+          LAYER 2: FULL-WIDTH DIAGONAL MARQUEE RIBBONS (-27.58 DEG)
+          Figma Nodes 51:391, 51:392, 51:393, 51:394, 51:395
+          IMPORTANT: Do NOT use Tailwind -translate-x-1/2 here to avoid
+          double-translation collision with CSS native translate property!
+          ═════════════════════════════════════════════════════════ */}
+      <div
+        className="absolute left-1/2 top-1/2 pointer-events-none flex flex-col gap-5 sm:gap-6 z-[1]"
+        style={{
+          width: "3600px",
+          transform: "translate(-50%, -50%) rotate(-27.58deg)",
+          transformOrigin: "center center",
+        }}
+      >
+        {/* Row 1: Left */}
+        {renderMarqueeRow(row1, "left")}
+
+        {/* Row 2: Right */}
+        {renderMarqueeRow(row2, "right")}
+
+        {/* Row 3: Left */}
+        {renderMarqueeRow(row3, "left")}
+
+        {/* Row 4: Right */}
+        {renderMarqueeRow(row4, "right")}
+
+        {/* Row 5: Left */}
+        {renderMarqueeRow(row5, "left")}
+      </div>
+
+      {/* ═════════════════════════════════════════════════════════
+          LAYER 3: DARK OVERLAY (Figma Rectangle 209, Node 51:397)
+          rgba(0, 0, 0, 0.40) across the entire 1920x870 canvas
+          ═════════════════════════════════════════════════════════ */}
+      <div
+        className="absolute inset-0 pointer-events-none z-[2]"
+        style={{ backgroundColor: "rgba(0, 0, 0, 0.40)" }}
+      />
+
+      {/* ═════════════════════════════════════════════════════════
+          LAYER 4: CENTER CONTENT (Figma Frame 334, Node 51:400)
+          Heading + Subtitle + CTA Button
+          ═════════════════════════════════════════════════════════ */}
+      <motion.div
+        initial={{ opacity: 0, y: 32 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        className="relative z-10 h-full flex flex-col items-center justify-center px-4 sm:px-6 text-center"
+      >
+        {/* Heading 2 - Main Title (Node 51:401 & 51:402) */}
+        <div className="max-w-[753px]">
+          <h2 className="font-poppins font-bold text-3xl sm:text-5xl lg:text-[50.9px] leading-[1.2] sm:leading-[1.18] lg:leading-[60.5px] text-white tracking-tight lg:tracking-[-1.27px] drop-shadow-lg">
+            Siap Meningkatkan Penjualan
+            <br />
+            Bisnis Anda?
+          </h2>
+        </div>
+
+        {/* Subtitle Description (Node 51:403) */}
+        <p className="mt-5 sm:mt-6 font-poppins font-semibold text-sm sm:text-base text-white max-w-[532px] leading-[24px] sm:leading-[25px] drop-shadow-md px-2">
+          Bergabunglah dengan ribuan pelaku usaha lokal yang telah memiliki
+          website profesional sendiri.
+        </p>
+
+        {/* CTA Button: Coba Sekarang (Node 51:404, 51:405, 51:406, 51:407) */}
+        <div className="mt-7 sm:mt-8">
+          <motion.button
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.96 }}
+            type="button"
+            onClick={onTryNow}
+            className="inline-flex items-center justify-center gap-2.5 h-[56px] sm:h-[59px] px-7 sm:w-[250px] rounded-[13px] text-white font-poppins font-medium text-base shadow-xl shadow-black/25 hover:shadow-2xl hover:brightness-105 transition-all cursor-pointer group"
+            style={{
+              backgroundImage:
+                "linear-gradient(108.47deg, #425B9A 0.82%, #76C0EC 100%)",
+            }}
+          >
+            <span>Coba Sekarang</span>
+            <img
+              src={arrowNext}
+              alt=""
+              className="w-7 h-7 text-white group-hover:translate-x-1 transition-transform"
+            />
+          </motion.button>
+        </div>
+      </motion.div>
     </section>
   );
 };
