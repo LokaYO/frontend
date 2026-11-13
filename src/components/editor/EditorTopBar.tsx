@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Website } from '../../types/schema';
 import { getPublicSiteUrl } from '../../utils/url.utils';
+import { EditorTutorialTriggerButton } from './EditorTutorial';
 import {
   ArrowLeft,
   Monitor,
@@ -29,6 +30,8 @@ interface Props {
   onUpdateTitle: (newTitle: string) => void;
   showGrid?: boolean;
   setShowGrid?: (show: boolean) => void;
+  onOpenTutorial?: () => void;
+  showTutorialButton?: boolean;
 }
 
 export const EditorTopBar: React.FC<Props> = ({
@@ -44,6 +47,8 @@ export const EditorTopBar: React.FC<Props> = ({
   onUpdateTitle,
   showGrid = false,
   setShowGrid,
+  onOpenTutorial,
+  showTutorialButton = false,
 }) => {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [titleInput, setTitleInput] = useState(website.name);
@@ -112,7 +117,7 @@ export const EditorTopBar: React.FC<Props> = ({
       </div>
 
       {/* Center: Viewport & Mode Toggle */}
-      <div className="hidden md:flex items-center gap-2">
+      <div data-tour="editor-viewport" className="hidden md:flex items-center gap-2">
         {/* Viewport switch */}
         <div className="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200/80">
           <button
@@ -199,7 +204,10 @@ export const EditorTopBar: React.FC<Props> = ({
       </div>
 
       {/* Right: Save & Publish Action */}
-      <div className="flex items-center gap-2.5">
+      <div data-tour="editor-actions" className="flex items-center gap-2.5">
+        {showTutorialButton && onOpenTutorial && (
+          <EditorTutorialTriggerButton onClick={onOpenTutorial} />
+        )}
         <button
           type="button"
           onClick={onSave}
