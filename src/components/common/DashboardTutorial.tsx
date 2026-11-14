@@ -12,6 +12,7 @@ import {
   ChevronRight,
   BookOpen,
   Sparkles,
+  Plus,
 } from 'lucide-react';
 
 /* ─── Tutorial Steps ─────────────────────────────────────────────── */
@@ -39,9 +40,19 @@ const TUTORIAL_STEPS: TutorialStep[] = [
     icon: <Globe className="w-5 h-5" />,
     title: 'Website Saya',
     description:
-      'Di sini Anda bisa melihat, mengelola, dan membuat landing page bisnis Anda. Klik tombol "+ Buat Website" di kanan atas untuk membuat halaman baru.',
+      'Di sini Anda bisa melihat dan mengelola seluruh landing page bisnis Anda, memantau status publikasi, dan membuka editor.',
     target: '[data-tour="nav-websites"]',
     position: 'right',
+    highlightPadding: 6,
+  },
+  {
+    id: 'create-website',
+    icon: <Plus className="w-5 h-5" />,
+    title: 'Buat Website Baru',
+    description:
+      'Klik tombol "+ Buat Website" untuk membuat landing page baru, pilih preset template bisnis, atau buat dari nol.',
+    target: '[data-tour="create-website-btn"]',
+    position: 'bottom',
     highlightPadding: 6,
   },
   {

@@ -20,14 +20,17 @@ export const ProSuccessModal: React.FC<Props> = ({ isOpen, onClose }) => {
           <div className="absolute -top-10 -right-10 w-48 h-48 bg-[#76C0EC]/30 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute -bottom-10 left-10 w-48 h-48 bg-amber-400/25 rounded-full blur-2xl pointer-events-none" />
 
-          <div className="relative inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-400 via-amber-300 to-yellow-200 text-slate-950 shadow-xl shadow-amber-500/30 mb-3 animate-bounce">
-            <Crown className="w-9 h-9 fill-current" />
-            <Sparkles className="w-4 h-4 text-amber-900 absolute -top-1 -right-1" />
-          </div>
+          {/* Top celebratory icon & verification pill */}
+          <div className="flex items-center justify-center gap-3 mb-3 -translate-x-2.5">
+            <div className="relative flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-tr from-amber-400 via-amber-300 to-yellow-200 text-slate-950 shadow-xl shadow-amber-500/30 shrink-0">
+              <Crown className="w-8 h-8 fill-current" />
+              <Sparkles className="w-3.5 h-3.5 text-amber-900 absolute -top-1 -right-1" />
+            </div>
 
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 backdrop-blur-xs text-amber-300 font-black text-[10px] uppercase tracking-wider mb-2 border border-white/20">
-            <Sparkles className="w-3 h-3 fill-current" />
-            <span>Pembayaran Berhasil Diverifikasi</span>
+            <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/15 backdrop-blur-xs text-amber-300 font-black text-[10px] uppercase tracking-wider border border-white/20 shadow-xs">
+              <Sparkles className="w-3.5 h-3.5 fill-current" />
+              <span>Pembayaran Berhasil Diverifikasi</span>
+            </div>
           </div>
 
           <h2 className="text-xl sm:text-2xl font-black tracking-tight">

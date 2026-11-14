@@ -1,14 +1,15 @@
 import React from 'react';
-import { FooterContent, ThemeConfig } from '../../types/schema';
+import { FooterContent, ThemeConfig, BusinessInfo } from '../../types/schema';
 import { MessageCircle, Instagram, MapPin, Globe } from 'lucide-react';
 
 interface Props {
   content: FooterContent;
   theme: ThemeConfig;
   isEditor?: boolean;
+  businessInfo?: BusinessInfo;
 }
 
-export const FooterSection: React.FC<Props> = ({ content, isEditor }) => {
+export const FooterSection: React.FC<Props> = ({ content, isEditor, businessInfo }) => {
   const padding = (content as any).padding || 'normal';
   const paddingClass =
     padding === 'compact'
@@ -16,6 +17,23 @@ export const FooterSection: React.FC<Props> = ({ content, isEditor }) => {
       : padding === 'spacious'
       ? 'py-16 sm:py-24'
       : 'py-12';
+
+  // Merge social links with businessInfo (Instagram & WhatsApp)
+  const links = [...(content.socialLinks || [])];
+  if (businessInfo?.instagram && !links.some((l) => l.platform === 'instagram')) {
+    const handle = businessInfo.instagram.replace('@', '');
+    links.push({
+      platform: 'instagram',
+      url: `https://instagram.com/${handle}`,
+    });
+  }
+  if (businessInfo?.whatsapp && !links.some((l) => l.platform === 'whatsapp')) {
+    const clean = businessInfo.whatsapp.replace(/\D/g, '');
+    links.push({
+      platform: 'whatsapp',
+      url: `https://wa.me/${clean}`,
+    });
+  }
 
   return (
     <footer className={`bg-slate-950 text-slate-400 ${paddingClass} border-t border-slate-900`}>
@@ -30,7 +48,7 @@ export const FooterSection: React.FC<Props> = ({ content, isEditor }) => {
 
           {/* Social Links */}
           <div className="flex items-center gap-3">
-            {content.socialLinks?.map((soc, idx) => (
+            {links.map((soc, idx) => (
               <a
                 key={idx}
                 href={isEditor ? '#!' : soc.url}

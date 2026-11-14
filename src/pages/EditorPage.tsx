@@ -123,6 +123,25 @@ export const EditorPage: React.FC<Props> = ({ websiteId, onBackToDashboard }) =>
 
     try {
       setSaving(true);
+      setSaveStatusText('Menyimpan perubahan & update status...');
+
+      // Update website metadata and sections first so publish always has latest changes!
+      await websiteService.updateWebsite(website.id, {
+        name: website.name,
+        slug: website.slug,
+        theme: website.theme,
+        businessInfo: website.businessInfo,
+      });
+
+      if (website.sections) {
+        const sectionIds = website.sections.map((s) => s.id);
+        await sectionService.reorderSections(website.id, sectionIds);
+
+        for (const s of website.sections) {
+          await sectionService.updateSection(website.id, s.id, s.content);
+        }
+      }
+
       if (isCurrentlyPublished) {
         await websiteService.unpublishWebsite(website.id);
       } else {
@@ -138,8 +157,11 @@ export const EditorPage: React.FC<Props> = ({ websiteId, onBackToDashboard }) =>
       if (nextStatus === 'published') {
         setPublishModalOpen(true);
       }
+      setSaveStatusText('Tersimpan!');
+      setTimeout(() => setSaveStatusText(null), 2500);
     } catch (err) {
       console.error('Publish error:', err);
+      setSaveStatusText('Gagal mengubah status');
     } finally {
       setSaving(false);
     }
@@ -330,6 +352,8 @@ export const EditorPage: React.FC<Props> = ({ websiteId, onBackToDashboard }) =>
             onUpdateBusinessInfo={(businessInfo) => setWebsite({ ...website, businessInfo })}
             slug={website.slug}
             onUpdateSlug={(slug) => setWebsite({ ...website, slug })}
+            onSave={handleSave}
+            saving={saving}
           />
         )}
 

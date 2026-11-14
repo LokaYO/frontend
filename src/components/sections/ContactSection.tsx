@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ContactContent, ThemeConfig } from "../../types/schema";
+import { ContactContent, ThemeConfig, BusinessInfo } from "../../types/schema";
 import { MapPin, Phone, MessageCircle, Mail, Clock, Instagram, Send, CheckCircle2, AlertCircle } from "lucide-react";
 import { OperatingStatusBadge } from "../common/OperatingStatusBadge";
 import { websiteService } from "../../services/website.service";
@@ -10,14 +10,22 @@ interface Props {
   theme: ThemeConfig;
   isEditor?: boolean;
   slug?: string;
+  businessInfo?: BusinessInfo;
 }
 
-export const ContactSection: React.FC<Props> = ({ content, theme, isEditor, slug }) => {
+export const ContactSection: React.FC<Props> = ({ content, theme, isEditor, slug, businessInfo }) => {
   const primaryColor = theme.primaryColor || "#2563eb";
-  const cleanPhone = content.whatsapp ? content.whatsapp.replace(/\D/g, "") : "";
+  const effectiveWhatsapp = content.whatsapp || businessInfo?.whatsapp || "";
+  const cleanPhone = effectiveWhatsapp ? effectiveWhatsapp.replace(/\D/g, "") : "";
   const waUrl = `https://wa.me/${cleanPhone}?text=Halo,%20saya%20ingin%20menghubungi%20Anda`;
   const { isMobile, isTablet } = useViewport();
   const columns = (content as any).columns || "3";
+
+  const effectiveAddress = content.address || businessInfo?.address || businessInfo?.location;
+  const effectiveHours = content.operatingHours || businessInfo?.operatingHours || "Buka setiap hari";
+  const effectiveOpen = (content as any).openTime || businessInfo?.openTime;
+  const effectiveClose = (content as any).closeTime || businessInfo?.closeTime;
+  const effectiveInstagram = content.instagram || businessInfo?.instagram;
 
   const gridColsClass = isMobile
     ? "grid-cols-1"
@@ -102,7 +110,7 @@ export const ContactSection: React.FC<Props> = ({ content, theme, isEditor, slug
             </div>
             <div className="space-y-1">
               <h4 className="font-bold text-slate-900 text-sm">Alamat Lokasi</h4>
-              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">{content.address}</p>
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">{effectiveAddress || "Alamat usaha belum diatur"}</p>
             </div>
           </div>
 
@@ -113,18 +121,20 @@ export const ContactSection: React.FC<Props> = ({ content, theme, isEditor, slug
             </div>
             <div className="space-y-1">
               <h4 className="font-bold text-slate-900 text-sm">WhatsApp Resmi</h4>
-              <p className="text-xs sm:text-sm text-slate-600 font-normal">{content.whatsapp}</p>
-              <a
-                href={isEditor ? "#!" : waUrl}
-                target={isEditor ? undefined : "_blank"}
-                rel="noopener noreferrer"
-                className="inline-block text-xs font-semibold text-emerald-700 hover:text-emerald-800 underline mt-1"
-                onClick={(e) => {
-                  if (isEditor) e.preventDefault();
-                }}
-              >
-                Chat WhatsApp Sekarang →
-              </a>
+              <p className="text-xs sm:text-sm text-slate-600 font-normal">{effectiveWhatsapp || "Nomor belum diatur"}</p>
+              {cleanPhone && (
+                <a
+                  href={isEditor ? "#!" : waUrl}
+                  target={isEditor ? undefined : "_blank"}
+                  rel="noopener noreferrer"
+                  className="inline-block text-xs font-semibold text-emerald-700 hover:text-emerald-800 underline mt-1"
+                  onClick={(e) => {
+                    if (isEditor) e.preventDefault();
+                  }}
+                >
+                  Chat WhatsApp Sekarang →
+                </a>
+              )}
             </div>
           </div>
 
@@ -137,9 +147,9 @@ export const ContactSection: React.FC<Props> = ({ content, theme, isEditor, slug
               <div className="flex items-center justify-between">
                 <h4 className="font-bold text-slate-900 text-sm">Jam Operasional</h4>
               </div>
-              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">{content.operatingHours || "Buka setiap hari"}</p>
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">{effectiveHours}</p>
               <div>
-                <OperatingStatusBadge operatingHours={content.operatingHours} className="mt-1" />
+                <OperatingStatusBadge operatingHours={effectiveHours} openTime={effectiveOpen} closeTime={effectiveClose} className="mt-1" />
               </div>
             </div>
           </div>
@@ -171,7 +181,7 @@ export const ContactSection: React.FC<Props> = ({ content, theme, isEditor, slug
           )}
 
           {/* Instagram */}
-          {content.instagram && (
+          {effectiveInstagram && (
             <div className="p-6 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-start gap-4">
               <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-amber-500 via-pink-600 to-purple-600 flex items-center justify-center text-white shrink-0 shadow-xs">
                 <Instagram className="w-5 h-5" />
@@ -179,7 +189,7 @@ export const ContactSection: React.FC<Props> = ({ content, theme, isEditor, slug
               <div className="space-y-1">
                 <h4 className="font-bold text-slate-900 text-sm">Instagram</h4>
                 <a
-                  href={isEditor ? "#!" : `https://instagram.com/${content.instagram.replace("@", "")}`}
+                  href={isEditor ? "#!" : `https://instagram.com/${effectiveInstagram.replace("@", "")}`}
                   target={isEditor ? undefined : "_blank"}
                   rel="noopener noreferrer"
                   className="text-xs sm:text-sm text-slate-700 hover:text-slate-900 font-medium underline"
@@ -187,7 +197,7 @@ export const ContactSection: React.FC<Props> = ({ content, theme, isEditor, slug
                     if (isEditor) e.preventDefault();
                   }}
                 >
-                  {content.instagram}
+                  {effectiveInstagram}
                 </a>
               </div>
             </div>

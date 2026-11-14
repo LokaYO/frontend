@@ -88,6 +88,7 @@ export interface HeroContent {
   secondaryButtonUrl?: string;
   imageUrl?: string;
   alignment?: 'left' | 'center';
+  layoutVariant?: 'image-right' | 'image-left' | 'center' | 'background';
 }
 
 export interface AboutContent {

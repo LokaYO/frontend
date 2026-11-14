@@ -670,12 +670,18 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
 
           {/* Right: Actions */}
           <div className="flex items-center gap-3 sm:gap-4">
+            {/* TUTORIAL TRIGGER BUTTON (Client Only) */}
+            {!isAdmin && (
+              <TutorialTriggerButton onClick={handleOpenTutorial} />
+            )}
+
             {/* PRO BADGE / UPGRADE BUTTON (Client Only) */}
             {!isAdmin && (
               user?.plan === 'pro' ? (
                 <button
                   type="button"
                   onClick={() => setIsPricingModalOpen(true)}
+                  data-tour="upgrade-btn"
                   className="flex items-center gap-2 px-3.5 h-[34px] bg-gradient-to-r from-amber-500 to-orange-500 hover:brightness-105 rounded-[10px] text-white text-xs font-poppins font-semibold shadow-md shadow-orange-500/20 active:scale-95 transition cursor-pointer"
                   title="Klik untuk melihat status langganan & seluruh benefit PRO Anda"
                 >
@@ -700,6 +706,7 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
               <button
                 type="button"
                 onClick={() => setIsCreateModalOpen(true)}
+                data-tour="create-website-btn"
                 className="flex items-center gap-2 px-3.5 h-[34px] bg-[#76C0EC] hover:bg-[#5eb5e7] text-white rounded-[10px] text-xs font-poppins font-semibold shadow-md shadow-[#76C0EC]/30 active:scale-95 transition cursor-pointer"
               >
                 <img src={iconPlusWhite} alt="" className="w-3.5 h-3.5 object-contain" />

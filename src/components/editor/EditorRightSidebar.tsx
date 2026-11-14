@@ -105,6 +105,13 @@ export const EditorRightSidebar: React.FC<Props> = ({ section, onUpdateContent, 
     });
   };
 
+  const handleChangeMultiple = (updates: Record<string, any>) => {
+    onUpdateContent({
+      ...content,
+      ...updates,
+    });
+  };
+
   const moveItemToIndex = (field: string, fromIndex: number, toIndex: number) => {
     const list = [...(content[field] || [])];
     if (toIndex < 0 || toIndex >= list.length || fromIndex === toIndex) return;
@@ -222,8 +229,10 @@ export const EditorRightSidebar: React.FC<Props> = ({ section, onUpdateContent, 
               type="text"
               value={content.badge ?? content.badgeText ?? ""}
               onChange={(e) => {
-                handleChange("badge", e.target.value);
-                if ("badgeText" in content) handleChange("badgeText", e.target.value);
+                const val = e.target.value;
+                const updates: Record<string, any> = { badge: val };
+                if ("badgeText" in content) updates.badgeText = val;
+                handleChangeMultiple(updates);
               }}
               placeholder="Contoh: ✨ Promo Spesial"
               className="w-full px-3 py-2 border border-slate-200 rounded-lg outline-none focus:ring-1 focus:ring-blue-500"
@@ -239,8 +248,10 @@ export const EditorRightSidebar: React.FC<Props> = ({ section, onUpdateContent, 
               type="text"
               value={content.title ?? content.headline ?? ""}
               onChange={(e) => {
-                handleChange("title", e.target.value);
-                if ("headline" in content) handleChange("headline", e.target.value);
+                const val = e.target.value;
+                const updates: Record<string, any> = { title: val };
+                if ("headline" in content) updates.headline = val;
+                handleChangeMultiple(updates);
               }}
               className="w-full px-3 py-2 border border-slate-200 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 font-medium"
             />
@@ -255,8 +266,10 @@ export const EditorRightSidebar: React.FC<Props> = ({ section, onUpdateContent, 
               rows={3}
               value={content.description ?? content.subheadline ?? ""}
               onChange={(e) => {
-                handleChange("description", e.target.value);
-                if ("subheadline" in content) handleChange("subheadline", e.target.value);
+                const val = e.target.value;
+                const updates: Record<string, any> = { description: val };
+                if ("subheadline" in content) updates.subheadline = val;
+                handleChangeMultiple(updates);
               }}
               className="w-full px-3 py-2 border border-slate-200 rounded-lg outline-none focus:ring-1 focus:ring-blue-500"
             />
@@ -279,8 +292,10 @@ export const EditorRightSidebar: React.FC<Props> = ({ section, onUpdateContent, 
                 type="text"
                 value={content.buttonText ?? content.ctaText ?? ""}
                 onChange={(e) => {
-                  handleChange("buttonText", e.target.value);
-                  if ("ctaText" in content) handleChange("ctaText", e.target.value);
+                  const val = e.target.value;
+                  const updates: Record<string, any> = { buttonText: val };
+                  if ("ctaText" in content) updates.ctaText = val;
+                  handleChangeMultiple(updates);
                 }}
                 className="w-full px-3 py-2 border border-slate-200 rounded-lg outline-none"
               />
@@ -292,8 +307,10 @@ export const EditorRightSidebar: React.FC<Props> = ({ section, onUpdateContent, 
                 type="text"
                 value={content.buttonUrl ?? content.ctaUrl ?? ""}
                 onChange={(e) => {
-                  handleChange("buttonUrl", e.target.value);
-                  if ("ctaUrl" in content) handleChange("ctaUrl", e.target.value);
+                  const val = e.target.value;
+                  const updates: Record<string, any> = { buttonUrl: val };
+                  if ("ctaUrl" in content) updates.ctaUrl = val;
+                  handleChangeMultiple(updates);
                 }}
                 placeholder="https://wa.me/..."
                 className="w-full px-3 py-2 border border-slate-200 rounded-lg outline-none font-mono text-[11px]"
@@ -339,12 +356,10 @@ export const EditorRightSidebar: React.FC<Props> = ({ section, onUpdateContent, 
                     key={opt.val}
                     type="button"
                     onClick={() => {
-                      handleChange("layoutVariant", opt.val);
-                      if (opt.val === "center") {
-                        handleChange("alignment", "center");
-                      } else {
-                        handleChange("alignment", "left");
-                      }
+                      handleChangeMultiple({
+                        layoutVariant: opt.val,
+                        alignment: opt.val === "center" ? "center" : "left",
+                      });
                     }}
                     className={`py-1.5 px-2 rounded-lg text-[10px] font-bold border transition text-center ${
                       (content.layoutVariant || (content.alignment === "center" ? "center" : "image-right")) === opt.val ? "bg-blue-600 border-blue-600 text-white shadow-xs" : "bg-white border-slate-200 text-slate-700 hover:bg-slate-100"

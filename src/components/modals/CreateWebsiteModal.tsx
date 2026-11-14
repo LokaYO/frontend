@@ -1,116 +1,91 @@
-import React, { useState } from 'react';
-import { PRESET_TEMPLATES, PresetTemplate } from '../../templates/presetTemplates';
-import { BusinessInfo, SectionType } from '../../types/schema';
-import { useAuth } from '../../context/AuthContext';
-import { aiService } from '../../services/ai.service';
-import { websiteService } from '../../services/website.service';
-import {
-  X,
-  Sparkles,
-  LayoutTemplate,
-  ArrowRight,
-  ArrowLeft,
-  Check,
-  Coffee,
-  Scissors,
-  Wrench,
-  Utensils,
-  ShoppingBag,
-  Store,
-  Layers,
-  MapPin,
-  MessageCircle,
-  Crown,
-  Palette,
-  PenTool,
-  Sliders,
-} from 'lucide-react';
+import React, { useState } from "react";
+import { PRESET_TEMPLATES, PresetTemplate } from "../../templates/presetTemplates";
+import { BusinessInfo, SectionType } from "../../types/schema";
+import { useAuth } from "../../context/AuthContext";
+import { aiService } from "../../services/ai.service";
+import { websiteService } from "../../services/website.service";
+import { X, Sparkles, LayoutTemplate, ArrowRight, ArrowLeft, Check, Coffee, Scissors, Wrench, Utensils, ShoppingBag, Store, Layers, MapPin, MessageCircle, Crown, Palette, PenTool, Sliders } from "lucide-react";
 
-const createStarterScratchSections = (
-  businessName: string,
-  category: string,
-  whatsapp: string,
-  primaryColor: string
-) => {
-  const cleanPhone = whatsapp.replace(/\D/g, '') || '6281234567890';
+const createStarterScratchSections = (businessName: string, category: string, whatsapp: string, primaryColor: string) => {
+  const cleanPhone = whatsapp.replace(/\D/g, "") || "6281234567890";
   return [
     {
-      type: 'navbar' as SectionType,
+      type: "navbar" as SectionType,
       content: {
         brandName: businessName,
-        logoUrl: '',
+        logoUrl: "",
         links: [
-          { label: 'Beranda', href: '#hero' },
-          { label: 'Tentang Kami', href: '#about' },
-          { label: 'Layanan', href: '#services' },
-          { label: 'Kontak', href: '#contact' },
+          { label: "Beranda", href: "#hero" },
+          { label: "Tentang Kami", href: "#about" },
+          { label: "Layanan", href: "#services" },
+          { label: "Kontak", href: "#contact" },
         ],
-        ctaText: 'Hubungi WhatsApp',
+        ctaText: "Hubungi WhatsApp",
         ctaUrl: `https://wa.me/${cleanPhone}?text=Halo%20${encodeURIComponent(businessName)},%20saya%20tertarik%20dengan%20layanan%20Anda`,
-        phone: whatsapp || '0812-3456-7890',
+        phone: whatsapp || "0812-3456-7890",
       },
     },
     {
-      type: 'hero' as SectionType,
+      type: "hero" as SectionType,
       content: {
         title: `Selamat Datang di ${businessName}`,
         headline: `Selamat Datang di ${businessName}`,
         description: `Solusi profesional terpercaya untuk kebutuhan ${category.toLowerCase()} Anda. Siap melayani dengan produk & layanan terbaik.`,
         subheadline: `Solusi profesional terpercaya untuk kebutuhan ${category.toLowerCase()} Anda. Siap melayani dengan produk & layanan terbaik.`,
-        badge: 'Usaha Lokal Terverifikasi',
-        badgeText: 'Usaha Lokal Terverifikasi',
-        buttonText: 'Hubungi Kami via WhatsApp',
-        ctaText: 'Hubungi Kami via WhatsApp',
+        badge: "Usaha Lokal Terverifikasi",
+        badgeText: "Usaha Lokal Terverifikasi",
+        buttonText: "Hubungi Kami via WhatsApp",
+        ctaText: "Hubungi Kami via WhatsApp",
         buttonUrl: `https://wa.me/${cleanPhone}?text=Halo%20${encodeURIComponent(businessName)},%20saya%20ingin%20tanya-tanya`,
         ctaUrl: `https://wa.me/${cleanPhone}?text=Halo%20${encodeURIComponent(businessName)},%20saya%20ingin%20tanya-tanya`,
-        imageUrl: 'https://images.unsplash.com/photo-1556742049-0a67c5574f73?auto=format&fit=crop&w=1200&q=80',
-        layoutVariant: 'image-right',
+        imageUrl: "https://images.unsplash.com/photo-1556742049-0a67c5574f73?auto=format&fit=crop&w=1200&q=80",
+        layoutVariant: "image-right",
       },
     },
     {
-      type: 'services' as SectionType,
+      type: "services" as SectionType,
       content: {
-        title: 'Layanan & Produk Pilihan',
-        subtitle: 'Kustomisasi daftar produk, katalog harga, dan deskripsi layanan Anda di visual editor.',
+        title: "Layanan & Produk Pilihan",
+        subtitle: "Kustomisasi daftar produk, katalog harga, dan deskripsi layanan Anda di visual editor.",
         items: [
           {
-            name: 'Layanan / Produk Utama',
-            description: 'Penjelasan singkat mengenai keunggulan produk atau layanan unggulan bisnis Anda.',
-            price: 'Hubungi Kami',
-            imageUrl: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
+            name: "Layanan / Produk Utama",
+            description: "Penjelasan singkat mengenai keunggulan produk atau layanan unggulan bisnis Anda.",
+            price: "Hubungi Kami",
+            imageUrl: "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80",
           },
           {
-            name: 'Paket / Layanan Populer',
-            description: 'Pilihan favorit pelanggan dengan penawaran terbaik dan kualitas terjamin.',
-            price: 'Hubungi Kami',
-            imageUrl: 'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=600&q=80',
+            name: "Paket / Layanan Populer",
+            description: "Pilihan favorit pelanggan dengan penawaran terbaik dan kualitas terjamin.",
+            price: "Hubungi Kami",
+            imageUrl: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=600&q=80",
           },
           {
-            name: 'Layanan Khusus & Kustom',
-            description: 'Layanan khusus yang dapat disesuaikan langsung dengan kebutuhan pelanggan Anda.',
-            price: 'Hubungi Kami',
-            imageUrl: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=600&q=80',
+            name: "Layanan Khusus & Kustom",
+            description: "Layanan khusus yang dapat disesuaikan langsung dengan kebutuhan pelanggan Anda.",
+            price: "Hubungi Kami",
+            imageUrl: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=600&q=80",
           },
         ],
       },
     },
     {
-      type: 'contact' as SectionType,
+      type: "contact" as SectionType,
       content: {
-        title: 'Hubungi Kami Langsung',
-        subtitle: 'Kunjungi lokasi kami atau langsung terhubung dengan admin kami via WhatsApp.',
-        address: 'Alamat lengkap lokasi bisnis atau toko Anda',
-        phone: whatsapp || '0812-3456-7890',
+        title: "Hubungi Kami Langsung",
+        subtitle: "Kunjungi lokasi kami atau langsung terhubung dengan admin kami via WhatsApp.",
+        address: "Alamat lengkap lokasi bisnis atau toko Anda",
+        phone: whatsapp || "0812-3456-7890",
         whatsapp: cleanPhone,
-        workingHours: 'Senin - Minggu: 09:00 - 21:00 WIB',
-        mapEmbedUrl: '',
+        workingHours: "Senin - Minggu: 09:00 - 21:00 WIB",
+        mapEmbedUrl: "",
       },
     },
     {
-      type: 'footer' as SectionType,
+      type: "footer" as SectionType,
       content: {
         brandName: businessName,
-        tagline: 'Kepuasan dan kenyamanan pelanggan adalah komitmen utama kami.',
+        tagline: "Kepuasan dan kenyamanan pelanggan adalah komitmen utama kami.",
         copyrightText: `© ${new Date().getFullYear()} ${businessName}. Seluruh hak cipta dilindungi.`,
       },
     },
@@ -125,24 +100,18 @@ interface Props {
   onOpenPricing?: () => void;
 }
 
-export const CreateWebsiteModal: React.FC<Props> = ({
-  isOpen,
-  onClose,
-  onWebsiteCreated,
-  initialTemplate,
-  onOpenPricing,
-}) => {
+export const CreateWebsiteModal: React.FC<Props> = ({ isOpen, onClose, onWebsiteCreated, initialTemplate, onOpenPricing }) => {
   const { token, user } = useAuth();
-  const [step, setStep] = useState<'choose_method' | 'ai_form' | 'template_gallery' | 'custom_scratch'>('choose_method');
+  const [step, setStep] = useState<"choose_method" | "ai_form" | "template_gallery" | "custom_scratch">("choose_method");
   const [selectedTemplate, setSelectedTemplate] = useState<PresetTemplate | null>(null);
   const [loading, setLoading] = useState(false);
-  const [loadingStatus, setLoadingStatus] = useState<string>('');
+  const [loadingStatus, setLoadingStatus] = useState<string>("");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   // Sync initialTemplate if opened directly from template gallery
   React.useEffect(() => {
     if (isOpen && initialTemplate) {
-      setStep('template_gallery');
+      setStep("template_gallery");
       setSelectedTemplate(initialTemplate);
       setTemplateSiteName(initialTemplate.name);
     }
@@ -150,42 +119,42 @@ export const CreateWebsiteModal: React.FC<Props> = ({
 
   // AI Form State
   const [aiForm, setAiForm] = useState<BusinessInfo>({
-    name: '',
-    category: 'Coffee Shop & Kafe',
-    description: '',
-    location: '',
-    whatsapp: '',
-    instagram: '',
-    services: '',
-    targetCustomer: '',
-    preferredStyle: 'modern',
+    name: "",
+    category: "Coffee Shop & Kafe",
+    description: "",
+    location: "",
+    whatsapp: "",
+    instagram: "",
+    services: "",
+    targetCustomer: "",
+    preferredStyle: "modern",
   });
 
   // Template Form State
-  const [templateSiteName, setTemplateSiteName] = useState('');
+  const [templateSiteName, setTemplateSiteName] = useState("");
 
   // Scratch Form State
   const [scratchForm, setScratchForm] = useState({
-    name: '',
-    category: 'Coffee Shop & Kafe',
-    whatsapp: '',
-    primaryColor: '#425B9A',
-    font: 'sans' as 'sans' | 'serif' | 'mono',
+    name: "",
+    category: "Coffee Shop & Kafe",
+    whatsapp: "",
+    primaryColor: "#425B9A",
+    font: "sans" as "sans" | "serif" | "mono",
   });
 
   if (!isOpen) return null;
 
   const handleReset = () => {
-    setStep('choose_method');
+    setStep("choose_method");
     setSelectedTemplate(null);
     setLoading(false);
     setErrorMsg(null);
     setScratchForm({
-      name: '',
-      category: 'Coffee Shop & Kafe',
-      whatsapp: '',
-      primaryColor: '#425B9A',
-      font: 'sans',
+      name: "",
+      category: "Coffee Shop & Kafe",
+      whatsapp: "",
+      primaryColor: "#425B9A",
+      font: "sans",
     });
   };
 
@@ -198,21 +167,16 @@ export const CreateWebsiteModal: React.FC<Props> = ({
   const handleCreateFromScratch = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!scratchForm.name.trim()) {
-      setErrorMsg('Nama website atau bisnis wajib diisi');
+      setErrorMsg("Nama website atau bisnis wajib diisi");
       return;
     }
 
     try {
       setLoading(true);
       setErrorMsg(null);
-      setLoadingStatus('Menyiapkan kanvas website custom...');
+      setLoadingStatus("Menyiapkan kanvas website custom...");
 
-      const initialSections = createStarterScratchSections(
-        scratchForm.name.trim(),
-        scratchForm.category,
-        scratchForm.whatsapp.trim(),
-        scratchForm.primaryColor
-      );
+      const initialSections = createStarterScratchSections(scratchForm.name.trim(), scratchForm.category, scratchForm.whatsapp.trim(), scratchForm.primaryColor);
 
       const created = await websiteService.createWebsite({
         name: scratchForm.name.trim(),
@@ -220,15 +184,15 @@ export const CreateWebsiteModal: React.FC<Props> = ({
           name: scratchForm.name.trim(),
           category: scratchForm.category,
           description: `Website resmi untuk ${scratchForm.name.trim()}.`,
-          location: 'Indonesia',
-          whatsapp: scratchForm.whatsapp.trim() || '6281234567890',
+          location: "Indonesia",
+          whatsapp: scratchForm.whatsapp.trim() || "6281234567890",
         },
         theme: {
           primaryColor: scratchForm.primaryColor,
-          secondaryColor: '#0f172a',
+          secondaryColor: "#0f172a",
           font: scratchForm.font,
-          accentColor: '#76C0EC',
-          backgroundColor: '#ffffff',
+          accentColor: "#76C0EC",
+          backgroundColor: "#ffffff",
         },
         sections: initialSections,
       });
@@ -236,8 +200,8 @@ export const CreateWebsiteModal: React.FC<Props> = ({
       handleClose();
       onWebsiteCreated(created.websiteId);
     } catch (err: any) {
-      console.error('Scratch creation error:', err);
-      setErrorMsg(err.message || 'Gagal membuat website baru');
+      console.error("Scratch creation error:", err);
+      setErrorMsg(err.message || "Gagal membuat website baru");
     } finally {
       setLoading(false);
     }
@@ -247,25 +211,25 @@ export const CreateWebsiteModal: React.FC<Props> = ({
   const handleGenerateAI = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!aiForm.name || !aiForm.description || !aiForm.location || !aiForm.whatsapp) {
-      setErrorMsg('Harap lengkapi semua field bertanda bintang (*)');
+      setErrorMsg("Harap lengkapi semua field bertanda bintang (*)");
       return;
     }
 
     try {
       setLoading(true);
       setErrorMsg(null);
-      setLoadingStatus('Gemini AI sedang menganalisis profil bisnis Anda...');
+      setLoadingStatus("Gemini AI sedang menganalisis profil bisnis Anda...");
 
       setTimeout(() => {
-        setLoadingStatus('Menyusun copywriting headline, value proposition & CTA...');
+        setLoadingStatus("Menyusun copywriting headline, value proposition & CTA...");
       }, 1500);
 
       setTimeout(() => {
-        setLoadingStatus('Membangun struktur 9 section dan palet warna responsif...');
+        setLoadingStatus("Membangun struktur 9 section dan palet warna responsif...");
       }, 3000);
 
       const aiRes = await aiService.generateWebsite(aiForm);
-      setLoadingStatus('Menyimpan ke database...');
+      setLoadingStatus("Menyimpan ke database...");
 
       // Save as new website
       const created = await websiteService.createWebsite({
@@ -278,8 +242,8 @@ export const CreateWebsiteModal: React.FC<Props> = ({
       handleClose();
       onWebsiteCreated(created.websiteId);
     } catch (err: any) {
-      console.error('AI generate failed:', err);
-      setErrorMsg(err.message || 'Terjadi kesalahan saat membuat website dengan AI.');
+      console.error("AI generate failed:", err);
+      setErrorMsg(err.message || "Terjadi kesalahan saat membuat website dengan AI.");
     } finally {
       setLoading(false);
     }
@@ -300,7 +264,7 @@ export const CreateWebsiteModal: React.FC<Props> = ({
       handleClose();
       onWebsiteCreated(created.websiteId);
     } catch (err: any) {
-      console.error('Template create failed:', err);
+      console.error("Template create failed:", err);
       setErrorMsg(err.message);
     } finally {
       setLoading(false);
@@ -313,60 +277,46 @@ export const CreateWebsiteModal: React.FC<Props> = ({
         {/* Modal Top Header */}
         <div className="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2">
-            {step !== 'choose_method' && (
-              <button
-                type="button"
-                onClick={() => setStep('choose_method')}
-                className="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition mr-1 cursor-pointer"
-              >
+            {step !== "choose_method" && (
+              <button type="button" onClick={() => setStep("choose_method")} className="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition mr-1 cursor-pointer">
                 <ArrowLeft className="w-4 h-4" />
               </button>
             )}
             <h3 className="text-base font-bold text-slate-900">
-              {step === 'choose_method' && 'Buat Website Baru'}
-              {step === 'ai_form' && '✨ Buat dengan Gemini AI'}
-              {step === 'template_gallery' && '🎨 Pilih dari Template Siap Pakai'}
-              {step === 'custom_scratch' && '🛠️ Kustomisasi Mandiri (Build from Scratch)'}
+              {step === "choose_method" && "Buat Website Baru"}
+              {step === "ai_form" && "✨ Buat dengan Gemini AI"}
+              {step === "template_gallery" && "🎨 Pilih dari Template Siap Pakai"}
+              {step === "custom_scratch" && "🛠️ Kustomisasi Mandiri (Build from Scratch)"}
             </h3>
-            {user?.plan === 'pro' && (
+            {user?.plan === "pro" && (
               <span className="ml-2 inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 text-[10px] font-black border border-amber-300">
                 <Crown className="w-3 h-3 text-amber-600 fill-amber-500" />
                 <span>PRO: Clean URL</span>
               </span>
             )}
           </div>
-          <button
-            type="button"
-            onClick={handleClose}
-            className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition cursor-pointer"
-          >
+          <button type="button" onClick={handleClose} className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition cursor-pointer">
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Modal Content */}
         <div className="flex-1 overflow-y-auto p-5 sm:p-7">
-          {errorMsg && (
-            <div className="mb-5 p-3 rounded-xl bg-red-50 border border-red-200 text-xs font-medium text-red-700">
-              {errorMsg}
-            </div>
-          )}
+          {errorMsg && <div className="mb-5 p-3 rounded-xl bg-red-50 border border-red-200 text-xs font-medium text-red-700">{errorMsg}</div>}
 
           {/* STEP 1: CHOOSE METHOD */}
-          {step === 'choose_method' && (
+          {step === "choose_method" && (
             <div className="space-y-6">
               <div className="text-center max-w-xl mx-auto space-y-2">
                 <h4 className="text-lg font-bold text-slate-900">Bagaimana Anda ingin memulainya?</h4>
-                <p className="text-xs text-slate-500 leading-relaxed">
-                  Pilih AI untuk dibuatkan copywriting & section otomatis, pilih template siap pakai, atau bangun dari nol dengan kustomisasi mandiri.
-                </p>
+                <p className="text-xs text-slate-500 leading-relaxed">Pilih AI untuk dibuatkan copywriting & section otomatis, pilih template siap pakai, atau bangun dari nol dengan kustomisasi mandiri.</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
                 {/* Option A: AI */}
                 <button
                   type="button"
-                  onClick={() => setStep('ai_form')}
+                  onClick={() => setStep("ai_form")}
                   className="p-6 rounded-2xl border-2 border-slate-200 hover:border-[#425B9A] hover:bg-[#425B9A]/5 text-left transition-all group space-y-4 flex flex-col justify-between cursor-pointer active:scale-98 shadow-2xs hover:shadow-md"
                 >
                   <div className="space-y-3.5">
@@ -374,12 +324,8 @@ export const CreateWebsiteModal: React.FC<Props> = ({
                       <Sparkles className="w-6 h-6 text-[#76C0EC]" />
                     </div>
                     <div>
-                      <h5 className="text-sm font-bold text-slate-900 group-hover:text-[#425B9A] transition">
-                        Generate dengan AI
-                      </h5>
-                      <p className="text-xs text-slate-500 leading-relaxed mt-1">
-                        Cukup isi info bisnis Anda. AI akan meracik copywriting headline, deskripsi, layanan, dan section otomatis.
-                      </p>
+                      <h5 className="text-sm font-bold text-slate-900 group-hover:text-[#425B9A] transition">Generate dengan AI</h5>
+                      <p className="text-xs text-slate-500 leading-relaxed mt-1">Cukup isi info bisnis Anda. AI akan meracik copywriting headline, deskripsi, layanan, dan section otomatis.</p>
                     </div>
                   </div>
                   <div className="flex items-center text-xs font-bold text-[#425B9A] gap-1.5 pt-2">
@@ -391,7 +337,7 @@ export const CreateWebsiteModal: React.FC<Props> = ({
                 {/* Option B: Template */}
                 <button
                   type="button"
-                  onClick={() => setStep('template_gallery')}
+                  onClick={() => setStep("template_gallery")}
                   className="p-6 rounded-2xl border-2 border-slate-200 hover:border-[#425B9A] hover:bg-[#76C0EC]/10 text-left transition-all group space-y-4 flex flex-col justify-between cursor-pointer active:scale-98 shadow-2xs hover:shadow-md"
                 >
                   <div className="space-y-3.5">
@@ -399,12 +345,8 @@ export const CreateWebsiteModal: React.FC<Props> = ({
                       <LayoutTemplate className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h5 className="text-sm font-bold text-slate-900 group-hover:text-[#425B9A] transition">
-                        Gunakan Template
-                      </h5>
-                      <p className="text-xs text-slate-500 leading-relaxed mt-1">
-                        Pilih dari 5 template bisnis lokal terpopuler: Coffee Shop, Barbershop, Laundry, Restoran, atau Bengkel.
-                      </p>
+                      <h5 className="text-sm font-bold text-slate-900 group-hover:text-[#425B9A] transition">Gunakan Template</h5>
+                      <p className="text-xs text-slate-500 leading-relaxed mt-1">Pilih dari 5 template bisnis lokal terpopuler: Coffee Shop, Barbershop, Laundry, Restoran, atau Bengkel.</p>
                     </div>
                   </div>
                   <div className="flex items-center text-xs font-bold text-[#425B9A] gap-1.5 pt-2">
@@ -416,7 +358,7 @@ export const CreateWebsiteModal: React.FC<Props> = ({
                 {/* Option C: Build from Scratch / Custom */}
                 <button
                   type="button"
-                  onClick={() => setStep('custom_scratch')}
+                  onClick={() => setStep("custom_scratch")}
                   className="p-6 rounded-2xl border-2 border-slate-200 hover:border-[#425B9A] hover:bg-slate-50 text-left transition-all group space-y-4 flex flex-col justify-between cursor-pointer active:scale-98 shadow-2xs hover:shadow-md"
                 >
                   <div className="space-y-3.5">
@@ -424,12 +366,8 @@ export const CreateWebsiteModal: React.FC<Props> = ({
                       <Palette className="w-6 h-6 text-[#76C0EC]" />
                     </div>
                     <div>
-                      <h5 className="text-sm font-bold text-slate-900 group-hover:text-[#425B9A] transition">
-                        Kustomisasi Mandiri
-                      </h5>
-                      <p className="text-xs text-slate-500 leading-relaxed mt-1">
-                        Mulai dari nol atau kanvas bersih. Rancang bebas susunan komponen, warna, teks, dan section langsung di visual editor.
-                      </p>
+                      <h5 className="text-sm font-bold text-slate-900 group-hover:text-[#425B9A] transition">Kustomisasi Mandiri</h5>
+                      <p className="text-xs text-slate-500 leading-relaxed mt-1">Mulai dari nol atau kanvas bersih. Rancang bebas susunan komponen, warna, teks, dan section langsung di visual editor.</p>
                     </div>
                   </div>
                   <div className="flex items-center text-xs font-bold text-[#425B9A] gap-1.5 pt-2">
@@ -442,13 +380,11 @@ export const CreateWebsiteModal: React.FC<Props> = ({
           )}
 
           {/* STEP 2A: AI FORM */}
-          {step === 'ai_form' && (
+          {step === "ai_form" && (
             <form onSubmit={handleGenerateAI} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Nama Bisnis / Brand *
-                  </label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Nama Bisnis / Brand *</label>
                   <input
                     type="text"
                     required
@@ -460,9 +396,7 @@ export const CreateWebsiteModal: React.FC<Props> = ({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Kategori Bisnis *
-                  </label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Kategori Bisnis *</label>
                   <select
                     value={aiForm.category}
                     onChange={(e) => setAiForm({ ...aiForm, category: e.target.value })}
@@ -480,9 +414,7 @@ export const CreateWebsiteModal: React.FC<Props> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Deskripsi Bisnis & Keunggulan Utama *
-                </label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Deskripsi Bisnis & Keunggulan Utama *</label>
                 <textarea
                   required
                   rows={3}
@@ -495,9 +427,7 @@ export const CreateWebsiteModal: React.FC<Props> = ({
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Lokasi / Kota *
-                  </label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Lokasi / Kota *</label>
                   <input
                     type="text"
                     required
@@ -509,9 +439,7 @@ export const CreateWebsiteModal: React.FC<Props> = ({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Nomor WhatsApp Pemesanan *
-                  </label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Nomor WhatsApp Pemesanan *</label>
                   <input
                     type="text"
                     required
@@ -525,12 +453,10 @@ export const CreateWebsiteModal: React.FC<Props> = ({
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Layanan / Produk Utama
-                  </label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Layanan / Produk Utama</label>
                   <input
                     type="text"
-                    value={aiForm.services || ''}
+                    value={aiForm.services || ""}
                     onChange={(e) => setAiForm({ ...aiForm, services: e.target.value })}
                     placeholder="Contoh: Espresso, Manual Brew, Pastry"
                     className="w-full text-xs px-3 py-2.5 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-[#425B9A]/30 focus:border-[#425B9A]"
@@ -538,9 +464,7 @@ export const CreateWebsiteModal: React.FC<Props> = ({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Gaya Desain yang Diinginkan
-                  </label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Gaya Desain yang Diinginkan</label>
                   <select
                     value={aiForm.preferredStyle}
                     onChange={(e) => setAiForm({ ...aiForm, preferredStyle: e.target.value as any })}
@@ -563,17 +487,10 @@ export const CreateWebsiteModal: React.FC<Props> = ({
                 </div>
               ) : (
                 <div className="pt-3 flex items-center justify-end gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setStep('choose_method')}
-                    className="px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition cursor-pointer"
-                  >
+                  <button type="button" onClick={() => setStep("choose_method")} className="px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition cursor-pointer">
                     Kembali
                   </button>
-                  <button
-                    type="submit"
-                    className="px-6 py-2.5 rounded-xl bg-[#425B9A] hover:bg-[#354a7d] text-xs font-bold text-white shadow-sm flex items-center gap-2 active:scale-95 transition cursor-pointer"
-                  >
+                  <button type="submit" className="px-6 py-2.5 rounded-xl bg-[#425B9A] hover:bg-[#354a7d] text-xs font-bold text-white shadow-sm flex items-center gap-2 active:scale-95 transition cursor-pointer">
                     <Sparkles className="w-4 h-4 text-[#76C0EC]" />
                     <span>Generate Landing Page Sekarang</span>
                   </button>
@@ -583,14 +500,12 @@ export const CreateWebsiteModal: React.FC<Props> = ({
           )}
 
           {/* STEP 2B: TEMPLATE GALLERY */}
-          {step === 'template_gallery' && (
+          {step === "template_gallery" && (
             <div className="space-y-4">
               <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-center justify-between gap-3 text-xs">
                 <div className="flex items-center gap-2 text-slate-600">
-                  <span className="text-base">🎨</span>
-                  <span>
-                    Pilih salah satu template siap pakai di bawah. Anda dapat menyesuaikan konten, gambar, dan warna di editor kapan saja.
-                  </span>
+                  <span className="text-base"></span>
+                  <span>Pilih salah satu template siap pakai di bawah. Anda dapat menyesuaikan konten, gambar, dan warna di editor kapan saja.</span>
                 </div>
                 {selectedTemplate && (
                   <span className="shrink-0 px-2.5 py-1 rounded-full bg-[#425B9A]/10 text-[#425B9A] font-bold text-[11px] flex items-center gap-1">
@@ -601,7 +516,7 @@ export const CreateWebsiteModal: React.FC<Props> = ({
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pb-2">
                 {PRESET_TEMPLATES.map((tpl) => {
-                  const isLocked = tpl.isPro && user?.plan !== 'pro';
+                  const isLocked = tpl.isPro && user?.plan !== "pro";
                   const isSelected = selectedTemplate?.id === tpl.id;
                   return (
                     <div
@@ -616,22 +531,16 @@ export const CreateWebsiteModal: React.FC<Props> = ({
                       }}
                       className={`rounded-2xl border-2 overflow-hidden cursor-pointer transition-all duration-200 flex flex-col justify-between group relative ${
                         isLocked
-                          ? 'border-amber-200/90 bg-amber-50/20 hover:border-amber-400'
+                          ? "border-amber-200/90 bg-amber-50/20 hover:border-amber-400"
                           : isSelected
-                          ? 'border-[#425B9A] bg-[#425B9A]/5 ring-2 ring-[#425B9A]/30 shadow-md scale-[1.01]'
-                          : 'border-slate-200 hover:border-slate-300 hover:shadow-xs'
+                            ? "border-[#425B9A] bg-[#425B9A]/5 ring-2 ring-[#425B9A]/30 shadow-md scale-[1.01]"
+                            : "border-slate-200 hover:border-slate-300 hover:shadow-xs"
                       }`}
                     >
                       <div className="relative h-36 overflow-hidden">
-                        <img
-                          src={tpl.previewImage}
-                          alt={tpl.name}
-                          className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
-                        />
+                        <img src={tpl.previewImage} alt={tpl.name} className="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
                         <div className="absolute top-2 left-2 flex items-center gap-1.5 flex-wrap">
-                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-white/95 text-slate-800 shadow-xs">
-                            {tpl.category}
-                          </span>
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-white/95 text-slate-800 shadow-xs">{tpl.category}</span>
                           {tpl.isPro && (
                             <span className="px-2 py-0.5 rounded-full text-[9px] font-black bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 shadow-xs flex items-center gap-1 border border-amber-300">
                               <Crown className="w-3 h-3 fill-current" />
@@ -657,9 +566,7 @@ export const CreateWebsiteModal: React.FC<Props> = ({
                               {tpl.isPro && <Crown className="w-3.5 h-3.5 text-amber-500 fill-amber-400" />}
                             </span>
                           </h5>
-                          <p className="text-[11px] text-slate-500 line-clamp-2 leading-relaxed">
-                            {tpl.description}
-                          </p>
+                          <p className="text-[11px] text-slate-500 line-clamp-2 leading-relaxed">{tpl.description}</p>
                         </div>
 
                         {isLocked ? (
@@ -693,7 +600,7 @@ export const CreateWebsiteModal: React.FC<Props> = ({
                               disabled={loading}
                               className="px-3.5 py-1.5 rounded-lg bg-[#425B9A] hover:bg-[#354a7d] text-white text-xs font-bold flex items-center gap-1.5 shadow-xs transition active:scale-95 cursor-pointer disabled:opacity-50"
                             >
-                              <span>{loading ? 'Memproses...' : 'Gunakan Sekarang'}</span>
+                              <span>{loading ? "Memproses..." : "Gunakan Sekarang"}</span>
                               <ArrowRight className="w-3.5 h-3.5 text-[#76C0EC]" />
                             </button>
                           </div>
@@ -714,7 +621,7 @@ export const CreateWebsiteModal: React.FC<Props> = ({
           )}
 
           {/* STEP 2C: CUSTOM BUILD FROM SCRATCH */}
-          {step === 'custom_scratch' && (
+          {step === "custom_scratch" && (
             <form onSubmit={handleCreateFromScratch} className="space-y-5">
               <div className="p-4 rounded-2xl bg-[#425B9A]/5 border border-[#425B9A]/20 flex items-start gap-3.5">
                 <div className="w-10 h-10 rounded-xl bg-[#425B9A] text-white flex items-center justify-center shrink-0 shadow-2xs">
@@ -730,9 +637,7 @@ export const CreateWebsiteModal: React.FC<Props> = ({
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Nama Website / Bisnis *
-                  </label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Nama Website / Bisnis *</label>
                   <input
                     type="text"
                     required
@@ -744,9 +649,7 @@ export const CreateWebsiteModal: React.FC<Props> = ({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Kategori Bisnis
-                  </label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Kategori Bisnis</label>
                   <select
                     value={scratchForm.category}
                     onChange={(e) => setScratchForm({ ...scratchForm, category: e.target.value })}
@@ -766,9 +669,7 @@ export const CreateWebsiteModal: React.FC<Props> = ({
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Nomor WhatsApp Pemesanan
-                  </label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Nomor WhatsApp Pemesanan</label>
                   <input
                     type="text"
                     value={scratchForm.whatsapp}
@@ -779,9 +680,7 @@ export const CreateWebsiteModal: React.FC<Props> = ({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Gaya Font Utama
-                  </label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Gaya Font Utama</label>
                   <select
                     value={scratchForm.font}
                     onChange={(e) => setScratchForm({ ...scratchForm, font: e.target.value as any })}
@@ -796,32 +695,25 @@ export const CreateWebsiteModal: React.FC<Props> = ({
 
               {/* Pilihan Warna Primer */}
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-2">
-                  Pilih Warna Primer Dasar:
-                </label>
+                <label className="block text-xs font-semibold text-slate-700 mb-2">Pilih Warna Primer Dasar:</label>
                 <div className="flex items-center gap-3 flex-wrap">
                   {[
-                    { label: 'LOKA Blue', color: '#425B9A' },
-                    { label: 'Emerald', color: '#059669' },
-                    { label: 'Warm Amber', color: '#d97706' },
-                    { label: 'Slate Dark', color: '#0f172a' },
-                    { label: 'Crimson', color: '#dc2626' },
-                    { label: 'Royal Purple', color: '#7c3aed' },
+                    { label: "LOKA Blue", color: "#425B9A" },
+                    { label: "Emerald", color: "#059669" },
+                    { label: "Warm Amber", color: "#d97706" },
+                    { label: "Slate Dark", color: "#0f172a" },
+                    { label: "Crimson", color: "#dc2626" },
+                    { label: "Royal Purple", color: "#7c3aed" },
                   ].map((c) => (
                     <button
                       key={c.color}
                       type="button"
                       onClick={() => setScratchForm({ ...scratchForm, primaryColor: c.color })}
                       className={`flex items-center gap-2 px-3 py-2 rounded-xl border text-xs font-semibold transition cursor-pointer active:scale-95 ${
-                        scratchForm.primaryColor === c.color
-                          ? 'border-slate-900 bg-slate-900 text-white shadow-xs'
-                          : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300'
+                        scratchForm.primaryColor === c.color ? "border-slate-900 bg-slate-900 text-white shadow-xs" : "border-slate-200 bg-white text-slate-700 hover:border-slate-300"
                       }`}
                     >
-                      <span
-                        className="w-3.5 h-3.5 rounded-full border border-white/40 shrink-0"
-                        style={{ backgroundColor: c.color }}
-                      />
+                      <span className="w-3.5 h-3.5 rounded-full border border-white/40 shrink-0" style={{ backgroundColor: c.color }} />
                       <span>{c.label}</span>
                     </button>
                   ))}
@@ -836,17 +728,10 @@ export const CreateWebsiteModal: React.FC<Props> = ({
                 </div>
               ) : (
                 <div className="pt-3 flex items-center justify-end gap-2 border-t border-slate-100">
-                  <button
-                    type="button"
-                    onClick={() => setStep('choose_method')}
-                    className="px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition cursor-pointer"
-                  >
+                  <button type="button" onClick={() => setStep("choose_method")} className="px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition cursor-pointer">
                     Kembali
                   </button>
-                  <button
-                    type="submit"
-                    className="px-6 py-2.5 rounded-xl bg-[#425B9A] hover:bg-[#354a7d] text-xs font-bold text-white shadow-sm flex items-center gap-2 active:scale-95 transition cursor-pointer"
-                  >
+                  <button type="submit" className="px-6 py-2.5 rounded-xl bg-[#425B9A] hover:bg-[#354a7d] text-xs font-bold text-white shadow-sm flex items-center gap-2 active:scale-95 transition cursor-pointer">
                     <span>Buka Visual Editor Sekarang</span>
                     <ArrowRight className="w-4 h-4 text-[#76C0EC]" />
                   </button>
@@ -857,7 +742,7 @@ export const CreateWebsiteModal: React.FC<Props> = ({
         </div>
 
         {/* Modal Sticky Bottom Action Bar for Template Gallery */}
-        {step === 'template_gallery' && (
+        {step === "template_gallery" && (
           <div className="shrink-0 p-3.5 sm:p-4 bg-slate-50/95 backdrop-blur-md border-t border-slate-200 shadow-md">
             {selectedTemplate ? (
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
@@ -879,11 +764,7 @@ export const CreateWebsiteModal: React.FC<Props> = ({
                   </div>
                 </div>
                 <div className="flex items-center justify-end gap-2 shrink-0">
-                  <button
-                    type="button"
-                    onClick={() => setSelectedTemplate(null)}
-                    className="px-3 py-2 rounded-xl text-xs font-semibold text-slate-500 hover:text-slate-800 hover:bg-slate-200/70 transition cursor-pointer"
-                  >
+                  <button type="button" onClick={() => setSelectedTemplate(null)} className="px-3 py-2 rounded-xl text-xs font-semibold text-slate-500 hover:text-slate-800 hover:bg-slate-200/70 transition cursor-pointer">
                     Batal Pilih
                   </button>
                   <button
@@ -892,7 +773,7 @@ export const CreateWebsiteModal: React.FC<Props> = ({
                     disabled={loading}
                     className="px-5 py-2.5 rounded-xl bg-[#425B9A] hover:bg-[#354a7d] text-xs font-bold text-white shadow-md flex items-center justify-center gap-2 active:scale-95 transition disabled:opacity-50 cursor-pointer"
                   >
-                    <span>{loading ? 'Menyiapkan...' : 'Lanjutkan dengan Template Ini'}</span>
+                    <span>{loading ? "Menyiapkan..." : "Lanjutkan dengan Template Ini"}</span>
                     <ArrowRight className="w-4 h-4 text-[#76C0EC]" />
                   </button>
                 </div>
@@ -901,13 +782,11 @@ export const CreateWebsiteModal: React.FC<Props> = ({
               <div className="flex items-center justify-between text-xs text-slate-500">
                 <div className="flex items-center gap-2">
                   <span className="text-base">👆</span>
-                  <span>Silakan <strong>klik salah satu kartu template</strong> di atas untuk memilih dan langsung membuat website.</span>
+                  <span>
+                    Silakan <strong>klik salah satu kartu template</strong> di atas untuk memilih dan langsung membuat website.
+                  </span>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => setStep('choose_method')}
-                  className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-white transition cursor-pointer"
-                >
+                <button type="button" onClick={() => setStep("choose_method")} className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-white transition cursor-pointer">
                   Kembali
                 </button>
               </div>

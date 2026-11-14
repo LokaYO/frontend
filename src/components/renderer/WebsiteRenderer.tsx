@@ -166,9 +166,24 @@ export const WebsiteRenderer: React.FC<Props> = ({
           />
         );
       case 'contact':
-        return <ContactSection content={section.content as any} theme={theme} isEditor={isEditor} slug={slug} />;
+        return (
+          <ContactSection
+            content={section.content as any}
+            theme={theme}
+            isEditor={isEditor}
+            slug={slug}
+            businessInfo={businessInfo}
+          />
+        );
       case 'footer':
-        return <FooterSection content={section.content as any} theme={theme} isEditor={isEditor} />;
+        return (
+          <FooterSection
+            content={section.content as any}
+            theme={theme}
+            isEditor={isEditor}
+            businessInfo={businessInfo}
+          />
+        );
       default:
         return (
           <div className="p-8 text-center bg-amber-50 text-amber-800 border border-amber-200">

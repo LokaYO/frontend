@@ -121,7 +121,7 @@ export const HeroSection: React.FC<Props> = ({ content, theme, isEditor }) => {
     ? 'grid grid-cols-1 gap-8 items-center'
     : isTablet
     ? `grid grid-cols-1 ${isCenter ? 'text-center' : 'gap-8'} items-center`
-    : `grid grid-cols-1 ${isCenter ? 'text-center' : 'lg:grid-cols-12'} gap-12 items-center`;
+    : `grid grid-cols-1 ${isCenter ? 'text-center' : 'md:grid-cols-12'} gap-8 lg:gap-12 items-center`;
   const titleSize = isMobile
     ? 'text-2xl font-black'
     : isTablet
@@ -149,11 +149,11 @@ export const HeroSection: React.FC<Props> = ({ content, theme, isEditor }) => {
           <div
             className={`${
               isCenter
-                ? 'max-w-3xl mx-auto'
-                : isImageLeft && !isMobile
-                ? 'lg:col-span-7 order-1 lg:order-2'
-                : !isMobile
-                ? 'lg:col-span-7 order-1'
+                ? 'max-w-3xl mx-auto text-center'
+                : isImageLeft && !isMobile && !isTablet
+                ? 'md:col-span-7 order-1 md:order-2'
+                : !isMobile && !isTablet
+                ? 'md:col-span-7 order-1'
                 : 'order-1'
             } space-y-4 sm:space-y-6`}
           >
@@ -215,9 +215,11 @@ export const HeroSection: React.FC<Props> = ({ content, theme, isEditor }) => {
               className={`${
                 isCenter
                   ? 'max-w-2xl mx-auto w-full'
-                  : isImageLeft
-                  ? 'lg:col-span-5 order-2 lg:order-1'
-                  : 'lg:col-span-5 order-2'
+                  : isImageLeft && !isMobile && !isTablet
+                  ? 'md:col-span-5 order-2 md:order-1'
+                  : !isMobile && !isTablet
+                  ? 'md:col-span-5 order-2'
+                  : 'order-2'
               }`}
             >
               <div className="relative group">

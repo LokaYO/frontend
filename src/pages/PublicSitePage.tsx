@@ -76,7 +76,10 @@ export const PublicSitePage: React.FC<Props> = ({ slug }) => {
     const info = (website.businessInfo || {}) as any;
     const title = info.seoTitle || info.name || website.name || 'Website Resmi';
     const description = info.seoDescription || info.tagline || info.description || 'Selamat datang di website resmi kami.';
-    const imageUrl = info.ogImageUrl || info.logo || '';
+    let imageUrl = info.ogImageUrl || info.logo || '';
+    if (imageUrl && !imageUrl.startsWith('http://') && !imageUrl.startsWith('https://')) {
+      imageUrl = `${window.location.origin}${imageUrl.startsWith('/') ? '' : '/'}${imageUrl}`;
+    }
 
     document.title = title;
 
@@ -96,13 +99,23 @@ export const PublicSitePage: React.FC<Props> = ({ slug }) => {
     setMeta('property', 'og:description', description);
     setMeta('property', 'og:type', 'website');
     setMeta('property', 'og:url', window.location.href);
+    setMeta('property', 'og:site_name', info.name || website.name || 'LOKA');
     if (imageUrl) {
       setMeta('property', 'og:image', imageUrl);
+      setMeta('property', 'og:image:secure_url', imageUrl);
       setMeta('name', 'twitter:image', imageUrl);
     }
     setMeta('name', 'twitter:card', 'summary_large_image');
     setMeta('name', 'twitter:title', title);
     setMeta('name', 'twitter:description', description);
+
+    // Dynamic Favicon if business has logo
+    if (info.logo) {
+      let icon = document.querySelector("link[rel*='icon']") as HTMLLinkElement | null;
+      if (icon) {
+        icon.href = info.logo;
+      }
+    }
   }, [website]);
 
   if (loading) {
