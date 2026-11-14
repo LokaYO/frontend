@@ -23,9 +23,15 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   onUpgraded?: () => void;
+  onViewProPerks?: () => void;
 }
 
-export const PricingModal: React.FC<Props> = ({ isOpen, onClose, onUpgraded }) => {
+export const PricingModal: React.FC<Props> = ({
+  isOpen,
+  onClose,
+  onUpgraded,
+  onViewProPerks,
+}) => {
   const toast = useToast();
   const { user, updateUser } = useAuth();
   const [selectedPlan, setSelectedPlan] = useState<'pro_monthly' | 'pro_yearly'>('pro_monthly');
@@ -224,14 +230,26 @@ export const PricingModal: React.FC<Props> = ({ isOpen, onClose, onUpgraded }) =
                   </p>
                 </div>
               </div>
-              <button
-                type="button"
-                onClick={() => setShowExtendSection(!showExtendSection)}
-                className="py-1.5 px-3 bg-white hover:bg-amber-50 border border-amber-300 rounded-xl text-xs font-bold text-amber-900 transition flex items-center justify-center gap-1.5 shrink-0 shadow-2xs cursor-pointer"
-              >
-                <CreditCard className="w-3.5 h-3.5 text-amber-700" />
-                <span>{showExtendSection ? 'Tutup Opsi Perpanjang' : 'Perpanjang Langganan'}</span>
-              </button>
+              <div className="flex items-center gap-2 shrink-0 flex-wrap">
+                {onViewProPerks && (
+                  <button
+                    type="button"
+                    onClick={onViewProPerks}
+                    className="py-1.5 px-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:brightness-105 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer active:scale-95"
+                  >
+                    <Sparkles className="w-3.5 h-3.5 fill-current" />
+                    <span>Lihat Benefit & Animasi</span>
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={() => setShowExtendSection(!showExtendSection)}
+                  className="py-1.5 px-3 bg-white hover:bg-amber-50 border border-amber-300 rounded-xl text-xs font-bold text-amber-900 transition flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer active:scale-95"
+                >
+                  <CreditCard className="w-3.5 h-3.5 text-amber-700" />
+                  <span>{showExtendSection ? 'Tutup Opsi' : 'Perpanjang Langganan'}</span>
+                </button>
+              </div>
             </div>
           )}
 

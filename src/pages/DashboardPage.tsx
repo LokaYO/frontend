@@ -579,7 +579,13 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
                   {/* Upgrade Button */}
                   <button
                     type="button"
-                    onClick={() => setIsPricingModalOpen(true)}
+                    onClick={() => {
+                      if (user?.plan === 'pro') {
+                        setIsProSuccessModalOpen(true);
+                      } else {
+                        setIsPricingModalOpen(true);
+                      }
+                    }}
                     className="w-full max-w-[120px] mx-auto py-1.5 px-4 bg-[#fc9900] hover:bg-[#ea8c00] active:scale-95 text-white font-poppins font-semibold text-[11px] rounded-[12px] shadow-sm transition-all cursor-pointer block"
                   >
                     {user?.plan === 'pro' ? 'Aktif' : 'Upgrade'}
@@ -680,7 +686,7 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
               user?.plan === 'pro' ? (
                 <button
                   type="button"
-                  onClick={() => setIsPricingModalOpen(true)}
+                  onClick={() => setIsProSuccessModalOpen(true)}
                   data-tour="upgrade-btn"
                   className="flex items-center gap-2 px-3.5 h-[34px] bg-gradient-to-r from-amber-500 to-orange-500 hover:brightness-105 rounded-[10px] text-white text-xs font-poppins font-semibold shadow-md shadow-orange-500/20 active:scale-95 transition cursor-pointer"
                   title="Klik untuk melihat status langganan & seluruh benefit PRO Anda"
@@ -1283,7 +1289,16 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
                             </p>
                           </div>
                         </div>
-                        {user?.plan !== 'pro' && (
+                        {user?.plan === 'pro' ? (
+                          <button
+                            type="button"
+                            onClick={() => setIsProSuccessModalOpen(true)}
+                            className="px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:brightness-105 text-white rounded-xl text-xs font-bold transition shadow-xs cursor-pointer active:scale-95 self-start sm:self-auto shrink-0 flex items-center gap-1.5"
+                          >
+                            <Sparkles className="w-3.5 h-3.5 fill-current" />
+                            <span>Lihat Benefit PRO</span>
+                          </button>
+                        ) : (
                           <button
                             type="button"
                             onClick={() => setIsPricingModalOpen(true)}
@@ -1556,6 +1571,10 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
               fetchWebsites();
               setIsProSuccessModalOpen(true);
             }}
+            onViewProPerks={() => {
+              setIsPricingModalOpen(false);
+              setIsProSuccessModalOpen(true);
+            }}
           />
 
           {/* Pro Activated Celebration Modal */}
@@ -1564,6 +1583,10 @@ export const DashboardPage: React.FC<Props> = ({ onOpenEditor, onOpenPublicSite,
             onClose={() => {
               setIsProSuccessModalOpen(false);
               fetchWebsites();
+            }}
+            onManageSubscription={() => {
+              setIsProSuccessModalOpen(false);
+              setIsPricingModalOpen(true);
             }}
           />
         </>

@@ -20,6 +20,7 @@ export interface BusinessInfo {
   category: string;
   description: string;
   location: string;
+  address?: string;
   whatsapp: string;
   instagram?: string;
   services?: string;
